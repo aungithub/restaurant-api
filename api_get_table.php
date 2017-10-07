@@ -12,6 +12,9 @@ $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $limit = $_GET["limit"];
     $offset = $_GET["offset"];
+    //เป็นพารามิเตอร์ที่ใช้เช็คว่ามีการส่ง limit กับ ofset มาไหม ถ้ามีใช้ค่าที่ส่งมา ถ้าไม่ใช้ค่าdefalt 
+    //limit,offset คือพารามิเตอร์ที่ถูกส่งมาหลังurl ดูจาก method GET
+
 }
 
 $query = " SELECT * "

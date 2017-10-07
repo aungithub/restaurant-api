@@ -25,9 +25,14 @@ $count = 0;
 $employees = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $employees[$count]["emp_id"] = $row["emp_id"];
-    $employees[$count]["emp_name"] = $row["emp_name"];
+    $employees[$count]["emp_firstname"] = $row["emp_firstname"];
+    $employees[$count]["emp_lastname"] = $row["emp_lastname"];
     $employees[$count]["emp_user"] = $row["emp_user"];
-    //$employees[$count]["emp_name"] = $row["emp_name"];
+    $employees[$count]["emp_pass"] = $row["emp_pass"];
+    $employees[$count]["emp_idcard"] = $row["emp_idcard"];
+    $employees[$count]["emp_pos_id"] = $row["emp_pos_id"];
+    $employees[$count]["emp_status_id"] = $row["emp_status_id"];
+    
     $count++;
 }
 

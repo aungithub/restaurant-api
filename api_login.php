@@ -10,13 +10,13 @@ if($_POST["username"] != "" && $_POST["password"] !=""){
                                 $db["local"]["database"])
                                  or die("Error : MySQL cannot connect!");
                         
-    $user = $_POST["username"];
+    $user = $_POST["username"];//ชื่อพารามิเตอร์ที่ถูกส่งจากเว็บ
     $pass = md5($_POST["password"]);
     
     $query = "SELECT * "
             ."FROM res_employee "
-            . "WHERE username '"
-            .$user."'AND password = '".$pass."'";
+            . "WHERE username ='"
+            .$user."' AND password = '".$pass."'";
     
     $rs = $database->query($query);
     $rs = mysqli_fetch_object($rs);
