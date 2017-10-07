@@ -2,7 +2,7 @@
 
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
-if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] != "" && $_POST["lastname"] != "") {
+if ($_POST["name"] != "" && $_POST["discount"] != "" && $_POST["start"] != "" && $_POST["end"] != "" && $_POST["status"] != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -10,31 +10,31 @@ if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $user = $_POST["username"];
-    $pass = md5($_POST["password"]);
-    $firstname = $_POST["firstname"];
-    $lastname = $_POST["lastname"];
-    $tel    = $_POST["tel"];
-    $idc = $_POST["idc"];
-    $position = $_POST["position"];
+    $id = $_POST["id"];
+    $name = $_POST["name"];
+    $discount = $_POST["discount"];
+    $start = $_POST["start"];
+    $end    = $_POST["end"];
+    $status = $_POST["status"];
     
-    $query_check_user = "SELECT * FROM res_employee WHERE username = '".$user."' AND password = '".$pass."'";
-    $result_check_user = $database->query($query_check_user);
     
-    if ($result_check_user->num_rows > 0) {
+    $query_check_promotion = "SELECT * FROM res_promotion WHERE pro_id = '".$id."'";
+    $result_check_promotion = $database->query($query_check_promotion);
+    
+    if ($result_check_promotion->num_rows > 0) {
         $result["status"] = 500;
-        $result["message"] = "Error: Add employee not successful! This employee is already exist in the system.";
+        $result["message"] = "Error: Add promotion not successful! This promotion is already exist in the system.";
     } else {
     
-        $query_insert_employee = "INSERT INTO res_users(username, password, user_firstname, user_lastname, tel , idc , position) "
-                . "VALUES('".$user."', '".$pass."', '".$firstname."', '".$lastname."', '".$tel."', '".$idc."', '".$position."')";
+        $query_insert_promotion = "INSERT INTO res_promotion(pro_name, pro_discount, pro_start, pro_end, pro_status_id) "
+                . "VALUES('".$name."', '".$discount."', '".$start."', '".$end."', '".$status."')";
 
-        if ($database->query($query_insert_employee)) {
+        if ($database->query($query_insert_promotion)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {
             $result["status"] = 500;
-            $result["message"] = "Error: Add employee not successful!";
+            $result["message"] = "Error: Add promotion not successful!";
         }
     }
 }

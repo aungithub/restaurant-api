@@ -2,7 +2,7 @@
 
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
-if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] != "" && $_POST["lastname"] != "") {
+if ($_POST["name"] != "" && $_POST["status"] != "" ) {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -10,23 +10,24 @@ if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $tables_id = $_POST["id"];
-    $tables_number = $_POST["number"];
+    $id = $_POST["id"];
+    $name = $_POST["name"];
+    $status = $_POST["status"];
     
     
     
-    $query_check_user = "SELECT * FROM res_employee WHERE username = '".$user."' AND password = '".$pass."'";
-    $result_check_user = $database->query($query_check_user);
+    $query_check_kind = "SELECT * FROM res_kind WHERE kind_id = '".$id."'";
+    $result_check_kind = $database->query($query_check_kind);
     
-    if ($result_check_user->num_rows > 0) {
+    if ($result_check_kind->num_rows > 0) {
         $result["status"] = 500;
-        $result["message"] = "Error: Add employee not successful! This employee is already exist in the system.";
+        $result["message"] = "Error: Add kind not successful! This kind is already exist in the system.";
     } else {
     
-        $query_insert_employee = "INSERT INTO res_users(id,name,front,back) "
-                . "VALUES('".$pos_id."', '".$pos_name."')";
+        $query_insert_kind = "INSERT INTO res_kind(name,status) "
+                . "VALUES( '".$name."', '".$status."')";
 
-        if ($database->query($query_insert_position)) {
+        if ($database->query($query_insert_kind)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {

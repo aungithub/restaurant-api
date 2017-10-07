@@ -16,21 +16,22 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 $query = " SELECT * "
-        . " FROM res_position "
+        . " FROM res_kind "
         . " LIMIT ".$offset.", ".$limit."";
 
 $rs = $database->query($query);
 
 $count = 0;
-$position = array();
+$kind = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $positions[$count]["pos_id"] = $row["pos_id"];
-    $positions[$count]["pos_name"] = $row["pos_name"];
-   
+    $kind[$count]["kind_id"] = $row["kind_id"];
+    $kind[$count]["kind_name"] = $row["kind_name"];
+    $kind[$count]["kind_status"] = $row["kind_status"];
+
     $count++;
 }
 
-$result["positions"] = $positions;
+$result["kind"] = $kind;
 
 echo json_encode($result);
 

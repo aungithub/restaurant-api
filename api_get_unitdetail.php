@@ -15,23 +15,22 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 $query = " SELECT * "
-        . " FROM res_role "
+        . " FROM res_unitdetail "
         . " LIMIT ".$offset.", ".$limit."";
 
 $rs = $database->query($query);
 
 $count = 0;
-$roles = array();
+$unitdetail = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $roles[$count]["role_id"] = $row["role_id"];
-    $roles[$count]["role_name"] = $row["role_name"];
-    $roles[$count]["role_front"] = $row["role_front"];
-    $roles[$count]["role_back"] = $row["role_back"];
-    $roles[$count]["role_status_id"] = $row["role_status_id"];
+    $unitdetail[$count]["unitdetail_id"] = $row["unitdetail_id"];
+    $unitdetail[$count]["unitdetail_number"] = $row["unitdetail_number"];
+     $unitdetail[$count]["unitdetail_unit_id"] = $row["unitdetail_unit_id"];
+    $unitdetail[$count]["unitdetail_status_id"] = $row["unitdetail_status_id"];
     
     $count++;
 }
 
-$result["roles"] = $roles;
+$result["unitdetail"] = $unitdetail;
 
 echo json_encode($result);

@@ -11,28 +11,28 @@ if ($_POST["name"] != "" && $_POST["number"] != "" && $_POST["status"] != "") {
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
     $id = $_POST["id"];
-    $name = $_POST["name"];
     $number = $_POST["number"];
+    $unit_id = $_POST["unit_id"];
     $status = $_POST["status"];
    
     
-    $query_check_unit = "SELECT * FROM res_unit WHERE unit_id = '".$id."'";
-    $result_check_unit = $database->query($query_check_unit);
+    $query_check_unitdetail = "SELECT * FROM res_unitdetail WHERE unitdetail_id = '".$id."'";
+    $result_check_unitdetail = $database->query($query_check_unitdetail);
     
-    if ($result_check_unit->num_rows > 0) {
+    if ($result_check_unitdetail->num_rows > 0) {
         $result["status"] = 500;
-        $result["message"] = "Error: Add unit not successful! This unit is already exist in the system.";
+        $result["message"] = "Error: Add unitdetail not successful! This unit is already exist in the system.";
     } else {
     
-        $query_insert_unit = "INSERT INTO res_unit(unit_name, unit_number, unit_status_id) "
-                . "VALUES('".$name."', '".$number."', '".$status."')";
+        $query_insert_unitdetail = "INSERT INTO res_unitdetail(unitdetail_number, unitdetail_unit_id, unitdetail_status_id) "
+                . "VALUES( '".$number."', '".$status."','".$unit_id."')";
 
         if ($database->query($query_insert_unit)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {
             $result["status"] = 500;
-            $result["message"] = "Error: Add unit not successful!";
+            $result["message"] = "Error: Add unitdetail not successful!";
         }
     }
 }

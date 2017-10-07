@@ -15,20 +15,21 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 $query = " SELECT * "
-        . " FROM res_table "
+        . " FROM res_kind "
         . " LIMIT ".$offset.", ".$limit."";
 
 $rs = $database->query($query);
 
 $count = 0;
-$tables = array();
+$kind = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $tables[$count]["table_id"] = $row["table_id"];
-    $tables[$count]["table_number"] = $row["table_number"];
-   
+    $kind[$count]["kind_id"] = $row["kind_id"];
+    $kind[$count]["kind_name"] = $row["kind_name"];
+    $kind[$count]["kind_status"] = $row["kind_status"];
+
     $count++;
 }
 
-$result["tables"] = $tables;
+$result["kind"] = $kind;
 
 echo json_encode($result);

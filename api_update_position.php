@@ -26,6 +26,8 @@ $position = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $positions[$count]["pos_id"] = $row["pos_id"];
     $positions[$count]["pos_name"] = $row["pos_name"];
+    $positions[$count]["pos_role_id"] = $row["pos_role_id"];
+    $positions[$count]["pos_status_id"] = $row["pos_status_id"];
    
     $count++;
 }

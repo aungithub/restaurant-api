@@ -15,21 +15,23 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 $query = " SELECT * "
-        . " FROM res_employee "
+        . " FROM res_drink "
         . " LIMIT ".$offset.", ".$limit."";
 
 $rs = $database->query($query);
 
 $count = 0;
-$employees = array();
+$drink = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $employees[$count]["emp_id"] = $row["emp_id"];
-    $employees[$count]["emp_name"] = $row["emp_name"];
-    $employees[$count]["emp_user"] = $row["emp_user"];
-    //$employees[$count]["emp_name"] = $row["emp_name"];
+    $drink[$count]["drink_id"] = $row["drink_id"];
+    $drink[$count]["drink_name"] = $row["drink_name"];
+    $drink[$count]["drink_number"] = $row["drink_number"];
+    $drink[$count]["drink_price"] = $row["drink_price"];
+    $drink[$count]["drink_status_id"] = $row["drink_status_id"];
+    $employees[$count]["drink_unit_id"] = $row["drink_unit_id"];
     $count++;
 }
 
-$result["employees"] = $employees;
+$result["drink"] = $drink;
 
 echo json_encode($result);

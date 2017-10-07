@@ -26,10 +26,10 @@ $roles = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $roles[$count]["role_id"] = $row["role_id"];
     $roles[$count]["role_name"] = $row["role_name"];
-    $roles[$count]["role_user"] = $row["role_user"];
-     $roles[$count]["role_front"] = $row["role_front"];
+    $roles[$count]["role_front"] = $row["role_front"];
     $roles[$count]["role_back"] = $row["role_back"];
-    //$employees[$count]["emp_name"] = $row["emp_name"];
+    $roles[$count]["role_status_id"] = $row["role_status_id"];
+    
     $count++;
 }
 

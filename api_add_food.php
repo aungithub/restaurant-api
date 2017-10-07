@@ -2,39 +2,37 @@
 
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
-if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] != "" && $_POST["lastname"] != "") {
+if ($_POST["name"] != "" && $_POST["price"] != "" && $_POST["kind"] != "" && $_POST["status"] != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+    $id = $_POST["id"];
+    $name = $_POST["name"];
+    $price =$_POST["price"];
+    $kind = $_POST["kind"];
+    $status = $_POST["status"];
     
-    $user = $_POST["username"];
-    $pass = md5($_POST["password"]);
-    $firstname = $_POST["firstname"];
-    $lastname = $_POST["lastname"];
-    $tel    = $_POST["tel"];
-    $idc = $_POST["idc"];
-    $position = $_POST["position"];
     
-    $query_check_user = "SELECT * FROM res_employee WHERE username = '".$user."' AND password = '".$pass."'";
-    $result_check_user = $database->query($query_check_user);
+    $query_check_food = "SELECT * FROM res_food WHERE food_id = '".$id."'";
+    $result_check_food = $database->query($query_check_food);
     
-    if ($result_check_user->num_rows > 0) {
+    if ($result_check_food->num_rows > 0) {
         $result["status"] = 500;
-        $result["message"] = "Error: Add employee not successful! This employee is already exist in the system.";
+        $result["message"] = "Error: Add food not successful! This food is already exist in the system.";
     } else {
     
-        $query_insert_employee = "INSERT INTO res_users(username, password, user_firstname, user_lastname, tel , idc , position) "
-                . "VALUES('".$user."', '".$pass."', '".$firstname."', '".$lastname."', '".$tel."', '".$idc."', '".$position."')";
+        $query_insert_food = "INSERT INTO res_food(food_name, food_price, food_kind_id, food_status_id) "
+                . "VALUES('".$name."', '".$price."', '".$kind."', '".$status."')";
 
-        if ($database->query($query_insert_employee)) {
+        if ($database->query($query_insert_food)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {
             $result["status"] = 500;
-            $result["message"] = "Error: Add employee not successful!";
+            $result["message"] = "Error: Add food not successful!";
         }
     }
 }
