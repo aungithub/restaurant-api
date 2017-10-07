@@ -10,13 +10,13 @@ if ($_POST["name"] != "" && $_POST["front"] != "" && $_POST["back"] != "" && $_P
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $role_id = $_POST["id"];
+   
     $role_name = $_POST["name"];
     $role_front = $_POST["front"];
     $role_back = $_POST["back"];
-     $role_status = $_POST["status"];
+    $role_status = $_POST["status"];
     
-    $query_check_user = "SELECT * FROM res_role WHERE role_id = '".$id."'";
+    $query_check_role = "SELECT * FROM res_role WHERE role_name = '".$role_name."'";
     $result_check_role = $database->query($query_check_role);
     
     if ($result_check_role->num_rows > 0) {
@@ -25,7 +25,7 @@ if ($_POST["name"] != "" && $_POST["front"] != "" && $_POST["back"] != "" && $_P
     } else {
     
         $query_insert_role = "INSERT INTO res_role(role_name,role_front,role_back,role_status_id) "
-                . "VALUES('".$role_id."', '".$role_name."', '".$role_front."', '".$role_back."', '".$role_status."')";
+                . "VALUES('".$role_name."','".$role_front."','".$role_back."','".$role_status."')";
 
         if ($database->query($query_insert_role)) {
             $result["status"] = 200;

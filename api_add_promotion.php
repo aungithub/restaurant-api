@@ -1,5 +1,4 @@
 <?php
-
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 if ($_POST["name"] != "" && $_POST["discount"] != "" && $_POST["start"] != "" && $_POST["end"] != "" && $_POST["status"] != "") {
@@ -10,7 +9,7 @@ if ($_POST["name"] != "" && $_POST["discount"] != "" && $_POST["start"] != "" &&
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $id = $_POST["id"];
+   
     $name = $_POST["name"];
     $discount = $_POST["discount"];
     $start = $_POST["start"];
@@ -18,7 +17,7 @@ if ($_POST["name"] != "" && $_POST["discount"] != "" && $_POST["start"] != "" &&
     $status = $_POST["status"];
     
     
-    $query_check_promotion = "SELECT * FROM res_promotion WHERE pro_id = '".$id."'";
+    $query_check_promotion = "SELECT * FROM res_promotion WHERE pro_name = '".$name."'";
     $result_check_promotion = $database->query($query_check_promotion);
     
     if ($result_check_promotion->num_rows > 0) {

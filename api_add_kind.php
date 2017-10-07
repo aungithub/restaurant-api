@@ -15,16 +15,16 @@ if ($_POST["name"] != "" && $_POST["status"] != "" ) {
     $status = $_POST["status"];
     
     
-    
     $query_check_kind = "SELECT * FROM res_kind WHERE kind_id = '".$id."'";
-    $result_check_kind = $database->query($query_check_kind);
+    
+     $result_check_kind = $database->query($query_check_kind);
     
     if ($result_check_kind->num_rows > 0) {
         $result["status"] = 500;
         $result["message"] = "Error: Add kind not successful! This kind is already exist in the system.";
     } else {
     
-        $query_insert_kind = "INSERT INTO res_kind(name,status) "
+        $query_insert_kind = "INSERT INTO res_kind(kind_name,kind_status) "
                 . "VALUES( '".$name."', '".$status."')";
 
         if ($database->query($query_insert_kind)) {

@@ -9,14 +9,14 @@ if ($_POST["name"] != "" && $_POST["price"] != "" && $_POST["kind"] != "" && $_P
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-    $id = $_POST["id"];
+    
     $name = $_POST["name"];
     $price =$_POST["price"];
     $kind = $_POST["kind"];
     $status = $_POST["status"];
     
     
-    $query_check_food = "SELECT * FROM res_food WHERE food_id = '".$id."'";
+    $query_check_food = "SELECT * FROM res_food WHERE food_name = '".$name."'";
     $result_check_food = $database->query($query_check_food);
     
     if ($result_check_food->num_rows > 0) {

@@ -24,7 +24,7 @@ $rs = $database->query($query);
 $count = 0;
 $unitdetail = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $unitdetail[$count]["unitdetail_id"] = $row["unitdetail_id"];
+    
     $unitdetail[$count]["unitdetail_number"] = $row["unitdetail_number"];
      $unitdetail[$count]["unitdetail_unit_id"] = $row["unitdetail_unit_id"];
     $unitdetail[$count]["unitdetail_status_id"] = $row["unitdetail_status_id"];

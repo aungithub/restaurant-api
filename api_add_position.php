@@ -24,7 +24,7 @@ if ($_POST["name"] != "" && $_POST["role"] != "" && $_POST["status"] != "") {
         $result["message"] = "Error: Add position not successful! This position is already exist in the system.";
     } else {
     
-        $query_insert_position = "INSERT INTO res_position(ipos_name,pos_role_id,pos_status_id) "
+        $query_insert_position = "INSERT INTO res_position(pos_name,pos_role_id,pos_status_id) "
                 . "VALUES('".$name."', '".$role."', '".$status."')";
 
         if ($database->query($query_insert_position)) {

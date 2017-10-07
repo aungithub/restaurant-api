@@ -23,7 +23,7 @@ $rs = $database->query($query);
 $count = 0;
 $kind = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $kind[$count]["kind_id"] = $row["kind_id"];
+   
     $kind[$count]["kind_name"] = $row["kind_name"];
     $kind[$count]["kind_status"] = $row["kind_status"];
 

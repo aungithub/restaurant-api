@@ -24,7 +24,7 @@ $rs = $database->query($query);
 $count = 0;
 $employees = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $employees[$count]["emp_id"] = $row["emp_id"];
+   
     $employees[$count]["emp_firstname"] = $row["emp_firstname"];
     $employees[$count]["emp_lastname"] = $row["emp_lastname"];
     $employees[$count]["emp_user"] = $row["emp_user"];

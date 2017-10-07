@@ -24,7 +24,7 @@ $rs = $database->query($query);
 $count = 0;
 $food = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $food[$count]["emp_id"] = $row["emp_id"];
+    
     $food[$count]["emp_name"] = $row["emp_name"];
     $food[$count]["emp_user"] = $row["emp_user"];
     //$employees[$count]["emp_name"] = $row["emp_name"];

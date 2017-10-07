@@ -24,7 +24,7 @@ $rs = $database->query($query);
 $count = 0;
 $promotion = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    $promotion[$count]["pro_id"] = $row["pro_id"];
+    
     $promotion[$count]["pro_name"] = $row["pro_name"];
     $promotion[$count]["pro_discount"] = $row["pro_discount"];
     $promotion[$count]["pro_start"] = $row["pro_start"];
