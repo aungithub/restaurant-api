@@ -4,7 +4,7 @@ $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 if ($_POST["username"] != "" && $_POST["password"] != "" && $_POST["firstname"] != "" && $_POST["lastname"] != "") {
     require 'config.php';
-
+ 
     $database = mysqli_connect($db["local"]["host"], 
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
