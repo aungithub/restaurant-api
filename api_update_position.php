@@ -1,39 +1,63 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-$result["status"] = 200;
-$result["message"] = "Successful!";
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
+
+$result["status"] = 400;
+$result["message"] = "Error: Bad request!";
+
 require 'config.php';
-$database = mysqli_connect($db["local"]["host"], 
-                            $db["local"]["username"], 
-                            $db["local"]["password"], 
-                            $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+    $database = mysqli_connect($db["local"]["host"], 
+                                $db["local"]["username"], 
+                                $db["local"]["password"], 
+                                $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+  
+ 
+    $pos_id = "";
+    $pos_name = "";
+    $pos_role_id = "";
+     $pos_status_id = "";
+    
 
-$limit = 9999999;
-$offset = 0;
-if ($_GET["limit"] != null && $_GET["offset"] != null) {
-    $limit = $_GET["limit"];
-    $offset = $_GET["offset"];
+     if (!$postData) {
+    // ส่งจาก RESTlet
+    $pos_id = $_POST["pos_id"];
+    $pos_name = $_POST["pos_name"];
+    $pos_role_id = $_POST["pos_role_id"];
+    $pos_status_id = $_POST["pos_status_id"];
+    //$status = $_POST["status"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   
+
+} else {
+    // ส่งจากหน้าเว็บ AngularJS
+    
+    $pos_id = $postData->pos_id;
+    $pos_name = $postData->pos_name;
+    $pos_role_id = $postData->pos_role_id;
+    $pos_status_id = $postData->pos_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   
+
 }
 
-$query = " SELECT * "
-        . " FROM res_position "
-        . " LIMIT ".$offset.", ".$limit."";
+if ($pos_id != "" && $pos_name != "" && $pos_role_id != "" && $pos_status_id != "") {
+    
 
-$rs = $database->query($query);
+    
+    
+    $query_check_position = "SELECT * FROM res_position WHERE pos_id = '".$pos_id."'";
+    $result_check_position = $database->query($query_check_position);
+    
+    if ($result_check_position->num_rows > 0) {
+       $query = " UPDATE res_employee "
+            . " SET pos_id = '".$pos_id."', pos_name = '".$pos_name."', pos_role_id = '".$pos_role_id."', pos_status_id = '".$pos_status_id."'"
+            . " WHERE pos_id = '".$pos_id."' ";
 
-$count = 0;
-$position = array();
-while ($row = mysqli_fetch_assoc($rs)) {
-   
-    $positions[$count]["pos_name"] = $row["pos_name"];
-    $positions[$count]["pos_role_id"] = $row["pos_role_id"];
-    $positions[$count]["pos_status_id"] = $row["pos_status_id"];
-   
-    $count++;
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update position success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this position!";
+    }
 }
-
-$result["positions"] = $positions;
-
 echo json_encode($result);
-
-

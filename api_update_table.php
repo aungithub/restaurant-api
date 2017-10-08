@@ -1,38 +1,56 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-$result["status"] = 200;
-$result["message"] = "Successful!";
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
+
+$result["status"] = 400;
+$result["message"] = "Error: Bad request!";
+
 require 'config.php';
-$database = mysqli_connect($db["local"]["host"], 
-                            $db["local"]["username"], 
-                            $db["local"]["password"], 
-                            $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-
-$limit = 9999999;
-$offset = 0;
-if ($_GET["limit"] != null && $_GET["offset"] != null) {
-    $limit = $_GET["limit"];
-    $offset = $_GET["offset"];
-}
-
-$query = " SELECT * "
-        . " FROM res_tables "
-        . " LIMIT ".$offset.", ".$limit."";
-
-$rs = $database->query($query);
-
-$count = 0;
-$tables = array();
-while ($row = mysqli_fetch_assoc($rs)) {
+    $database = mysqli_connect($db["local"]["host"], 
+                                $db["local"]["username"], 
+                                $db["local"]["password"], 
+                                $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $tables[$count]["table_number"] = $row["table_number"];
-    $tables[$count]["table_status_id"] = $row["table_status_id"];
+
+    $table_id = "";
+    $table_number = "";
+    $table_status_id = "";
    
-    $count++;
+
+
+if(!$postData){
+
+    $table_id = $_POST["table_id"];
+    $table_number = $_POST["table_number"];
+    $table_status_id = $_POST["table_status_id"];
+   
+
+    }else{
+        $table_id = $postData->table_id;
+         $table_number = $postData->table_number;
+         $table_status_id = $postData->table_status_id;
+       
+    }
+
+
+if ($table_id != "" && $table_number != "" && $table_status_id != "" ) {
+    
+    
+    $query_check_table = "SELECT * FROM res_table WHERE table_id = '".$table_id."'";
+    $result_check_table = $database->query($query_check_table);
+    
+    if ($result_check_table->num_rows > 0) {
+        $query = " UPDATE res_table "
+            . " SET table_id = '".$table_id."', table_number = '".$table_number."', table_status_id = '".$table_status_id."'"
+            . " WHERE table_id = '".$table_id."' ";
+
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update table success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this table!";
+    }
 }
-
-$result["tables"] = $tables;
-
 echo json_encode($result);
-
-

@@ -1,39 +1,56 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-$result["status"] = 200;
-$result["message"] = "Successful!";
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
+
+$result["status"] = 400;
+$result["message"] = "Error: Bad request!";
+
 require 'config.php';
-$database = mysqli_connect($db["local"]["host"], 
-                            $db["local"]["username"], 
-                            $db["local"]["password"], 
-                            $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-
-$limit = 9999999;
-$offset = 0;
-if ($_GET["limit"] != null && $_GET["offset"] != null) {
-    $limit = $_GET["limit"];
-    $offset = $_GET["offset"];
-}
-
-$query = " SELECT * "
-        . " FROM res_unitdetail "
-        . " LIMIT ".$offset.", ".$limit."";
-
-$rs = $database->query($query);
-
-$count = 0;
-$unitdetail = array();
-while ($row = mysqli_fetch_assoc($rs)) {
+    $database = mysqli_connect($db["local"]["host"], 
+                                $db["local"]["username"], 
+                                $db["local"]["password"], 
+                                $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-    $unitdetail[$count]["unitdetail_number"] = $row["unitdetail_number"];
-     $unitdetail[$count]["unitdetail_unit_id"] = $row["unitdetail_unit_id"];
-    $unitdetail[$count]["unitdetail_status_id"] = $row["unitdetail_status_id"];
+
+    $unitdetail_id = "";
+    $unitdetail_number = "";
+    $unitdetail_unit_id = "";
+    $unitdetail_status_id = "";
+   
+
+if(!$postData){
+
+    $unitdetail_id = $_POST["unitdetail_id"];
+    $unitdetail_number = $_POST["unitdetail_number"];
+    $unitdetail_unit_id = $_POST["unitdetail_unit_id"];
+    $unitdetail_status_id = $_POST["unitdetail_status_id"];
+   
+
+    }else{
+        $unitdetail_id = $postData->unitdetail_id;
+        $unitdetail_number = $postData->unitdetail_number;
+         $unitdetail_unit_id = $postData->unitdetail_unit_id;
+         $unitdetail_status_id = $postData->unitdetail_status_id;
+       
+    }
+if ($unitdetail_id != "" && $unitdetail_number != "" && $unitdetail_unit_id != "" && $unitdetail_status_id != "") {
+   
+  
+    $query_check_unitdetail = "SELECT * FROM res_unitdetail WHERE unitdetail_number = '".$number."'AND unitdetail_unit_id = '".$unit_id."'";
+    $result_check_unitdetail = $database->query($query_check_unitdetail);
     
-    $count++;
+    if ($result_check_unitdetail->num_rows > 0) {
+        $query = " UPDATE res_employee "
+            . " SET unitdetail_id = '".$unitdetail_id."', unitdetail_number = '".$unitdetail_number."', unitdetail_unit_id = '".$unitdetail_unit_id."', unitdetail_status_id = '".$unitdetail_status_id."'"
+            . " WHERE unitdetail_id = '".$unitdetail_id."' ";
+
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update unitdetail success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this unitdetail!";
+    }
 }
-
-$result["unitdetail"] = $unitdetail;
-
 echo json_encode($result);
-
-

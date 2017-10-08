@@ -1,8 +1,33 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
+
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
-if ($_POST["number"] != "" && $_POST["status"] != "" ) {
+
+
+     $id = "";
+    $number = "";
+    $status = "";
+   
+
+
+if(!$postData){
+
+    $id = $_POST["id"];
+    $number = $_POST["number"];
+    $status = $_POST["status"];
+   
+
+    }else{
+        $id = $postData->id;
+         $number = $postData->number;
+         $status = $postData->status;
+       
+    }
+
+
+if ($id != "" && $number != "" && $status != "" ) {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
