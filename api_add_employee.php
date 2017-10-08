@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8");
+//header("Content-Type: application/json; charset=UTF-8");
 
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!"; //ข้อมูลไม่ครบถ้วน
@@ -23,11 +23,8 @@ if ($_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["idc"] != ""
 
      $tel = $_POST["tel"];
      $tel_ext = $_POST["tel_ext"];
+     $telephone_numbers = json_decode($tel, true);
      $tel_status = 1; //id from status
-
-
-$test = json_decode($tel, true);
-echo $test;
     
     $query_check_user = "SELECT * FROM res_employee WHERE emp_user = '".$user."' AND emp_pass = '".$pass."'";
     $result_check_user = $database->query($query_check_user);//เช็คว่าข้อมูลมีอยู่แล้วรึป่าว
