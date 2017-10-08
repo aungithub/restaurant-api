@@ -1,7 +1,24 @@
 <?php
+header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
+
 $result["status"] = 404;
 $result["message"] = "Error Not found this User!";
-if($_POST["username"] != "" && $_POST["password"] !=""){
+
+$user = "";
+$pass = "";
+// เช็คว่าส่งมาจาก web หรือ RESTlet
+if (!$postData) {
+    // ส่งจาก RESTlet
+    $user = $_POST["username"];//ชื่อพารามิเตอร์ที่ถูกส่งจากเว็บ
+    $pass = md5($_POST["password"]);
+} else {
+    // ส่งจากหน้าเว็บ AngularJS
+    $user = $postData->username;
+    $pass = md5($postData->password);
+}
+
+if($user != "" && $pass !=""){
     require 'config.php';
     
     $database = mysqli_connect($db["local"]["host"],
@@ -10,24 +27,20 @@ if($_POST["username"] != "" && $_POST["password"] !=""){
                                 $db["local"]["database"])
                                  or die("Error : MySQL cannot connect!");
                         
-    $user = $_POST["username"];//ชื่อพารามิเตอร์ที่ถูกส่งจากเว็บ
-    $pass = md5($_POST["password"]);
+    
     
     $query = "SELECT * "
             ."FROM res_employee "
-            . "WHERE username ='"
-            .$user."' AND password = '".$pass."'";
+            . "WHERE emp_user ='"
+            .$user."' AND emp_pass = '".$pass."'";
     
     $rs = $database->query($query);
-    $rs = mysqli_fetch_object($rs);
     
-     // $rs->password <- Fetch object จะเรียกใช้แบบนี้
-    
-     if ($rs->username != null){
+    if ($rs->num_rows > 0){
          
         $result["status"] = 200;
         $result["message"] = "Login successfull!";         
-     }
+    }
     
 }
 echo json_encode($result);
