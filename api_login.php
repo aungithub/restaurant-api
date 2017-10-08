@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
-
+//รับข้อมูลที่ส่งมาจากเว็บแล้วแปลงข้อมูลให้พร้อมใช้งาน
 $result["status"] = 404;
 $result["message"] = "Error Not found this User!";
 

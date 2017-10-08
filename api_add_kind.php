@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: application/json; charset=UTF-8");
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 if ($_POST["name"] != "" && $_POST["status"] != "" ) {

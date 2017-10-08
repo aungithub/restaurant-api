@@ -1,42 +1,65 @@
 <?php
+header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
-$result["status"] = 200;
-$result["message"] = "Successful!";
+$result["status"] = 500;
+$result["message"] = "Error!";
 require 'config.php';
 $database = mysqli_connect($db["local"]["host"], 
                             $db["local"]["username"], 
                             $db["local"]["password"], 
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
-$limit = 9999999;
-$offset = 0;
-if ($_GET["limit"] != null && $_GET["offset"] != null) {
-    $limit = $_GET["limit"];
-    $offset = $_GET["offset"];
+$emp_id = "";
+$emp_firstname = "";
+$emp_lastname = "";
+$emp_user = "";
+$emp_pass = "";
+$emp_idcard = "";
+$emp_pos_id = "";
+$emp_status_id = "";
+
+
+if (!$postData) {
+    $emp_id = $_POST["emp_id"];
+    $emp_firstname = $_POST["emp_firstname"];
+    $emp_lastname = $_POST["emp_lastname"];
+    $emp_user = $_POST["emp_user"];
+    $emp_pass = $_POST["emp_pass"];
+    $emp_idcard = $_POST["emp_idcard"];
+    $emp_pos_id = $_POST["emp_pos_id"];
+    $emp_status_id = $_POST["emp_status_id"];
+
+} else {
+    $emp_id = $postData->emp_id;
+    $emp_firstname = $postData->emp_firstname;
+    $emp_lastname = $postData->emp_lastname;
+    $emp_user = $postData->emp_user;
+    $emp_pass = $postData->emp_pass;
+    $emp_idcard = $postData->emp_idcard;
+    $emp_pos_id = $postData->emp_pos_id;
+    $emp_status_id = $postData->emp_status_id;
 }
 
-$query = " SELECT * "
-        . " FROM res_employee "
-        . " LIMIT ".$offset.", ".$limit."";
+if ($emp_id != "" && $emp_firstname != "" && $emp_lastname != "" && $emp_user != "" && $emp_pass != "" && $emp_idcard != "" && $emp_pos_id != "" && $emp_status_id != "") {
 
-$rs = $database->query($query);
+    $query_check_emp = "SELECT * FROM res_employee WHERE emp_id = '".$emp_id."'";
+    $result_check_emp = $database->query($query_check_emp);
 
-$count = 0;
-$employees = array();
-while ($row = mysqli_fetch_assoc($rs)) {
-   
-    $employees[$count]["emp_firstname"] = $row["emp_firstname"];
-    $employees[$count]["emp_lastname"] = $row["emp_lastname"];
-    $employees[$count]["emp_user"] = $row["emp_user"];
-    $employees[$count]["emp_pass"] = $row["emp_pass"];
-    $employees[$count]["emp_idcard"] = $row["emp_idcard"];
-    $employees[$count]["emp_pos_id"] = $row["emp_pos_id"];
-    $employees[$count]["emp_status_id"] = $row["emp_status_id"];
-    
-    $count++;
+    if ($result_check_emp->num_rows > 0) {
+        $query = " UPDATE res_employee "
+            . " SET emp_firstname = '".$emp_firstname."', emp_lastname = '".$emp_lastname."', emp_user = '".$emp_user."', emp_pass = '".$emp_pass."',emp_idcard = '".$emp_idcard."',emp_pos_id = '".$emp_pos_id."', emp_status_id = '".$emp_status_id."'"
+            . " WHERE emp_id = '".$emp_id."' ";
+
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update employee success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this employee!";
+    }
 }
-
-$result["employees"] = $employees;
 
 echo json_encode($result);
 

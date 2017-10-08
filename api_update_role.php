@@ -1,5 +1,5 @@
 <?php
-
+header("Content-Type: application/json; charset=UTF-8");
 $result["status"] = 200;
 $result["message"] = "Successful!";
 require 'config.php';

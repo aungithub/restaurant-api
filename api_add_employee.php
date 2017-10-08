@@ -1,18 +1,31 @@
 <?php
-//header("Content-Type: application/json; charset=UTF-8");
+
+header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!"; //ข้อมูลไม่ครบถ้วน
-if ($_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["idc"] != "" && $_POST["tel"] != "" && $_POST["tel_ext"] != "" && $_POST["username"] != ""  && $_POST["password"] != "" && $_POST["position"] != "" && $_POST["status"] != "") {
-    require 'config.php';
 
-    $database = mysqli_connect($db["local"]["host"], 
-                                $db["local"]["username"], 
-                                $db["local"]["password"], 
-                                $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-    
-    
-    $firstname = $_POST["firstname"];
+
+    $firstname = "";
+    $lastname = "";
+    $idc = "";
+    $user = "";
+    $pass = "";
+    $position = "";//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+     $status = "";
+
+
+     $tel = "";
+     $tel_ext = "";
+     $telephone_numbers = "";
+     $tel_status = ""; //id from status
+
+
+// เช็คว่าส่งมาจาก web หรือ RESTlet
+if (!$postData) {
+    // ส่งจาก RESTlet
+   $firstname = $_POST["firstname"];
     $lastname = $_POST["lastname"];
     $idc = $_POST["idc"];
     $user = $_POST["username"];
@@ -25,6 +38,35 @@ if ($_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["idc"] != ""
      $tel_ext = $_POST["tel_ext"];
      $telephone_numbers = json_decode($tel, true);
      $tel_status = 1; //id from status
+
+} else {
+    // ส่งจากหน้าเว็บ AngularJS
+    $firstname = $postData->firstname;
+    $lastname = $postData->lastname;
+    $idc = $postData->idc;
+    $user = $postData->username;
+    $pass = md5($postData->password);
+    $position = $postData->position;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+     $status = $postData->status;
+
+
+     $tel = $postData->tel;
+     $tel_ext = $postData->tel_ext;
+     $telephone_numbers = json_decode($tel, true);
+     $tel_status = 1; //id from status
+}
+
+
+if ($firstname != "" && $lastname != "" && $idc != "" && $tel != "" && $tel_ext != "" && $user != ""  && $pass != "" && $position != "" && $status != "") {
+    require 'config.php';
+
+    $database = mysqli_connect($db["local"]["host"], 
+                                $db["local"]["username"], 
+                                $db["local"]["password"], 
+                                $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+    
+    
+   
     
     $query_check_user = "SELECT * FROM res_employee WHERE emp_user = '".$user."' AND emp_pass = '".$pass."'";
     $result_check_user = $database->query($query_check_user);//เช็คว่าข้อมูลมีอยู่แล้วรึป่าว
