@@ -33,15 +33,31 @@ require 'config.php';
        
     }
 
-if ( $unit_id != "" && $unit_name != "" && $unit_number != "" && $unit_status_id != "") {
+if ( $unit_id != "" && $unit_status_id != "") {
     
+    $condition_update = "";
+    if ($unit_name != "") {
+        $condition_update = " unit_name = '".$unit_name."' ";
+    }
+    if ($unit_number != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " unit_number = '".$unit_number."' ";
+    }
+    if ($unit_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " unit_status_id = '".$unit_status_id."' ";
+    }
     
     $query_check_unit = "SELECT * FROM res_unit WHERE unit_id = '".$unit_id."'";
     $result_check_unit = $database->query($query_check_unit);
     
     if ($result_check_unit->num_rows > 0) {
        $query = " UPDATE res_unit "
-            . " SET unit_id = '".$unit_id."', unit_name = '".$unit_name."', unit_number = '".$unit_number."', unit_status_id = '".$unit_status_id."'"
+            . " SET ".$condition_update.""
             . " WHERE unit_id = '".$unit_id."' ";
 
         if ($database->query($query)) {

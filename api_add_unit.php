@@ -32,10 +32,6 @@ if ( $name != "" && $number != "" && $status != "") {
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-    
-    $name = $_POST["name"];
-    $number = $_POST["number"];
-    $status = $_POST["status"];
    
     
     $query_check_unit = "SELECT * FROM res_unit WHERE unit_name = '".$name."'";
