@@ -28,18 +28,23 @@ if($user != "" && $pass !=""){
                                  or die("Error : MySQL cannot connect!");
                         
     
-    
-    $query = "SELECT * "
-            ."FROM res_employee "
-            . "WHERE emp_user ='"
-            .$user."' AND emp_pass = '".$pass."'";
+    $query = "SELECT e.*, group_concat(r.role_front, ',', r.role_back) AS user_roles "
+            ."FROM res_employee e "
+            ." INNER JOIN res_position p ON p.pos_id = e.emp_pos_id "
+            . " INNER JOIN res_role r ON r.role_id = p.pos_role_id "
+            . "WHERE emp_user ='".$user."' AND emp_pass = '".$pass."'";
     
     $rs = $database->query($query);
     
     if ($rs->num_rows > 0){
-         
-        $result["status"] = 200;
-        $result["message"] = "Login successfull!";         
+
+        $row = mysqli_fetch_assoc($rs);
+
+        if ($row['emp_user'] != null) {
+            $result["status"] = 200;
+            $result["message"] = "Login successfull!";         
+            $result["roles"] = $row['user_roles'];
+        }
     }
     
 }
