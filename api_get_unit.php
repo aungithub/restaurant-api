@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 header("Content-Type: application/json; charset=UTF-8");
 $result["status"] = 200;
 $result["message"] = "Successful!";
@@ -8,9 +9,11 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["password"], 
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
+$database->set_charset('utf8');
+
 $conditions = "";
 $unit_id = null;
-if ($_GET["unit_id"] != null) {
+if ($_GET["unit_id"] != null && $_GET["unit_id"] != 0) {
     $unit_id = $_GET["unit_id"];
     $conditions = " WHERE unit_id = '".$unit_id."' ";
 }

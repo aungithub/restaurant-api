@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -66,7 +68,7 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $tel != "" && $tel_ext 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
     
-   
+   $database->set_charset('utf8');
     
     $query_check_user = "SELECT * FROM res_employee WHERE emp_user = '".$user."' AND emp_pass = '".$pass."'";
     $result_check_user = $database->query($query_check_user);//เช็คว่าข้อมูลมีอยู่แล้วรึป่าว

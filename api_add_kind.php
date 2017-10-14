@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -38,7 +41,7 @@ if ($name != "" && $status != "" ) {
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
    
-    
+    $database->set_charset('utf8');
     
     $query_check_kind = "SELECT * FROM res_kind WHERE kind_name = '".$name."'";
     

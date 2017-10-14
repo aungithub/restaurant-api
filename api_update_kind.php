@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -12,6 +15,7 @@ require 'config.php';
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
+ $database->set_charset('utf8');
 
     $kind_id = "";
     $kind_name = "";
@@ -34,15 +38,30 @@ require 'config.php';
 }
 
 
-if ($kind_id != "" && $kind_name != "" && $kind_status != "" ) {
-   
+if ($kind_id != "" && $kind_status != "" ) {
+
+   $condition_update = "";
+   if ($kind_name != "") {
+        $condition_update = " kind_name = '".$kind_name."' ";
+    }
+    
+    }
+    if ($kind_status != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " kind_status = '".$kind_status."' ";
+    }
+    
+
+
     $query_check_kind = "SELECT * FROM res_kind WHERE kind_id = '".$kind_id."'";
     
      $result_check_kind = $database->query($query_check_kind);
     
     if ($result_check_kind->num_rows > 0) {
         $query = " UPDATE res_kind "
-            . " SET kind_id = '".$kind_id."', kind_name = '".$kind_name."', kind_status = '".$kind_status."'"
+            . " SET ".$condition_update." "
             . " WHERE kind_id = '".$kind_id."' ";
 
         if ($database->query($query)) {
@@ -53,6 +72,5 @@ if ($kind_id != "" && $kind_name != "" && $kind_status != "" ) {
         $result["status"] = 404;
         $result["message"] = "Cannot find this kind!";
     }
-}
 
 echo json_encode($result);

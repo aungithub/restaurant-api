@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -12,6 +15,9 @@ require 'config.php';
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
+
     $unit_id = "";
     $unit_name = "";
     $unit_number = "";
@@ -51,6 +57,17 @@ if ( $unit_id != "" && $unit_status_id != "") {
         }
         $condition_update .= " unit_status_id = '".$unit_status_id."' ";
     }
+
+    //unit_id=1
+    //unit_status_id=2
+    //unit_name=test
+    //unit_number=1234
+    // $condition_update = " unit_name = 'test' ";
+    // $condition_update = " unit_name = 'test' ,";
+    // $condition_update = " unit_name = 'test' , unit_number = '1234' ";
+    // $condition_update = " unit_name = 'test' , unit_number = '1234' ,";
+    // $condition_update = " unit_name = 'test' , unit_number = '1234' , unit_status_id = '2'";
+
     
     $query_check_unit = "SELECT * FROM res_unit WHERE unit_id = '".$unit_id."'";
     $result_check_unit = $database->query($query_check_unit);
@@ -59,6 +76,8 @@ if ( $unit_id != "" && $unit_status_id != "") {
        $query = " UPDATE res_unit "
             . " SET ".$condition_update.""
             . " WHERE unit_id = '".$unit_id."' ";
+
+            //  UPDATE res_unit SET unit_name = 'test' , unit_number = '1234' , unit_status_id = '2' WHERE unit_id = '1'
 
         if ($database->query($query)) {
             $result["status"] = 200;

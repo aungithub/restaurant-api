@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(0);
+
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -11,6 +15,7 @@ require 'config.php';
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
   
+   $database->set_charset('utf8');
  
     $pos_id = "";
     $pos_name = "";
@@ -38,7 +43,24 @@ require 'config.php';
 
 }
 
-if ($pos_id != "" && $pos_name != "" && $pos_role_id != "" && $pos_status_id != "") {
+if ($pos_id != "" && $pos_status_id != "") {
+
+     $condition_update = "";
+    if ($pos_name != "") {
+        $condition_update = " pos_name = '".$pos_name."' ";
+    }
+    if ($pos_role_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pos_role_id = '".$pos_role_id."' ";
+    }
+    if ($pos_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pos_status_id = '".$pos_status_id."' ";
+    }
     
 
     
@@ -47,8 +69,8 @@ if ($pos_id != "" && $pos_name != "" && $pos_role_id != "" && $pos_status_id != 
     $result_check_position = $database->query($query_check_position);
     
     if ($result_check_position->num_rows > 0) {
-       $query = " UPDATE res_employee "
-            . " SET pos_id = '".$pos_id."', pos_name = '".$pos_name."', pos_role_id = '".$pos_role_id."', pos_status_id = '".$pos_status_id."'"
+       $query = " UPDATE res_position "
+            . " SET ".$condition_update." "
             . " WHERE pos_id = '".$pos_id."' ";
 
         if ($database->query($query)) {

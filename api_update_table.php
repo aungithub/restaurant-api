@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -10,6 +13,8 @@ require 'config.php';
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
     
 
     $table_id = "";
@@ -33,7 +38,21 @@ if(!$postData){
     }
 
 
-if ($table_id != "" && $table_number != "" && $table_status_id != "" ) {
+if ($table_id != "" && $table_status_id != "" ) {
+
+     $condition_update = "";
+   if ($table_number != "") {
+        $condition_update = " table_number = '".$table_number."' ";
+    }
+    
+    }
+    if ($table_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " table_status_id = '".$table_status_id."' ";
+    }
+    
     
     
     $query_check_table = "SELECT * FROM res_table WHERE table_id = '".$table_id."'";
@@ -41,7 +60,7 @@ if ($table_id != "" && $table_number != "" && $table_status_id != "" ) {
     
     if ($result_check_table->num_rows > 0) {
         $query = " UPDATE res_table "
-            . " SET table_id = '".$table_id."', table_number = '".$table_number."', table_status_id = '".$table_status_id."'"
+           . " SET ".$condition_update." "
             . " WHERE table_id = '".$table_id."' ";
 
         if ($database->query($query)) {

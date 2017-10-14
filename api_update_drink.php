@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -10,6 +13,8 @@ require 'config.php';
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
     
     $drink_name = "";
     $drink_number = "";
@@ -38,16 +43,41 @@ require 'config.php';
 }
 
 
-if ( $drink_name != "" && $drink_number != "" && $drink_price != "" && $drink_status_id != "" && $drink_unit_id != "" ) {
+
+if ( $drink_id != "" && $drink_status_id != "") {
+    
+    $condition_update = "";
+    if ($drink_name != "") {
+        $condition_update = " drink_name = '".$drink_name."' ";
+    }
+    if ($drink_number != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_number = '".$drink_number."' ";
+    }
+    if ($drink_price != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_price = '".$drink_price."' ";
+    }
+    if ($drink_unit_id != "") {
+        if ($condition_update != " ") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
+    }
+
 
   
-    $query_check_drink = "SELECT * FROM res_drink WHERE drink_name = '".$drink_name."'";
+    $query_check_drink = "SELECT * FROM res_drink WHERE drink_id = '".$drink_id."'";
     $result_check_drink = $database->query($query_check_drink);
 
     if ($result_check_drink->num_rows > 0) {
         $query = " UPDATE res_drink "
-            . " SET drink_name = '".$drink_name."', drink_number = '".$drink_number."', drink_price = '".$drink_price."', drink_status_id = '".$drink_status_id."',drink_unit_id = '".$drink_unit_id."'"
-            . " WHERE drink_name = '".$drink_name."' ";
+            . " SET ".$condition_update.""
+            . " WHERE drink_id = '".$drink_id."' ";
 
         if ($database->query($query)) {
             $result["status"] = 200;
@@ -55,7 +85,7 @@ if ( $drink_name != "" && $drink_number != "" && $drink_price != "" && $drink_st
         }
     } else {
         $result["status"] = 404;
-        $result["message"] = "Cannot find this employee!";
+        $result["message"] = "Cannot find this drink!";
     }
 }
 echo json_encode($result);
