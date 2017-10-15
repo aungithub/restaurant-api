@@ -8,25 +8,31 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
-    $number = "";
-    $unit_id = "";
-    $status = "";
+    $primary_unit_id = "";
+    $secondary_unit_id = "";
+    $primary_unit_number = "";
+    $secondary_unit_number = "";
+    $unitdetail_status_id = "";
    
 
 if(!$postData){
 
-    $number = $_POST["number"];
-    $unit_id = $_POST["unit_id"];
-    $status = $_POST["status"];
+    $primary_unit_id = $_POST["primary_unit_id"];
+    $secondary_unit_id = $_POST["secondary_unit_id"];
+    $primary_unit_number = $_POST["primary_unit_number"];
+    $secondary_unit_number = $_POST["secondary_unit_number"];
+    $unitdetail_status_id = $_POST["unitdetail_status_id"];
    
 
     }else{
-        $number = $postData->number;
-         $unit_id = $postData->unit_id;
-         $status = $postData->status;
+        $primary_unit_id = $postData->primary_unit_id;
+        $secondary_unit_id = $postData->secondary_unit_id;
+        $primary_unit_number = $postData->primary_unit_number;
+        $secondary_unit_number = $postData->secondary_unit_number;
+        $unitdetail_status_id = $postData->unitdetail_status_id;
        
     }
-if ($number != "" && $unit_id != "" && $status != "") {
+if ($primary_unit_id != "" && $secondary_unit_id != "" && $primary_unit_number != "" && $secondary_unit_number != "" && $unitdetail_status_id != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -37,24 +43,15 @@ if ($number != "" && $unit_id != "" && $status != "") {
     $database->set_charset('utf8');
    
     
-    $query_check_unitdetail = "SELECT * FROM res_unitdetail WHERE unitdetail_number = '".$number."'AND unitdetail_unit_id = '".$unit_id."'";
-    $result_check_unitdetail = $database->query($query_check_unitdetail);
-    
-    if ($result_check_unitdetail->num_rows > 0) {
-        $result["status"] = 500;
-        $result["message"] = "Error: Add unitdetail not successful! This unit is already exist in the system.";
-    } else {
-    
-        $query_insert_unitdetail = "INSERT INTO res_unitdetail(unitdetail_number, unitdetail_unit_id, unitdetail_status_id) "
-                . "VALUES( '".$number."', '".$status."','".$unit_id."')";
+    $query_insert_unitdetail = "INSERT INTO res_unitdetail(unitdetail_number, unitdetail_unit_id, unitdetail_status_id, unit_number, unit_unit_id) "
+                . "VALUES( '".$primary_unit_number."', '".$primary_unit_id."','".$unitdetail_status_id."','".$secondary_unit_number."','".$secondary_unit_id."')";
 
-        if ($database->query($query_insert_unitdetail)) {
-            $result["status"] = 200;
-            $result["message"] = "Add successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Add unitdetail not successful!";
-        }
+    if ($database->query($query_insert_unitdetail)) {
+        $result["status"] = 200;
+        $result["message"] = "Add successful!";
+    } else {
+        $result["status"] = 500;
+        $result["message"] = "Error: Add unitdetail not successful!";
     }
 }
 echo json_encode($result);

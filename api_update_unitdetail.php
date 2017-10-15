@@ -15,40 +15,63 @@ require 'config.php';
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
      $database->set_charset('utf8');
-    
 
     $unitdetail_id = "";
-    $unitdetail_number = "";
-    $unitdetail_unit_id = "";
+    $primary_unit_id = "";
+    $secondary_unit_id = "";
+    $primary_unit_number = "";
+    $secondary_unit_number = "";
     $unitdetail_status_id = "";
    
 
 if(!$postData){
 
     $unitdetail_id = $_POST["unitdetail_id"];
-    $unitdetail_number = $_POST["unitdetail_number"];
-    $unitdetail_unit_id = $_POST["unitdetail_unit_id"];
+    $primary_unit_id = $_POST["primary_unit_id"];
+    $secondary_unit_id = $_POST["secondary_unit_id"];
+    $primary_unit_number = $_POST["primary_unit_number"];
+    $secondary_unit_number = $_POST["secondary_unit_number"];
     $unitdetail_status_id = $_POST["unitdetail_status_id"];
    
 
     }else{
         $unitdetail_id = $postData->unitdetail_id;
-        $unitdetail_number = $postData->unitdetail_number;
-         $unitdetail_unit_id = $postData->unitdetail_unit_id;
-         $unitdetail_status_id = $postData->unitdetail_status_id;
+        $primary_unit_id = $postData->primary_unit_id;
+        $secondary_unit_id = $postData->secondary_unit_id;
+        $primary_unit_number = $postData->primary_unit_number;
+        $secondary_unit_number = $postData->secondary_unit_number;
+        $unitdetail_status_id = $postData->unitdetail_status_id;
        
     }
 if ($unitdetail_id != "" && $unitdetail_status_id != "") {
 
      $condition_update = "";
-    if ($unitdetail_number != "") {
-        $condition_update = " unitdetail_number = '".$unitdetail_number."' ";
+    if ($secondary_unit_number != "") {
+        $condition_update = " unitdetail_number = '".$secondary_unit_number."' ";
     }
-    if ($unitdetail_unit_id != "") {
+    if ($primary_unit_id != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " unitdetail_unit_id = '".$unitdetail_unit_id."' ";
+        $condition_update .= " unitdetail_unit_id = '".$primary_unit_id."' ";
+    }
+    if ($secondary_unit_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " unit_unit_id = '".$secondary_unit_id."' ";
+    }
+    if ($primary_unit_number != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " unit_number = '".$primary_unit_number."' ";
+    }
+    if ($secondary_unit_number != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " unitdetail_number = '".$secondary_unit_number."' ";
     }
     if ($unitdetail_status_id != "") {
         if ($condition_update != "") {
