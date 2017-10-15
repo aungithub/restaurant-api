@@ -28,7 +28,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 $query = " SELECT * "
-        . " FROM res_position "
+        . " FROM res_position p INNER JOIN res_role r ON r.role_id = p.pos_role_id "
         . $conditions;
 
 $rs = $database->query($query);
@@ -40,6 +40,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $positions[$count]["pos_id"] = $row["pos_id"];
     $positions[$count]["pos_name"] = $row["pos_name"];
     $positions[$count]["pos_role_id"] = $row["pos_role_id"];
+    $positions[$count]["role_name"] = $row["role_name"];
     $positions[$count]["pos_status_id"] = $row["pos_status_id"];
    
     $count++;

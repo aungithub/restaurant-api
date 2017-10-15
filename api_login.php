@@ -28,7 +28,7 @@ if($user != "" && $pass !=""){
                                  or die("Error : MySQL cannot connect!");
                         
     
-    $query = "SELECT e.*, group_concat(r.role_front, ',', r.role_back) AS user_roles "
+   $query = "SELECT e.*, group_concat(r.role_front, ',', r.role_back) AS user_roles "
             ."FROM res_employee e "
             ." INNER JOIN res_position p ON p.pos_id = e.emp_pos_id "
             . " INNER JOIN res_role r ON r.role_id = p.pos_role_id "

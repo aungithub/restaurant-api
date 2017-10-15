@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -10,6 +13,9 @@ require 'config.php';
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+     $database->set_charset('utf8');
+ 
     
 
     $pro_id = "";
@@ -44,6 +50,39 @@ require 'config.php';
 }
 
 if ($pro_id != "" && $pro_name != "" && $pro_discount != "" && $pro_start != "" && $pro_end != "" && $pro_status_id != "") {
+
+    if ($pro_id != "" && $pro_status_id != "") {
+
+     $condition_update = "";
+    if ($pro_name != "") {
+        $condition_update = " pro_name = '".$pro_name."' ";
+    }
+    if ($pro_discount != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pro_discount = '".$pro_discount."' ";
+
+    if ($pro_start != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pro_start = '".$pro_start."' ";
+    }
+    if ($pro_end != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pro_end = '".$pro_end."' ";
+    }
+    }
+    if ($pro_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " pro_status_id = '".$pro_status_id."' ";
+    }
+    
     
    
     $query_check_promotion = "SELECT * FROM res_promotion WHERE pro_id = '".$pro_id."'";

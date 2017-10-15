@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -9,6 +12,8 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["username"], 
                             $db["local"]["password"], 
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+$database->set_charset('utf8');
 
 $emp_id = "";
 $emp_firstname = "";
@@ -41,6 +46,52 @@ if (!$postData) {
     $emp_status_id = $postData->emp_status_id;
 }
 
+
+if ($emp_id != "" && $emp_status_id != "") {
+
+     $condition_update = "";
+    if ($emp_firstname != "") {
+        $condition_update = " emp_firstname = '".$emp_firstname."' ";
+    }
+    if ($emp_lastname != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_lastname = '".$emp_lastname."' ";
+    }
+     if ($emp_user != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_user = '".$emp_user."' ";
+    }
+     if ($emp_pass != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_pass = '".$emp_pass."' ";
+    }
+     if ($emp_idcard != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_idcard = '".$emp_idcard."' ";
+    }
+    if ($emp_pos_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_pos_id = '".$emp_pos_id."' ";
+    }
+    if ($emp_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " emp_status_id = '".$emp_status_id."' ";
+    }
+
+
+
 if ($emp_id != "" && $emp_firstname != "" && $emp_lastname != "" && $emp_user != "" && $emp_pass != "" && $emp_idcard != "" && $emp_pos_id != "" && $emp_status_id != "") {
 
     $query_check_emp = "SELECT * FROM res_employee WHERE emp_id = '".$emp_id."'";
@@ -48,7 +99,7 @@ if ($emp_id != "" && $emp_firstname != "" && $emp_lastname != "" && $emp_user !=
 
     if ($result_check_emp->num_rows > 0) {
         $query = " UPDATE res_employee "
-            . " SET emp_firstname = '".$emp_firstname."', emp_lastname = '".$emp_lastname."', emp_user = '".$emp_user."', emp_pass = '".$emp_pass."',emp_idcard = '".$emp_idcard."',emp_pos_id = '".$emp_pos_id."', emp_status_id = '".$emp_status_id."'"
+           . " SET ".$condition_update." "
             . " WHERE emp_id = '".$emp_id."' ";
 
         if ($database->query($query)) {

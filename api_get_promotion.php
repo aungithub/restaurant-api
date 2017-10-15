@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $result["status"] = 200;
 $result["message"] = "Successful!";
@@ -8,23 +11,34 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["password"], 
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
+$database->set_charset('utf8');
+
+$conditions = "";
+$pro_id = null;
+if ($_GET["pro_id"] != null && $_GET["pro_id"] != 0) {
+    $pro_id = $_GET["pro_id"];
+    $conditions = " WHERE pro_id = '".$pro_id."' ";
+}
+
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $limit = $_GET["limit"];
     $offset = $_GET["offset"];
+     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
 $query = " SELECT * "
         . " FROM res_promotion "
-        . " LIMIT ".$offset.", ".$limit."";
+        . $conditions;
 
 $rs = $database->query($query);
 
 $count = 0;
 $promotion = array();
 while ($row = mysqli_fetch_assoc($rs)) {
-    
+    $promotion[$count]["pro_id"] = $row["pro_id"];
     $promotion[$count]["pro_name"] = $row["pro_name"];
     $promotion[$count]["pro_discount"] = $row["pro_discount"];
     $promotion[$count]["pro_start"] = $row["pro_start"];

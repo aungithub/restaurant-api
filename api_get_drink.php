@@ -37,6 +37,7 @@ $rs = $database->query($query);
 $count = 0;
 $drink = array();
 while ($row = mysqli_fetch_assoc($rs)) {
+    $drink[$count]["drink_id"] = $row["drink_id"];
     $drink[$count]["drink_name"] = $row["drink_name"];
     $drink[$count]["drink_number"] = $row["drink_number"];
     $drink[$count]["drink_price"] = $row["drink_price"];

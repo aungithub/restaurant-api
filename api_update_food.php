@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -11,7 +14,7 @@ require 'config.php';
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
-
+$database->set_charset('utf8');
 
 
     $food_id = "";
@@ -42,9 +45,35 @@ require 'config.php';
 }
 
 
-if ($food_id != "" && $food_name != "" && $food_price != "" && $food_kind_id != "" && $food_status_id != "") {
     
-   
+   if ($food_id != "" && $food_status_id != "" ) {
+
+   $condition_update = "";
+   if ($food_name != "") {
+        $condition_update = " food_name = '".$food_name."' ";
+    }
+    
+    }
+    if ($food_price != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " food_price = '".$food_price."' ";
+    }
+
+    if ($food_kind_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " food_kind_id = '".$food_kind_id."' ";
+    }
+
+    if ($food_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " food_status_id = '".$food_status_id."' ";
+    }
     
     
     $query_check_food = "SELECT * FROM res_food WHERE food_id = '".$food_id."'";
@@ -52,7 +81,7 @@ if ($food_id != "" && $food_name != "" && $food_price != "" && $food_kind_id != 
     
     if ($result_check_food->num_rows > 0) {
        $query = " UPDATE res_food "
-            . " SET food_id = '".$food_id."', food_name = '".$food_name."', food_price = '".$food_price."', food_kind_id = '".$food_kind_id."',food_status_id = '".$food_status_id."'"
+            . " SET ".$condition_update." "
             . " WHERE food_id = '".$food_id."' ";
 
         if ($database->query($query)) {

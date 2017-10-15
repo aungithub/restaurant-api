@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -12,6 +15,8 @@ require 'config.php';
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
 
 
     $role_id = "";
@@ -39,6 +44,34 @@ require 'config.php';
 
 
 if ($role_id != "" && $role_name != "" && $role_front != "" && $role_back != "" && $role_status_id != "") {
+
+    if ($role_id != "" && $role_status_id != "") {
+
+     $condition_update = "";
+    if ($role_name != "") {
+        $condition_update = " role_name = '".$role_name."' ";
+    }
+    if ($role_front != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " role_front = '".$role_front."' ";
+    }
+
+    if ($role_back != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " role_back = '".$role_back."' ";
+    }
+    
+    if ($role_status_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " role_status_id = '".$role_status_id."' ";
+    }
+    
     
     $query_check_role = "SELECT * FROM res_role WHERE role_id = '".$role_id."'";
     $result_check_role = $database->query($query_check_role);
@@ -46,7 +79,7 @@ if ($role_id != "" && $role_name != "" && $role_front != "" && $role_back != "" 
     
     if ($result_check_role->num_rows > 0) {
          $query = " UPDATE res_employee "
-            . " SET role_id = '".$role_id."', role_name = '".$role_name."', role_front = '".$role_front."', role_back = '".$role_back."',role_status_id = '".$role_status_id."'"
+            . " SET ".$condition_update." "
             . " WHERE role_id = '".$role_id."' ";
 
         if ($database->query($query)) {

@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(0);
+
 header("Content-Type: application/json; charset=UTF-8");
 $postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 
@@ -7,10 +10,10 @@ $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
 
-    $role_name = $_POST["name"];
-    $role_front = $_POST["front"];
-    $role_back = $_POST["back"];
-    $role_status = $_POST["status"];
+    $role_name = "";
+    $role_front = "";
+    $role_back = "";
+    $role_status = "";
 
 
     if(!$postData){
@@ -36,13 +39,10 @@ if ($role_name != "" && $role_front != "" && $role_back != "" && $role_status !=
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
     
    
-    $role_name = $_POST["name"];
-    $role_front = $_POST["front"];
-    $role_back = $_POST["back"];
-    $role_status = $_POST["status"];
-    
     $query_check_role = "SELECT * FROM res_role WHERE role_name = '".$role_name."'";
     $result_check_role = $database->query($query_check_role);
     
