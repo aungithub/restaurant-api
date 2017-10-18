@@ -29,7 +29,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 $query = " SELECT * "
         . " FROM res_position p INNER JOIN res_role r ON r.role_id = p.pos_role_id "
-        . $conditions;
+        . $conditions
+        . " ORDER BY pos_id ASC";
 
 $rs = $database->query($query);
 
@@ -46,6 +47,20 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
+$query_role = "SELECT * FROM res_role";
+
+$rs_role = $database->query($query_role);
+
+$count_role = 0;
+$roles = array();
+while ($row_role = mysqli_fetch_assoc($rs_role)) {
+    $roles[$count_role]["role_id"] = $row_role["role_id"];
+    $roles[$count_role]["role_name"] = $row_role["role_name"];
+
+    $count_role++;
+}
+
 $result["positions"] = $positions;
+$result["roles"] = $roles;
 
 echo json_encode($result);

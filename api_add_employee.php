@@ -59,7 +59,7 @@ if (!$postData) {
 }
 
 
-if ($firstname != "" && $lastname != "" && $idc != "" && $tel != "" && $tel_ext != "" && $user != ""  && $pass != "" && $position != "" && $status != "") {
+if ($firstname != "" && $lastname != "" && $idc != "" && $user != ""  && $pass != "" && $position != "" && $status != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -83,7 +83,7 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $tel != "" && $tel_ext 
                 . "VALUES( '".$firstname."', '".$lastname."', '".$idc."','".$user."', '".$pass."' , '".$position."', '".$status."')";
                 //คำสั่ง insert เก็ไว้ใน $query_insert_employee
 
-        if ($database->query($query_insert_employee)) {
+        /*if ($database->query($query_insert_employee)) {
 
              $query_insert_tel = "INSERT INTO emp_tel( tel_tel, tel_ext ,tel_status, tel_emp_id) "
                 . "VALUES( '".$tel."', '".$tel_ext."', '".$tel_status."', '".$database->insert_id."')";
@@ -94,7 +94,12 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $tel != "" && $tel_ext 
 
             $result["status"] = 200;
             $result["message"] = "Add successful!";//เพิ่มพนักงานสำเร็จ
-        } else {
+        }*/ 
+        if ($database->query($query_insert_employee)) {
+            $result["status"] = 200;
+            $result["message"] = "Add successful!";//เพิ่มพนักงานสำเร็จ
+        }
+        else {
             $result["status"] = 500;
             $result["message"] = "Error: Add employee not successful!";//เพิ่มพนักงานไม่สำเร็จ
         }

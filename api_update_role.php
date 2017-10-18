@@ -21,33 +21,34 @@ require 'config.php';
 
     $role_id = "";
     $role_name = "";
-    $role_front = "";
-    $role_back = "";
+    //$role_front = "";
+    //$role_back = "";
+    $role_back_pages_string = "";
     $role_status_id = "";
 
 
     if(!$postData){
     $role_id = $_POST["role_id"];
     $role_name = $_POST["role_name"];
-    $role_front = $_POST["role_front"];
-    $role_back = $_POST["role_back"];
+    //$role_front = $_POST["role_front"];
+    //$role_back = $_POST["role_back"];
+    $role_back = $_POST["role_back_pages_string"];
     $role_status_id = $_POST["role_status_id"];
 
     }else{
         $role_id = $postData->role_id;
         $role_name = $postData->role_name;
-         $role_front = $postData->role_front;
-         $role_back = $postData->role_back;
+         //$role_front = $postData->role_front;
+         //$role_back = $postData->role_back;
+        $role_back = $postData->role_back_pages_string;
          $role_status_id = $postData->role_status_id;
 
     }
 
 
-if ($role_id != "" && $role_name != "" && $role_front != "" && $role_back != "" && $role_status_id != "") {
+if ($role_id != "" && $role_name != "" && $role_status_id != "") {
 
-    if ($role_id != "" && $role_status_id != "") {
-
-     $condition_update = "";
+    $condition_update = "";
     if ($role_name != "") {
         $condition_update = " role_name = '".$role_name."' ";
     }
@@ -55,7 +56,13 @@ if ($role_id != "" && $role_name != "" && $role_front != "" && $role_back != "" 
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " role_front = '".$role_front."' ";
+        $condition_update .= " role_front = 'index,".$role_front."' ";
+    }
+    else {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " role_front = 'index'";
     }
 
     if ($role_back != "") {
@@ -78,7 +85,7 @@ if ($role_id != "" && $role_name != "" && $role_front != "" && $role_back != "" 
     
     
     if ($result_check_role->num_rows > 0) {
-         $query = " UPDATE res_employee "
+         $query = " UPDATE res_role "
             . " SET ".$condition_update." "
             . " WHERE role_id = '".$role_id."' ";
 

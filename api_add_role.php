@@ -11,28 +11,31 @@ $result["message"] = "Error: Bad request!";
 
 
     $role_name = "";
-    $role_front = "";
-    $role_back = "";
+    //$role_front = "";
+    //$role_back = "";
+    $role_back_pages_string = "";
     $role_status = "";
 
 
     if(!$postData){
 
     $role_name = $_POST["name"];
-    $role_front = $_POST["front"];
-    $role_back = $_POST["back"];
+    //$role_front = $_POST["front"];
+    //$role_back = $_POST["back"];
+    $role_back_pages_string = $_POST["role_back_pages_string"];
     $role_status = $_POST["status"];
 
     }else{
         $role_name = $postData->name;
-         $role_front = $postData->front;
-         $role_back = $postData->back;
+         //$role_front = $postData->front;
+         //$role_back = $postData->back;
+        $role_back_pages_string = $postData->role_back_pages_string;
          $role_status = $postData->status;
 
     }
 
 
-if ($role_name != "" && $role_front != "" && $role_back != "" && $role_status != "") {
+if ($role_name != "" && $role_back_pages_string != "" && $role_status != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -52,14 +55,14 @@ if ($role_name != "" && $role_front != "" && $role_back != "" && $role_status !=
     } else {
     
         $query_insert_role = "INSERT INTO res_role(role_name,role_front,role_back,role_status_id) "
-                . "VALUES('".$role_name."','".$role_front."','".$role_back."','".$role_status."')";
+                . "VALUES('".$role_name."','index','".$role_back_pages_string."','".$role_status."')";
 
         if ($database->query($query_insert_role)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {
             $result["status"] = 500;
-            $result["message"] = "Error: Add employee not successful!";
+            $result["message"] = "Error: Add role not successful!";
         }
     }
 }
