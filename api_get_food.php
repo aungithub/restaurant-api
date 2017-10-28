@@ -28,9 +28,11 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_food "
-         . $conditions;
+ $query = " SELECT * "
+        . " FROM res_food f "
+        . " LEFT JOIN res_kind k ON k.kind_id = f.food_kind_id " 
+        . $conditions
+        . " ORDER BY f.food_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
@@ -40,13 +42,28 @@ while ($row = mysqli_fetch_assoc($rs)) {
 
      $food[$count]["food_id"] = $row["food_id"];
     $food[$count]["food_name"] = $row["food_name"];
-    $food[$count]["food_price"] = $row["food_price"];
      $food[$count]["food_kind_id"] = $row["food_kind_id"];
+      $food[$count]["kind_name"] = $row["kind_name"];
+      $food[$count]["food_price"] = $row["food_price"];
     $food[$count]["food_status_id"] = $row["food_status_id"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }
 
+$query_kind = "SELECT * FROM res_kind";
+
+$rs_kind = $database->query($query_kind);
+
+$count_kind = 0;
+$kind = array();
+while ($row_kind = mysqli_fetch_assoc($rs_kind)) {
+    $kind[$count_kind]["kind_id"] = $row_kind["kind_id"];
+    $kind[$count_kind]["kind_name"] = $row_kind["kind_name"];
+
+    $count_kind++;
+}
+
 $result["food"] = $food;
+$result["kind"] = $kind;
 
 echo json_encode($result);

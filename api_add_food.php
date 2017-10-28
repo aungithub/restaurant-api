@@ -9,32 +9,32 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
- $name = "";
-    $price ="";
-    $kind = "";
-    $status = "";
+    $food_name = "";
+    $food_kind_id = "";
+     $food_price ="";
+    $food_status_id = "";
 
 
     if (!$postData) {
     // ส่งจาก RESTlet
-   $name = $_POST["name"];
-    $price =$_POST["price"];
-    $kind = $_POST["kind"];
-    $status = $_POST["status"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   $food_name = $_POST["food_name"];
+    $food_kind_id = $_POST["food_kind_id"];
+     $food_price =$_POST["food_price"];
+    $food_status_id = $_POST["food_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
    
 
 } else {
     // ส่งจากหน้าเว็บ AngularJS
-    $name = $postData->name;
-    $price = $postData->price;
-    $kind = $postData->kind;
-    $status = $postData->status;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+    $food_name = $postData->food_name;
+    $food_kind_id = $postData->food_kind_id; 
+    $food_price = $postData->food_price;
+    $food_status_id = $postData->food_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
    
 
 }
 
 
-if ($name != "" && $price != "" && $_POST["kind"] != "" && $kind != "" && $status != "") {
+if ($food_name != ""   && $food_kind_id != ""&& $food_price != "" && $food_status_id != "") {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -47,7 +47,7 @@ if ($name != "" && $price != "" && $_POST["kind"] != "" && $kind != "" && $statu
    
     
     
-    $query_check_food = "SELECT * FROM res_food WHERE food_name = '".$name."'";
+    $query_check_food = "SELECT * FROM res_food WHERE food_name = '".$food_name."'";
     $result_check_food = $database->query($query_check_food);
     
     if ($result_check_food->num_rows > 0) {
@@ -55,8 +55,8 @@ if ($name != "" && $price != "" && $_POST["kind"] != "" && $kind != "" && $statu
         $result["message"] = "Error: Add food not successful! This food is already exist in the system.";
     } else {
     
-        $query_insert_food = "INSERT INTO res_food(food_name, food_price, food_kind_id, food_status_id) "
-                . "VALUES('".$name."', '".$price."', '".$kind."', '".$status."')";
+        $query_insert_food = "INSERT INTO res_food(food_name, food_kind_id, food_price, food_status_id) "
+                . "VALUES('".$food_name."', '".$food_kind_id."', '".$food_price."', '".$food_status_id."')";
 
         if ($database->query($query_insert_food)) {
             $result["status"] = 200;

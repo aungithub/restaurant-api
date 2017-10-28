@@ -19,16 +19,18 @@ $database->set_charset('utf8');
 
     $food_id = "";
     $food_name ="";
+     $food_kind_id = "";
     $food_price = "";
-    $food_kind_id = "";
+   
     $food_status_id = "";
 
     if (!$postData) {
     // ส่งจาก RESTlet
    $food_id = $_POST["food_id"];
     $food_name =$_POST["food_name"];
-    $food_price = $_POST["food_price"];
     $food_kind_id = $_POST["food_kind_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+    $food_price = $_POST["food_price"];
+    
     $food_status_id = $_POST["food_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
    
 
@@ -36,8 +38,9 @@ $database->set_charset('utf8');
     // ส่งจากหน้าเว็บ AngularJS
     $food_id = $postData->food_id;
     $food_name = $postData->food_name;
+     $food_kind_id = $postData->food_kind_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $food_price = $postData->food_price;
-    $food_kind_id = $postData->food_kind_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   
     $food_status_id = $postData->food_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
    
 
@@ -51,15 +54,7 @@ $database->set_charset('utf8');
    $condition_update = "";
    if ($food_name != "") {
         $condition_update = " food_name = '".$food_name."' ";
-    }
-    
-    }
-    if ($food_price != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " food_price = '".$food_price."' ";
-    }
+    } 
 
     if ($food_kind_id != "") {
         if ($condition_update != "") {
@@ -67,6 +62,16 @@ $database->set_charset('utf8');
         }
         $condition_update .= " food_kind_id = '".$food_kind_id."' ";
     }
+    
+
+    if ($food_price != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " food_price = '".$food_price."' ";
+    }
+
+   
 
     if ($food_status_id != "") {
         if ($condition_update != "") {
@@ -93,4 +98,5 @@ $database->set_charset('utf8');
         $result["message"] = "Cannot find this food!";
     }
 }
+
 echo json_encode($result);

@@ -17,28 +17,36 @@ require 'config.php';
     $database->set_charset('utf8');
     
     $drink_name = "";
-    $drink_number = "";
+    $drink_vendor_id = "";
+    $drink_number = ""; 
+    $drink_unit_id = "";
     $drink_price = "";
     $drink_status_id  = "";
-    $drink_unit_id = "";
+   
 
 
     if (!$postData) {
     // ส่งจาก RESTlet
+    $drink_id = $_POST["drink_id"];
    $drink_name = $_POST["drink_name"];
-    $drink_number = $_POST["drink_number"];
+   $drink_vendor_id = $_POST["drink_vendor_id"];
+    $drink_number = $_POST["drink_number"]; 
+    $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $drink_price = $_POST["drink_price"];
     $drink_status_id = $_POST["drink_status_id"];
-    $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   
    
 
 } else {
     // ส่งจากหน้าเว็บ AngularJS
+     $drink_id = $postData->drink_id;
     $drink_name = $postData->drink_name;
-    $drink_number = $postData->drink_number;
+    $drink_vendor_id = $postData->drink_vendor_id;
+    $drink_number = $postData->drink_number; 
+    $drink_unit_id = $postData->drink_unit_id;
     $drink_price = $postData->drink_price;
     $drink_status_id = $postData->drink_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-     $drink_unit_id = $postData->drink_unit_id;
+   
 
 }
 
@@ -50,23 +58,35 @@ if ( $drink_id != "" && $drink_status_id != "") {
     if ($drink_name != "") {
         $condition_update = " drink_name = '".$drink_name."' ";
     }
+    if ($drink_vendor_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_vendor_id = '".$drink_vendor_id."' ";
+    }
     if ($drink_number != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
         $condition_update .= " drink_number = '".$drink_number."' ";
     }
-    if ($drink_price != "") {
+    if ($drink_unit_id != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " drink_price = '".$drink_price."' ";
+        $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
     }
-    if ($drink_unit_id != "") {
+    if ($drink_price != "") {
         if ($condition_update != " ") {
             $condition_update .= ",";
         }
-        $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
+         $condition_update .= " drink_price = '".$drink_price."' ";
+    }
+    if ($drink_status_id != "") {
+        if ($condition_update != " ") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_status_id = '".$drink_status_id."' ";
     }
 
 

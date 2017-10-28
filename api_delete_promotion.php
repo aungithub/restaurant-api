@@ -8,17 +8,15 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
-require 'config.php';
+    require 'config.php';
+ 
     $database = mysqli_connect($db["local"]["host"], 
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
-
-     $database->set_charset('utf8');
- 
     
-
-   
+   $database->set_charset('utf8');
+    
     $pro_name = "";
     $pro_discount = "";
     $pro_start    = "";
@@ -49,57 +47,17 @@ require 'config.php';
 
 }
 
-
-
-    if ($pro_id != "" && $pro_status_id != "") {
-
-     $condition_update = "";
-    if ($pro_name != "") {
-        $condition_update = " pro_name = '".$pro_name."' ";
-    }
-    if ($pro_discount != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " pro_discount = '".$pro_discount."' ";
-
-    if ($pro_start != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " pro_start = '".$pro_start."' ";
-    }
-    if ($pro_end != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " pro_end = '".$pro_end."' ";
-    }
-    }
-    if ($pro_status_id != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " pro_status_id = '".$pro_status_id."' ";
-    }
-    
-    
    
-    $query_check_promotion = "SELECT * FROM res_promotion WHERE pro_id = '".$pro_id."'";
-    $result_check_promotion = $database->query($query_check_promotion);
-    
-    if ($result_check_promotion->num_rows > 0) {
-       $query = " UPDATE res_promotion "
-            . " SET ".$condition_update.""
-            . " WHERE pro_id = '".$pro_id."' ";
+    $query_delete_promotion = "DELETE FROM res_promotion WHERE pro_id = '".$pro_id."'";
+   
 
-        if ($database->query($query)) {
+   
+        if ($database->query($query_delete_promotion)) {
             $result["status"] = 200;
-            $result["message"] = "Update promotion success!";
+            $result["message"] = "Delete successful!";
+        } else {
+            $result["status"] = 500;
+            $result["message"] = "Error: Delete promotion not successful!";
         }
-    } else {
-        $result["status"] = 404;
-        $result["message"] = "Cannot find this promotion!";
-    }
-}
+    
 echo json_encode($result);

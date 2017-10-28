@@ -45,12 +45,11 @@ if ($table_id != "" && $table_status_id != "" ) {
         $condition_update = " table_number = '".$table_number."' ";
     }
     
-    }
     if ($table_status_id != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " table_status_id = '".$table_status_id."' ";
+        $condition_update .= " table_status_id = '".$table_status_id."'";
     }
     
     
@@ -72,4 +71,5 @@ if ($table_id != "" && $table_status_id != "" ) {
         $result["message"] = "Cannot find this table!";
     }
 }
+
 echo json_encode($result);

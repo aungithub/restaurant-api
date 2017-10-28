@@ -9,7 +9,7 @@ $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
 
-     $id = "";
+    $id = "";
     $number = "";
     $status = "";
    
@@ -17,20 +17,20 @@ $result["message"] = "Error: Bad request!";
 
 if(!$postData){
 
-    $id = $_POST["id"];
+    
     $number = $_POST["number"];
     $status = $_POST["status"];
    
 
     }else{
-        $id = $postData->id;
+        
          $number = $postData->number;
          $status = $postData->status;
        
     }
 
 
-if ($id != "" && $number != "" && $status != "" ) {
+if ( $number != "" && $status != "" ) {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
