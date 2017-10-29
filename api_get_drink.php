@@ -31,7 +31,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
  
  $query = " SELECT * "
         . " FROM res_drink d " 
-         . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
+        . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
         . " LEFT JOIN res_vendor v ON v.vendor_id = d.drink_vendor_id " 
         . $conditions
         . " ORDER BY d.drink_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล

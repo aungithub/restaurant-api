@@ -48,9 +48,22 @@ $result["message"] = "Error: Bad request!";
 }
 
    
-    $query_delete_food = "DELETE FROM res_food WHERE food_id = '".$food_id."'";
    
-
+   
+  $query_check_kind = "SELECT * FROM res_kind WHERE kind_id = '".$food_kind_id."'";
+    $result_check_kind = $database->query($query_check_kind);
+    
+    if ($result_check_kind->num_rows < 0) { 
+        $query_delete_kind = "DELETE FROM res_kind WHERE kind_id = '".$kind_id."'";
+      
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update food success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this food!";
+    }
    
         if ($database->query($query_delete_food)) {
             $result["status"] = 200;

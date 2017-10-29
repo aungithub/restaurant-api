@@ -8,59 +8,104 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
-    require 'config.php';
- 
+require 'config.php';
     $database = mysqli_connect($db["local"]["host"], 
                                 $db["local"]["username"], 
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+    $database->set_charset('utf8');
     
-   $database->set_charset('utf8');
-    
-    $drink_id = "";
     $drink_name = "";
     $drink_vendor_id = "";
-    $drink_number = "";
+    $drink_number = ""; 
+    $drink_unit_id = "";
     $drink_price = "";
     $drink_status_id  = "";
-    $drink_unit_id = "";
+   
 
 
     if (!$postData) {
     // ส่งจาก RESTlet
     $drink_id = $_POST["drink_id"];
    $drink_name = $_POST["drink_name"];
-    $drink_vendor_id = $_POST["drink_vendor_id"];
-    $drink_number = $_POST["drink_number"];
-     $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
+   $drink_vendor_id = $_POST["drink_vendor_id"];
+    $drink_number = $_POST["drink_number"]; 
+    $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $drink_price = $_POST["drink_price"];
     $drink_status_id = $_POST["drink_status_id"];
+   
    
 
 } else {
     // ส่งจากหน้าเว็บ AngularJS
-    $drink_id = $postData->drink_id;
+     $drink_id = $postData->drink_id;
     $drink_name = $postData->drink_name;
-     $drink_vendor_id = $postData->drink_vendor_id;
-    $drink_number = $postData->drink_number;
-     $drink_unit_id = $postData->drink_unit_id;
+    $drink_vendor_id = $postData->drink_vendor_id;
+    $drink_number = $postData->drink_number; 
+    $drink_unit_id = $postData->drink_unit_id;
     $drink_price = $postData->drink_price;
     $drink_status_id = $postData->drink_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    
+   
 
 }
 
-   
-    $query_delete_drink = "DELETE FROM res_drink WHERE drink_id = '".$drink_id."'";
-   
 
-   
-        if ($database->query($query_delete_drink)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete drink not successful!";
-        }
+
+if ( $drink_id != "" && $drink_status_id != "") {
     
+    $condition_update = "";
+    if ($drink_name != "") {
+        $condition_update = " drink_name = '".$drink_name."' ";
+    }
+    if ($drink_vendor_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_vendor_id = '".$drink_vendor_id."' ";
+    }
+    if ($drink_number != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_number = '".$drink_number."' ";
+    }
+    if ($drink_unit_id != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
+    }
+    if ($drink_price != "") {
+        if ($condition_update != " ") {
+            $condition_update .= ",";
+        }
+         $condition_update .= " drink_price = '".$drink_price."' ";
+    }
+    if ($drink_status_id != "") {
+        if ($condition_update != " ") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_status_id = '".$drink_status_id."' ";
+    }
+
+
+  
+    $query_check_unit = "SELECT * FROM res_drink WHERE drink_unit_id = '".$unit_id."'";
+    $result_check_unit = $database->query($query_check_unit);
+
+    if ($result_check_unit->num_rows < 0) {
+        $query = " DELETE res_unit "
+            . " SET ".$condition_update.""
+            . " WHERE unit_id = '".$unit_id."' ";
+
+        if ($database->query($query)) {
+            $result["status"] = 200;
+            $result["message"] = "Update  success!";
+        }
+    } else {
+        $result["status"] = 404;
+        $result["message"] = "Cannot find this drink!";
+    }
+}
 echo json_encode($result);
