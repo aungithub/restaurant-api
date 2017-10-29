@@ -53,6 +53,7 @@ if ($name != "" && $discount != "" && $start != "" && $end != "" && $status != "
         $result["status"] = 500;
         $result["message"] = "Error: Add promotion not successful! This promotion is already exist in the system.";
     } else {
+
     
         $query_insert_promotion = "INSERT INTO res_promotion(pro_name, pro_discount, pro_start, pro_end, pro_status_id) "
                 . "VALUES('".$name."', '".$discount."', '".$start."', '".$end."', '".$status."')";
