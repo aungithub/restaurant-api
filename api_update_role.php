@@ -46,7 +46,7 @@ require 'config.php';
     }
 
 
-if ($role_id != "" && $role_name != "" && $role_status_id != "") {
+if ($role_id != ""  && $role_status_id != "") {
 
     $condition_update = "";
     if ($role_name != "") {
