@@ -77,13 +77,13 @@ if ( $drink_id != "" && $drink_status_id != "") {
         $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
     }
     if ($drink_price != "") {
-        if ($condition_update != " ") {
+        if ($condition_update != "") {
             $condition_update .= ",";
         }
          $condition_update .= " drink_price = '".$drink_price."' ";
     }
     if ($drink_status_id != "") {
-        if ($condition_update != " ") {
+        if ($condition_update != "") {
             $condition_update .= ",";
         }
         $condition_update .= " drink_status_id = '".$drink_status_id."' ";
