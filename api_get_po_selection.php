@@ -17,7 +17,7 @@ $database = mysqli_connect($db["local"]["host"],
   
 $database->set_charset('utf8');
 
-$query = " SELECT * FROM res_drink";
+$query = " SELECT * FROM res_drink WHERE drink_status_id = 1";
 
 $rs = $database->query($query);
 
@@ -31,7 +31,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
-$query = " SELECT * FROM res_unit";
+$query = " SELECT * FROM res_unit WHERE unit_status_id = 1";
 
 $rs = $database->query($query);
 
@@ -45,7 +45,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
-$query = " SELECT * FROM res_vendor";
+$query = " SELECT * FROM res_vendor WHERE vendor_status_id = 1";
 
 $rs = $database->query($query);
 

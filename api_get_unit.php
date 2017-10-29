@@ -18,6 +18,10 @@ if ($_GET["unit_id"] != null && $_GET["unit_id"] != 0) {
     $conditions = " WHERE unit_id = '".$unit_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE unit_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

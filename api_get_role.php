@@ -20,6 +20,10 @@ if ($_GET["role_id"] != null && $_GET["role_id"] != 0) {
     $conditions = " WHERE role_id = '".$role_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE role_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

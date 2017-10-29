@@ -20,6 +20,10 @@ if ($_GET["vendor_id"] != null && $_GET["vendor_id"] != 0) {
     $conditions = " WHERE vendor_id = '".$vendor_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE vendor_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

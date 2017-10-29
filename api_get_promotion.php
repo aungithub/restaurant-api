@@ -20,6 +20,9 @@ if ($_GET["pro_id"] != null && $_GET["pro_id"] != 0) {
     $conditions = " WHERE pro_id = '".$pro_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE pro_status_id = 1 ";
+}
 
 $limit = 9999999;
 $offset = 0;

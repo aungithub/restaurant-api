@@ -20,6 +20,10 @@ if ($_GET["emp_id"] != null && $_GET["emp_id"] != 0) {
     $conditions = " WHERE emp_id = '".$emp_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE emp_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

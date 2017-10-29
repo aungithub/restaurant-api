@@ -20,6 +20,10 @@ if ($_GET["kind_id"] != null && $_GET["kind_id"] != 0) {
     $conditions = " WHERE kind_id = '".$kind_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE kind_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

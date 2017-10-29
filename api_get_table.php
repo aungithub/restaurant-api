@@ -20,6 +20,10 @@ if ($_GET["table_id"] != null && $_GET["table_id"] != 0) {
     $conditions = " WHERE table_id = '".$table_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE table_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

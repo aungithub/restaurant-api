@@ -20,6 +20,10 @@ if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
     $conditions = " WHERE drink_id = '".$drink_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE drink_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {

@@ -20,6 +20,10 @@ if ($_GET["food_id"] != null && $_GET["food_id"] != 0) {
     $conditions = " WHERE food_id = '".$food_id."' ";
 }
 
+if ($conditions == "") {
+    $conditions = " WHERE food_status_id = 1 ";
+}
+
 $limit = 9999999;
 $offset = 0;
 if ($_GET["limit"] != null && $_GET["offset"] != null) {
