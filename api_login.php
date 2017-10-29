@@ -44,6 +44,8 @@ if($user != "" && $pass !=""){
             $result["status"] = 200;
             $result["message"] = "Login successfull!";         
             $result["roles"] = $row['user_roles'];
+            $result["emp_id"] = $row['emp_id'];
+            $result["emp_pos_id"] = $row['emp_pos_id'];
         }
     }
     
