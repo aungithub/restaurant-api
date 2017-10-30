@@ -18,6 +18,23 @@ $drink_id = null;
 if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
     $drink_id = $_GET["drink_id"];
     $conditions = " WHERE drink_id = '".$drink_id."' ";
+
+    $query_vendor_drink = "SELECT * FROM res_vendor v "
+                    . " LEFT JOIN res_drink_vendor dv ON dv.vendor_id = v.vendor_id "
+                    . " WHERE dv.drink_id = '".$drink_id."'";
+
+    $rs_vendor_drink = $database->query($query_vendor_drink);
+
+    $count = 0;
+    $vendor_drink = array();
+    while ($row_vendor_drink = mysqli_fetch_assoc($rs_vendor_drink)) {
+        $vendor_drink[$count]["vendor_id"] = $row_vendor_drink["vendor_id"];
+        $vendor_drink[$count]["vendor_name"] = $row_vendor_drink["vendor_name"];
+        $vendor_drink[$count]["price"] = $row_vendor_drink["price"];
+
+        $count++;
+    }
+
 }
 
 if ($conditions == "") {
@@ -38,7 +55,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
         . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
         . " LEFT JOIN res_vendor v ON v.vendor_id = d.drink_vendor_id " 
         . $conditions
-        . " ORDER BY d.drink_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY d.drink_number ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 
 $rs = $database->query($query);
@@ -90,5 +107,6 @@ while ($row_vendor = mysqli_fetch_assoc($rs_vendor)) {
 $result["drink"] = $drink;
 $result["unit"] = $unit;
 $result["vendor"] = $vendor;
+$result["vendor_drink"] = $vendor_drink;
 
 echo json_encode($result);

@@ -10,10 +10,9 @@ $result["message"] = "Error: Bad request!";
 
     $drink_id = "";
     $drink_name = "";
-    $drink_vendor_id = "";
+    $drink_vendor_price = "";
     $drink_number = "";
      $drink_unit_id = "";
-    $drink_price  = "";
     $drink_status_id = "";
    
 
@@ -21,10 +20,9 @@ $result["message"] = "Error: Bad request!";
     if (!$postData) {
     // ส่งจาก RESTlet
     $drink_name = $_POST["drink_name"];
-     $drink_vendor_id = $_POST["drink_vendor_id"];
+     $drink_vendor_price = $_POST["drink_vendor_price"];
     $drink_number = $_POST["drink_number"];
     $drink_unit_id = $_POST["drink_unit_id"];
-    $drink_price = $_POST["drink_price"];
     $drink_status_id = $_POST["drink_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     
    
@@ -32,17 +30,15 @@ $result["message"] = "Error: Bad request!";
 } else {
     // ส่งจากหน้าเว็บ AngularJS
     $drink_name = $postData->drink_name;
-     $drink_vendor_id = $postData->drink_vendor_id;
+     $drink_vendor_price = $postData->drink_vendor_price;
     $drink_number = $postData->drink_number;
      $drink_unit_id = $postData->drink_unit_id;
 
-    $drink_price = $postData->drink_price;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
      $drink_status_id = $postData->drink_status_id;
 
 }
 
-
-if ( $drink_name != "" && $drink_vendor_id != "" && $drink_number != "" && $drink_unit_id != "" && $drink_price != "" && $drink_status_id != "" ) {
+if ( $drink_name != "" && count($drink_vendor_price) > 0 && $drink_number != "" && $drink_unit_id != "" && $drink_status_id != "" ) {
     require 'config.php';
  
     $database = mysqli_connect($db["local"]["host"], 
@@ -61,10 +57,19 @@ if ( $drink_name != "" && $drink_vendor_id != "" && $drink_number != "" && $drin
         $result["status"] = 500;
         $result["message"] = "Error: Add drink not successful! This drink is already exist in the system.";
     } else {
-       $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_vendor_id, drink_number, drink_unit_id, drink_price, drink_status_id )"
-                . "VALUES( '".$drink_name."', '".$drink_vendor_id."', '".$drink_number."', '".$drink_unit_id."', '".$drink_price."', '".$drink_status_id."' )";
+       $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_number, drink_unit_id, drink_status_id )"
+                . "VALUES( '".$drink_name."', '".$drink_number."', '".$drink_unit_id."', '".$drink_status_id."' )";
 
         if ($database->query($query_insert_drink)) {
+
+            $drink_id = $database->insert_id;
+
+            foreach ($drink_vendor_price as $obj) {
+                $query = "INSERT INTO res_drink_vendor(drink_id, vendor_id, price) VALUES('".$drink_id."', '".$obj->vendor_id."', '".$obj->price."');";
+
+                $database->query($query);
+            }
+
             $result["status"] = 200;
             $result["message"] = "Add successful!";
         } else {
