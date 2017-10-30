@@ -42,13 +42,13 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["dp_status_id"] = $row["dp_status_id"];
 
     if ($row["dp_approved_by"] != null && $row["dp_approval_status"] == 1) {
-        $drinkPOs[$count]["dp_approve_status"] = "อนุมัติ";
+        $drinkPOs[$count]["dp_approve_status"] = "พิจารณาแล้ว";
         $drinkPOs[$count]["dp_approved"] = true;
     } else if ($row["dp_rejected_by"] != null && $row["dp_approval_status"] == 0) {
-        $drinkPOs[$count]["dp_approve_status"] = "ไม่อนุมัติ";
-        $drinkPOs[$count]["dp_approved"] = true;
+        $drinkPOs[$count]["dp_approve_status"] = "ไม่พิจารณา";
+        $drinkPOs[$count]["dp_approved"] = false;
     } else {
-        $drinkPOs[$count]["dp_approve_status"] = "อยู่ระหว่างอนุมัติ";
+        $drinkPOs[$count]["dp_approve_status"] = "อยู่ระหว่างการพิจารณา";
         $drinkPOs[$count]["dp_approved"] = false;
     }
     

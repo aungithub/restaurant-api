@@ -32,7 +32,7 @@ if($user != "" && $pass !=""){
             ."FROM res_employee e "
             ." INNER JOIN res_position p ON p.pos_id = e.emp_pos_id "
             . " INNER JOIN res_role r ON r.role_id = p.pos_role_id "
-            . "WHERE emp_user ='".$user."' AND emp_pass = '".$pass."'";
+            . "WHERE emp_user ='".$user."' AND emp_pass = '".$pass."'";//เช็คusernamepassว่ามีในระบบไหมพร้อมทั้งตำแหน่งงานและสิท
     
     $rs = $database->query($query);
     
