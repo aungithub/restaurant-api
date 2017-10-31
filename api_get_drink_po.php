@@ -70,6 +70,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
     $rs = $database->query($query);
 
     if ($rs->num_rows > 0) {
+        $isRemaining = false;
         $count = 0;
         $drinkPODetails = array();
 
@@ -83,13 +84,22 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
             $drinkPODetails[$count]["unit_price"] = $row["dpd_unit_price"];
             $drinkPODetails[$count]["receipt_by"] = $row["dpd_receipt_by"];
             $drinkPODetails[$count]["receipt_number"] = $row["dpd_receipt_number"];
+            $drinkPODetails[$count]["old_receipt_number"] = $row["dpd_receipt_number"];
             $drinkPODetails[$count]["receipt_remaining_number"] = $row["dpd_receipt_remaining_number"];
             $drinkPODetails[$count]["drink_id"] = $row["drink_id"];
             $drinkPODetails[$count]["drink_number"] = $row["drink_number"];
             $drinkPODetails[$count]["drink_name"] = $row["drink_name"];
-            
+            $drinkPODetails[$count]["is_remaining"] = $isRemaining;
+
+            if ($row["dpd_number"] > $row["dpd_receipt_number"]) {
+                $isRemaining = true; // ถ้าจำนวนที่สั่ง มากกว่าจำนวนที่รับ (ยังรับไม่ครบ) จะบอกว่าใบนี้ยังรับไม่ครบ
+            }
+
             $count++;
         }
+
+        $drinkPODetails[0]["is_remaining"] = $isRemaining;
+
         $result["drinkPODetails"] = $drinkPODetails;
     }
 }

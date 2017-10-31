@@ -57,8 +57,13 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
                 if ($rs->num_rows > 0) {
                     $rs = mysqli_fetch_assoc($rs);
 
+                    $old_receipt_number = 0;
+                    if ($obj->old_receipt_number != null) {
+                        $old_receipt_number = $obj->old_receipt_number;
+                    }
+
                     $query = "UPDATE res_drink "
-                            ." SET drink_number = ".($rs["drink_number"] + $receipt_number)." "
+                            ." SET drink_number = ".(($rs["drink_number"] - $old_receipt_number) + $receipt_number)." "
                             ." WHERE drink_id = ".$obj->drink_id."";
 
                     $database->query($query);
