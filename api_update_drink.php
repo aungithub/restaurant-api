@@ -19,6 +19,7 @@ require 'config.php';
     $drink_name = "";
     $drink_vendor_price = "";
     $drink_number = ""; 
+    $drink_order_point = "";
     $drink_unit_id = "";
     $drink_price = "";
     $drink_status_id  = "";
@@ -28,9 +29,10 @@ require 'config.php';
     if (!$postData) {
     // ส่งจาก RESTlet
     $drink_id = $_POST["drink_id"];
-   $drink_name = $_POST["drink_name"];
-   $drink_vendor_price = $_POST["drink_vendor_price"];
+    $drink_name = $_POST["drink_name"];
+    $drink_vendor_price = $_POST["drink_vendor_price"];
     $drink_number = $_POST["drink_number"]; 
+    $drink_order_point = $_POST["drink_order_point"]; 
     $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $drink_price = $_POST["drink_price"];
     $drink_status_id = $_POST["drink_status_id"];
@@ -39,10 +41,11 @@ require 'config.php';
 
 } else {
     // ส่งจากหน้าเว็บ AngularJS
-     $drink_id = $postData->drink_id;
+    $drink_id = $postData->drink_id;
     $drink_name = $postData->drink_name;
     $drink_vendor_price = $postData->drink_vendor_price;
     $drink_number = $postData->drink_number; 
+    $drink_order_point = $postData->drink_order_point;
     $drink_unit_id = $postData->drink_unit_id;
     $drink_price = $postData->drink_price;
     $drink_status_id = $postData->drink_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
@@ -69,6 +72,12 @@ if ( $drink_id != "" && $drink_status_id != "") {
             $condition_update .= ",";
         }
         $condition_update .= " drink_number = '".$drink_number."' ";
+    }
+    if ($drink_order_point != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " drink_order_point = '".$drink_order_point."' ";
     }
     if ($drink_unit_id != "") {
         if ($condition_update != "") {

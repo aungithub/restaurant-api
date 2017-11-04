@@ -50,12 +50,12 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
  
- $query = " SELECT * "
+ $query = " SELECT *, (drink_order_point > drink_number) AS is_less "
         . " FROM res_drink d " 
         . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
         . " LEFT JOIN res_vendor v ON v.vendor_id = d.drink_vendor_id " 
         . $conditions
-        . " ORDER BY d.drink_number ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY is_less DESC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 
 $rs = $database->query($query);
@@ -68,10 +68,12 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $drink[$count]["drink_vendor_id"] = $row["drink_vendor_id"];
     $drink[$count]["vendor_name"] = $row["vendor_name"];
     $drink[$count]["drink_number"] = $row["drink_number"]; 
+    $drink[$count]["drink_order_point"] = $row["drink_order_point"]; 
     $drink[$count]["drink_unit_id"] = $row["drink_unit_id"];
     $drink[$count]["unit_name"] = $row["unit_name"];
     $drink[$count]["drink_price"] = $row["drink_price"];
     $drink[$count]["drink_status_id"] = $row["drink_status_id"];
+    $drink[$count]["is_less"] = $row["is_less"];
 
     $count++;
 }
