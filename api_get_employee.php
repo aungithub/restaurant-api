@@ -37,8 +37,9 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
  $query = " SELECT * "
         . " FROM res_employee e "
         . " LEFT JOIN res_position pos ON pos.pos_id = e.emp_pos_id " 
+        . " LEFT JOIN emp_tel t ON t.tel_emp_id = e.emp_id "
         . $conditions
-        . " ORDER BY e.emp_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " GROUP BY e.emp_id ORDER BY e.emp_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);//เก็บผลที่ได้จากการselectไว้ใน $rs :$database->คือการเรียกใช้คำสั่ง จากตัวอย่างคือเรียกใช้คำสั่ง query 
 $count = 0;//ใช้นับค่าอาร์เรย์
@@ -51,6 +52,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $employees[$count]["emp_user"] = $row["emp_user"];
     $employees[$count]["emp_pass"] = $row["emp_pass"];
     $employees[$count]["emp_idcard"] = $row["emp_idcard"];
+    $employees[$count]["emp_tel"] = $row["tel_tel"];
     $employees[$count]["emp_pos_id"] = $row["emp_pos_id"];
     $employees[$count]["emp_pos_name"] = $row["pos_name"];
     $employees[$count]["emp_status_id"] = $row["emp_status_id"];

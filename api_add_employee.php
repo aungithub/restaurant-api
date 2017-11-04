@@ -83,10 +83,10 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $user != ""  && $pass !
                 . "VALUES( '".$firstname."', '".$lastname."', '".$idc."','".$user."', '".$pass."' , '".$position."', '".$status."')";
                 //คำสั่ง insert เก็ไว้ใน $query_insert_employee
 
-        /*if ($database->query($query_insert_employee)) {
+        if ($database->query($query_insert_employee)) {
 
              $query_insert_tel = "INSERT INTO emp_tel( tel_tel, tel_ext ,tel_status, tel_emp_id) "
-                . "VALUES( '".$tel."', '".$tel_ext."', '".$tel_status."', '".$database->insert_id."')";
+                . "VALUES( '".$tel."', '0', '".$tel_status."', '".$database->insert_id."')";
 
 
              $database->query($query_insert_tel);
@@ -94,11 +94,11 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $user != ""  && $pass !
 
             $result["status"] = 200;
             $result["message"] = "Add successful!";//เพิ่มพนักงานสำเร็จ
-        }*/ 
-        if ($database->query($query_insert_employee)) {
+        }
+        /*if ($database->query($query_insert_employee)) {
             $result["status"] = 200;
             $result["message"] = "Add successful!";//เพิ่มพนักงานสำเร็จ
-        }
+        }*/
         else {
             $result["status"] = 500;
             $result["message"] = "Error: Add employee not successful!";//เพิ่มพนักงานไม่สำเร็จ

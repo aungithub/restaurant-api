@@ -21,6 +21,7 @@ $emp_lastname = "";
 $emp_user = "";
 $emp_pass = "";
 $emp_idcard = "";
+$emp_tel = "";
 $emp_pos_id = "";
 $emp_status_id = "";
 
@@ -32,6 +33,7 @@ if (!$postData) {
     $emp_user = $_POST["emp_username"];
     $emp_pass = $_POST["emp_password"];
     $emp_idcard = $_POST["emp_card_id"];
+    $emp_tel = $_POST["emp_tel"];
     $emp_pos_id = $_POST["emp_position_id"];
     $emp_status_id = $_POST["emp_status_id"];
 
@@ -42,6 +44,7 @@ if (!$postData) {
     $emp_user = $postData->emp_username;
     $emp_pass = $postData->emp_password;
     $emp_idcard = $postData->emp_card_id;
+    $emp_tel = $postData->emp_tel;
     $emp_pos_id = $postData->emp_position_id;
     $emp_status_id = $postData->emp_status_id;
 }
@@ -71,7 +74,7 @@ if ($emp_id != "" && $emp_status_id != "") {
         }
         $condition_update .= " emp_pass = '".md5($emp_pass)."' ";
     }
-     if ($emp_idcard != "") {
+    if ($emp_idcard != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
@@ -100,6 +103,28 @@ if ($emp_id != "" && $emp_status_id != "") {
             . " WHERE emp_id = '".$emp_id."' ";
 
         if ($database->query($query)) {
+
+            if ($emp_tel != "") {
+
+                $query = "SELECT * FROM emp_tel WHERE tel_emp_id = ".$emp_id."";
+                $rs = $database->query($query);
+
+                if ($rs->num_rows > 0) {
+                    $query = " UPDATE emp_tel "
+                        . " SET tel_tel = ".$emp_tel." "
+                        . " WHERE tel_emp_id = '".$emp_id."' ";
+
+                    $database->query($query);
+                }
+                else {
+                    $query = " INSERT INTO emp_tel(tel_tel, tel_status, tel_emp_id) VALUES('".$emp_tel."', 1, ".$emp_id."); ";
+
+                    $database->query($query);
+                }
+
+                
+            }
+            
             $result["status"] = 200;
             $result["message"] = "Update employee success!";
         }

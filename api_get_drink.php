@@ -50,7 +50,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
  
- $query = " SELECT *, (drink_order_point > drink_number) AS is_less "
+ $query = " SELECT *, lpad(drink_id, 4, '0') AS drink_char_id , (drink_order_point > drink_number) AS is_less "
         . " FROM res_drink d " 
         . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
         . " LEFT JOIN res_vendor v ON v.vendor_id = d.drink_vendor_id " 
@@ -64,6 +64,7 @@ $count = 0;
 $drink = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $drink[$count]["drink_id"] = $row["drink_id"];
+    $drink[$count]["drink_char_id"] = $row["drink_char_id"];
     $drink[$count]["drink_name"] = $row["drink_name"];
     $drink[$count]["drink_vendor_id"] = $row["drink_vendor_id"];
     $drink[$count]["vendor_name"] = $row["vendor_name"];
