@@ -49,7 +49,7 @@ if ($dp_id != "" && ($dp_approval_status == true || $dp_approval_status == false
             foreach ($drink_pos as $obj) {
 
                 $query = "UPDATE res_drink_po_detail "
-                        . " SET number = ".$obj->number.", total_price = ".($obj->number * $obj->unit_price)." "
+                        . " SET dpd_number = ".$obj->number.", dpd_total_price = ".($obj->number * $obj->unit_price)." "
                         . " WHERE dpd_id = ".$obj->dpd_id."";
 
                 $database->query($query);
