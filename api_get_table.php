@@ -35,8 +35,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 
 }
 
-$query = " SELECT * "
-        . " FROM res_table "
+$query = " SELECT *, lpad(t.table_id, 4, '0') AS table_char_id "
+        . " FROM res_table t "
          . $conditions;
 
 $rs = $database->query($query);
@@ -45,6 +45,7 @@ $count = 0;
 $tables = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $tables[$count]["table_id"] = $row["table_id"]; 
+    $tables[$count]["table_char_id"] = $row["table_char_id"]; 
     $tables[$count]["table_number"] = $row["table_number"];
     $tables[$count]["table_status_id"] = $row["table_status_id"];
     $count++;

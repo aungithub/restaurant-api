@@ -32,8 +32,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_promotion "
+$query = " SELECT *, lpad(p.pro_id, 4, '0') AS pro_char_id "
+        . " FROM res_promotion p "
         . $conditions;
 
 $rs = $database->query($query);
@@ -42,6 +42,7 @@ $count = 0;
 $promotion = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $promotion[$count]["pro_id"] = $row["pro_id"];
+    $promotion[$count]["pro_char_id"] = $row["pro_char_id"];
     $promotion[$count]["pro_name"] = $row["pro_name"];
     $promotion[$count]["pro_discount"] = $row["pro_discount"];
     $promotion[$count]["pro_start"] = $row["pro_start"];

@@ -28,8 +28,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_drink_po "
+$query = " SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id "
+        . " FROM res_drink_po dp "
         . $conditions;
 
 $rs = $database->query($query);
@@ -38,6 +38,7 @@ $count = 0;
 $drinkPOs = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["dp_id"] = $row["dp_id"];
+    $drinkPOs[$count]["dp_char_id"] = $row["dp_char_id"];
     $drinkPOs[$count]["dp_date"] = $row["dp_date"];
     $drinkPOs[$count]["dp_status_id"] = $row["dp_status_id"];
 

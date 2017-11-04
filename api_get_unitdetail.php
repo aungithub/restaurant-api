@@ -29,6 +29,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
     $query = " SELECT innertable.primary_unit_id AS primary_unit_id, 
+        lpad(innertable.primary_unit_id, 4, '0') AS primary_unit_char_id,
         innertable.primary_unit_number AS primary_unit_number, 
         innertable.secondary_unit_name AS secondary_unit_name, 
         innertable.primary_status_id AS primary_status_id,
@@ -56,6 +57,7 @@ $unitdetail = array();
 while ($row = mysqli_fetch_assoc($rs)) {
    
     $unitdetail[$count]["primary_unit_id"] = $row["primary_unit_id"];
+    $unitdetail[$count]["primary_unit_char_id"] = $row["primary_unit_char_id"];
     $unitdetail[$count]["primary_unit_number"] = $row["primary_unit_number"];
      $unitdetail[$count]["primary_unit_name"] = $row["primary_unit_name"];
      $unitdetail[$count]["primary_status_id"] = $row["primary_status_id"];

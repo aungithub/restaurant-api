@@ -32,7 +32,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
- $query = " SELECT * "
+ $query = " SELECT *, lpad(f.food_id, 4, '0') AS food_char_id "
         . " FROM res_food f "
         . " LEFT JOIN res_kind k ON k.kind_id = f.food_kind_id " 
         . $conditions
@@ -45,6 +45,7 @@ $food = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
      $food[$count]["food_id"] = $row["food_id"];
+     $food[$count]["food_char_id"] = $row["food_char_id"];
     $food[$count]["food_name"] = $row["food_name"];
      $food[$count]["food_kind_id"] = $row["food_kind_id"];
       $food[$count]["kind_name"] = $row["kind_name"];

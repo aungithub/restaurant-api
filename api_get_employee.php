@@ -34,7 +34,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     //limit,offset คือพารามิเตอร์ที่ถูกส่งมาหลังurl ดูจาก method GET
 }
 
- $query = " SELECT * "
+ $query = " SELECT *, lpad(e.emp_id, 4, '0') AS emp_char_id "
         . " FROM res_employee e "
         . " LEFT JOIN res_position pos ON pos.pos_id = e.emp_pos_id " 
         . " LEFT JOIN emp_tel t ON t.tel_emp_id = e.emp_id "
@@ -47,6 +47,7 @@ $employees = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
     $employees[$count]["emp_id"] = $row["emp_id"];
+    $employees[$count]["emp_char_id"] = $row["emp_char_id"];
     $employees[$count]["emp_firstname"] = $row["emp_firstname"];
     $employees[$count]["emp_lastname"] = $row["emp_lastname"];
     $employees[$count]["emp_user"] = $row["emp_user"];

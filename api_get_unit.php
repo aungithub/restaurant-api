@@ -30,8 +30,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_unit "
+$query = " SELECT *, lpad(u.unit_id, 4, '0') AS unit_char_id "
+        . " FROM res_unit u "
         . $conditions;
 
 $rs = $database->query($query);
@@ -41,6 +41,7 @@ $unit = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     
     $unit[$count]["unit_id"] = $row["unit_id"];
+    $unit[$count]["unit_char_id"] = $row["unit_char_id"];
     $unit[$count]["unit_name"] = $row["unit_name"];
     $unit[$count]["unit_status_id"] = $row["unit_status_id"];
     

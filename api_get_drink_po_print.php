@@ -30,7 +30,7 @@ $vendor_id = $_POST["vendor_id"];
 }
 
 
-$query = "SELECT *
+$query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id
         FROM res_drink_po_detail dpd
         INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id
         INNER JOIN res_drink d ON d.drink_id = dpd.drink_id
@@ -44,6 +44,7 @@ $count = 0;
 $drinkPOs = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["dp_id"] = $row["dp_id"];
+    $drinkPOs[$count]["dp_char_id"] = $row["dp_char_id"];
     $drinkPOs[$count]["dp_date"] = $row["dp_date"];
     $drinkPOs[$count]["dp_status_id"] = $row["dp_status_id"];
     $drinkPOs[$count]["vendor_name"] = $row["vendor_name"];

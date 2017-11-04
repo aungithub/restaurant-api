@@ -31,7 +31,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $offset = $_GET["offset"];
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
-$query = " SELECT * "
+$query = " SELECT *, lpad(p.pos_id, 4, '0') AS pos_char_id "
         . " FROM res_position p INNER JOIN res_role r ON r.role_id = p.pos_role_id "
         . $conditions
         . " ORDER BY pos_id ASC";
@@ -43,6 +43,7 @@ $positions = array();
 while ($row = mysqli_fetch_assoc($rs)) {
    
     $positions[$count]["pos_id"] = $row["pos_id"];
+    $positions[$count]["pos_char_id"] = $row["pos_char_id"];
     $positions[$count]["pos_name"] = $row["pos_name"];
     $positions[$count]["pos_role_id"] = $row["pos_role_id"];
     $positions[$count]["role_name"] = $row["role_name"];

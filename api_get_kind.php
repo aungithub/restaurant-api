@@ -32,8 +32,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_kind "
+$query = " SELECT *, lpad(k.kind_id, 4, '0') AS kind_char_id "
+        . " FROM res_kind k "
         . $conditions;
 
 $rs = $database->query($query);
@@ -43,6 +43,7 @@ $kind = array();
 while ($row = mysqli_fetch_assoc($rs)) {
    
    $kind[$count]["kind_id"] = $row["kind_id"];
+   $kind[$count]["kind_char_id"] = $row["kind_char_id"];
     $kind[$count]["kind_name"] = $row["kind_name"];
     $kind[$count]["kind_status"] = $row["kind_status"];
 
