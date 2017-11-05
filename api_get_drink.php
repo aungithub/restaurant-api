@@ -105,11 +105,33 @@ while ($row_vendor = mysqli_fetch_assoc($rs_vendor)) {
     $count_vendor++;
 }
 
+$query_vendor_list = "SELECT dv.vendor_id, v.vendor_name, d.drink_number, dv.price, d.drink_status_id "
+                    . " FROM res_drink d "
+                    . " INNER JOIN res_drink_vendor dv ON dv.drink_id = d.drink_id "
+                    . " INNER JOIN res_unit u ON u.unit_id = d.drink_unit_id "
+                    . " INNER JOIN res_vendor v ON v.vendor_id = dv.vendor_id " 
+                    . " WHERE d.drink_id = '".$drink_id."'";
+
+$rs_vendor_list = $database->query($query_vendor_list);
+
+$count_vendor_list = 0;
+$vendor_list = array();
+while ($row_vendor_list = mysqli_fetch_assoc($rs_vendor_list)) {
+    $vendor_list[$count_vendor_list]["vendor_id"] = $row_vendor_list["vendor_id"];
+    $vendor_list[$count_vendor_list]["vendor_name"] = $row_vendor_list["vendor_name"];
+    $vendor_list[$count_vendor_list]["drink_number"] = $row_vendor_list["drink_number"];
+    $vendor_list[$count_vendor_list]["drink_price"] = $row_vendor_list["price"];
+    $vendor_list[$count_vendor_list]["drink_status_id"] = $row_vendor_list["drink_status_id"];
+
+    $count_vendor_list++;
+}
+
 
 
 $result["drink"] = $drink;
 $result["unit"] = $unit;
 $result["vendor"] = $vendor;
 $result["vendor_drink"] = $vendor_drink;
+$result["vendor_list"] = $vendor_list;
 
 echo json_encode($result);
