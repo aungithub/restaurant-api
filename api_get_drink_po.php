@@ -28,9 +28,11 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id "
+$query = " SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, SUM(dpd.dpd_receipt_number) AS receipted "
         . " FROM res_drink_po dp "
-        . $conditions;
+        . " INNER JOIN res_drink_po_detail dpd ON dpd.dp_id = dp.dp_id "
+        . $conditions
+        . " GROUP BY dp.dp_id";
 
 $rs = $database->query($query);
 
@@ -51,6 +53,26 @@ while ($row = mysqli_fetch_assoc($rs)) {
     } else {
         $drinkPOs[$count]["dp_approve_status"] = "อยู่ระหว่างการพิจารณา";
         $drinkPOs[$count]["dp_approved"] = false;
+    }
+
+    $query = "SELECT * "
+        . " FROM res_drink_po_detail dpd "
+        . " WHERE dpd.dp_id = 14 "
+        . " GROUP BY dpd.dp_id, dpd.drink_id, dpd.vendor_id, dpd.unit_id";
+    $rs_sum_number = $database->query($query);
+
+    $sum_number = 0;
+    while ($row_sum_number = mysqli_fetch_assoc($rs_sum_number)) {
+        $sum_number = $sum_number + $row_sum_number["dpd_number"];
+    }
+
+    $drinkPOs[$count]["dp_receipt_status"] = "อยู่ระหว่างการรับ";
+    if ($row["receipted"] != null) {
+        if ($row["receipted"] < $sum_number) {
+            $drinkPOs[$count]["dp_receipt_status"] = "ยังรับไม่ครบ";
+        } else if ($row["receipted"] == $sum_number) {
+            $drinkPOs[$count]["dp_receipt_status"] = "รับครบแล้ว";
+        }
     }
     
     $count++;
