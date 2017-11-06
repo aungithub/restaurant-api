@@ -46,29 +46,51 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
             $receipt_number = $obj->receipt_number;
             $remaining_number = abs($obj->receipt_number - $obj->number);
 
-            $query = "UPDATE res_drink_po_detail "
-                    ." SET dpd_receipt_number = ".$receipt_number.", dpd_receipt_remaining_number = ".$remaining_number.", dpd_receipt_by = ".$dpd_receipt_by." "
-                    ." WHERE dpd_id = ".$obj->dpd_id."";
+            $query = "SELECT * FROM res_drink_po_detail WHERE dpd_id = ".$obj->dpd_id." AND dpd_receipt_number IS NULL";
+            $rs = $database->query($query);
 
-            if ($database->query($query)) {
-                $query = "SELECT * FROM res_drink WHERE drink_id = ".$obj->drink_id."";
-                $rs = $database->query($query);
+            if ($rs->num_rows > 0) {
 
-                if ($rs->num_rows > 0) {
-                    $rs = mysqli_fetch_assoc($rs);
+                $query = "UPDATE res_drink_po_detail "
+                        ." SET dpd_receipt_number = ".$receipt_number.", dpd_receipt_remaining_number = ".$remaining_number.", dpd_receipt_by = ".$dpd_receipt_by." "
+                        ." WHERE dpd_id = ".$obj->dpd_id."";
 
-                    $old_receipt_number = 0;
-                    if ($obj->old_receipt_number != null) {
-                        $old_receipt_number = $obj->old_receipt_number;
-                    }
+                $database->query($query);
 
-                    $query = "UPDATE res_drink "
-                            ." SET drink_number = ".(($rs["drink_number"] - $old_receipt_number) + $receipt_number)." "
-                            ." WHERE drink_id = ".$obj->drink_id."";
+            }
+            else {
+                /*if ($obj->receipt_remaining_number > 0) {
+                    $remaining_number = abs($obj->number - $obj->old_receipt_number - $obj->receipt_number);
+                    $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unit_id, vendor_id, dpd_number, dpd_receipt_number, dpd_receipt_remaining_number, dpd_unit_price, dpd_total_price, dpd_status_id, dpd_receipt_by) "
+                    . "VALUES('".$obj->dp_id."', '".$obj->drink_id."', '".$obj->unit_id."', '".$obj->vendor_id."', '".$obj->number."', '".$receipt_number."', '".$remaining_number."', '".$obj->unit_price."', '".($obj->number * $obj->unit_price)."', 1, ".$dpd_receipt_by.")";
 
                     $database->query($query);
-                }
+                }*/
+                $remaining_number = abs($obj->number - $obj->old_receipt_number - $obj->receipt_number);
+                $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unit_id, vendor_id, dpd_number, dpd_receipt_number, dpd_receipt_remaining_number, dpd_unit_price, dpd_total_price, dpd_status_id, dpd_receipt_by) "
+                . "VALUES('".$obj->dp_id."', '".$obj->drink_id."', '".$obj->unit_id."', '".$obj->vendor_id."', '".$obj->number."', '".$receipt_number."', '".$remaining_number."', '".$obj->unit_price."', '".($obj->number * $obj->unit_price)."', 1, ".$dpd_receipt_by.")";
+
+                $database->query($query);
             }
+            
+            $query = "SELECT * FROM res_drink WHERE drink_id = ".$obj->drink_id."";
+            $rs = $database->query($query);
+
+            if ($rs->num_rows > 0) {
+                $rs = mysqli_fetch_assoc($rs);
+
+                $old_receipt_number = 0;
+                if ($obj->old_receipt_number != null) {
+                    $old_receipt_number = $obj->old_receipt_number;
+                }
+
+                $query = "UPDATE res_drink "
+                        ." SET drink_number = ".(($rs["drink_number"] - $old_receipt_number) + $receipt_number)." "
+                        ." WHERE drink_id = ".$obj->drink_id."";
+
+                $database->query($query);
+            }
+
         }
 
         $count++;
