@@ -17,7 +17,7 @@ $conditions = "";
 $dp_id = null;
 if ($_GET["dp_id"] != null && $_GET["dp_id"] != 0) {
     $dp_id = $_GET["dp_id"];
-    $conditions = " WHERE dp_id = '".$dp_id."' ";
+    $conditions = " WHERE dp.dp_id = '".$dp_id."' ";
 }
 
 $limit = 9999999;
@@ -67,11 +67,14 @@ while ($row = mysqli_fetch_assoc($rs)) {
     }
 
     $drinkPOs[$count]["dp_receipt_status"] = "อยู่ระหว่างการรับ";
+    $drinkPOs[$count]["dp_receipt_status_number"] = 0;
     if ($row["receipted"] != null) {
         if ($row["receipted"] < $sum_number) {
             $drinkPOs[$count]["dp_receipt_status"] = "ยังรับไม่ครบ";
+            $drinkPOs[$count]["dp_receipt_status_number"] = 1;
         } else if ($row["receipted"] == $sum_number) {
             $drinkPOs[$count]["dp_receipt_status"] = "รับครบแล้ว";
+            $drinkPOs[$count]["dp_receipt_status_number"] = 2;
         }
     }
     
