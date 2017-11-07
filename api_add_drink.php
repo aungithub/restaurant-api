@@ -11,6 +11,7 @@ $result["message"] = "Error: Bad request!";
 $drink_name = "";
 $drink_order_point = "";
 $drink_unit_id = "";
+$drink_unit_price = "";
 $drink_number = "";
 $drink_status_id = "";
 $add_drink_object = "";
@@ -22,6 +23,7 @@ if (!$postData) {
     $drink_name = $_POST["drink_name"];
     $drink_order_point = $_POST["drink_order_point"];
     $drink_unit_id = $_POST["drink_unit_id"];
+    $drink_unit_price = $_POST["drink_unit_price"];
     $drink_number = $_POST["drink_number"];
     $drink_status_id = $_POST["drink_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $add_drink_object = $_POST["add_drink_object"];
@@ -31,13 +33,14 @@ if (!$postData) {
     $drink_name = $postData->drink_name;
     $drink_order_point = $postData->drink_order_point;
     $drink_unit_id = $postData->drink_unit_id;
+    $drink_unit_price = $postData->drink_unit_price;
     $drink_number = $postData->drink_number;
     $drink_status_id = $postData->drink_status_id;
     $add_drink_object = $postData->add_drink_object;
 
 }
 
-if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != "" && $drink_unit_id != "" && $drink_number != "" && $drink_status_id != "" ) {
+if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != "" && $drink_unit_id != "" && $drink_number != "" && $drink_unit_price != "" && $drink_status_id != "" ) {
     require 'config.php';
  
     $database = mysqli_connect($db["local"]["host"], 
@@ -48,8 +51,8 @@ if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != 
     $database->set_charset('utf8');
     
     
-    $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_number, drink_order_point, drink_unit_id, drink_status_id )"
-                . "VALUES( '".$drink_name."', '".$drink_number."', '".$drink_order_point."', '".$drink_unit_id."', '".$drink_status_id."' )";
+    $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_number, drink_order_point, drink_price, drink_unit_id, drink_status_id )"
+                . "VALUES( '".$drink_name."', '".$drink_number."', '".$drink_order_point."', '".$drink_unit_price."', '".$drink_unit_id."', '".$drink_status_id."' )";
 
         if ($database->query($query_insert_drink)) {
 
