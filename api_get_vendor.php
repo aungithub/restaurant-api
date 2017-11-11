@@ -32,8 +32,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
-$query = " SELECT * "
-        . " FROM res_vendor "
+$query = " SELECT *, lpad(v.vendor_id, 4, '0') AS vendor_char_id "
+        . " FROM res_vendor v "
         . $conditions;
 
 $rs = $database->query($query);
@@ -42,6 +42,7 @@ $count = 0;
 $vendors = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $vendors[$count]["vendor_id"] = $row["vendor_id"];
+    $vendors[$count]["vendor_char_id"] = $row["vendor_char_id"];
     $vendors[$count]["vendor_name"] = $row["vendor_name"];
     $vendors[$count]["vendor_tel"] = $row["vendor_tel"];
     $vendors[$count]["vendor_address"] = $row["vendor_address"];
