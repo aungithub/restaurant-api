@@ -50,9 +50,20 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
  
- $query = " SELECT *, lpad(d.drink_id, 4, '0') AS drink_char_id , (drink_order_point > drink_number) AS is_less, GROUP_CONCAT(' ', v.vendor_name) AS vendor_name_list "
+$query = " SELECT d.drink_id, 
+                        d.drink_name, 
+                        d.drink_number, 
+                        d.drink_order_point, 
+                        d.drink_unit_id, 
+                        d.drink_price, 
+                        d.drink_status_id, 
+                        v.vendor_name, 
+                        u.unit_name, 
+                        lpad(d.drink_id, 4, '0') AS drink_char_id, 
+                        (drink_order_point > drink_number) AS is_less, 
+                        GROUP_CONCAT(' ', v.vendor_name) AS vendor_name_list "
         . " FROM res_drink d " 
-        . " LEFT JOIN res_unit unit ON unit.unit_id = d.drink_unit_id " 
+        . " LEFT JOIN res_unit u ON u.unit_id = d.drink_unit_id " 
         . " LEFT JOIN res_drink_vendor dv ON dv.drink_id = d.drink_id " 
         . " LEFT JOIN res_vendor v ON v.vendor_id = dv.vendor_id "
         . $conditions
