@@ -15,39 +15,51 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
     $kind_id = "";
-    $kind_name = "";
-    $kind_status = "";
+    
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $kind_id = $_POST["kind_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
+        $kind_id = $postData->kind_id;
+    }
 
-     if (!$postData) {
-    // ส่งจาก RESTlet
-    $kind_id = $_POST["kind_id"];
-    $kind_name = $_POST["kind_name"];
-    $kind_status = $_POST["kind_status"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+    if ($kind_id != "") {
+        $query = "SELECT *, COUNT(f.food_id) AS k_number "
+                . " FROM res_kind k "
+                . " LEFT JOIN res_food f ON f.food_kind_id = k.kind_id "
+                . " WHERE k.kind_id = ".$kind_id."";
 
-} else {
-    // ส่งจากหน้าเว็บ AngularJS
-    $kind_id = $postData->kind_id;
-    $kind_name = $postData->kind_name;
-    $kind_status = $postData->kind_status;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+        $rs = $database->query($query);
 
-}
+        $data = mysqli_fetch_assoc($rs);
 
-   
-    $query_delete_kind = "DELETE FROM res_kind WHERE kind_id = '".$kind_id."'";
-   
+        if ($data["k_number"] == 0) {
+            $query = "DELETE FROM res_kind "
+                    . " WHERE kind_id = '".$kind_id."' ";
 
-   
-        if ($database->query($query_delete_kind)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete kind not successful!";
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        else {
+            $query = "UPDATE res_kind "
+                    . " SET kind_status = 2 "
+                    . " WHERE kind_id = ".$kind_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+    }
     
 echo json_encode($result);
