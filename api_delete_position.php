@@ -15,44 +15,51 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
+    
     $pos_id = "";
-    $pos_name = "";
-    $pos_role_id = "";
-     $pos_status_id = "";
     
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $pos_id = $_POST["pos_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
+        $pos_id = $postData->pos_id;
+    }
 
-     if (!$postData) {
-    // ส่งจาก RESTlet
-    $pos_id = $_POST["pos_id"];
-    $pos_name = $_POST["pos_name"];
-    $pos_role_id = $_POST["pos_role_id"];
-    $pos_status_id = $_POST["pos_status_id"];
-    //$status = $_POST["status"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+    if ($pos_id != "") {
+        $query = "SELECT *, COUNT(e.emp_id) AS e_number "
+                . " FROM res_position p "
+                . " LEFT JOIN res_employee e ON e.emp_pos_id = p.pos_id "
+                . " WHERE p.pos_id = ".$pos_id."";
 
-} else {
-    // ส่งจากหน้าเว็บ AngularJS
-    
-    $pos_id = $postData->pos_id;
-    $pos_name = $postData->pos_name;
-    $pos_role_id = $postData->pos_role_id;
-    $pos_status_id = $postData->pos_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+        $rs = $database->query($query);
 
-}
+        $data = mysqli_fetch_assoc($rs);
 
-   
-    $query_delete_position = "DELETE FROM res_position WHERE pos_id = '".$pos_id."'";
-   
+        if ($data["e_number"] == 0) {
+            $query = "DELETE FROM res_position "
+                    . " WHERE pos_id = '".$pos_id."' ";
 
-   
-        if ($database->query($query_delete_position)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete position not successful!";
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        else {
+            $query = "UPDATE res_position "
+                    . " SET pos_status_id = 2 "
+                    . " WHERE pos_id = ".$pos_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+    }
     
 echo json_encode($result);
