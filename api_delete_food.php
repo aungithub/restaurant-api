@@ -15,62 +15,55 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
     $food_id = "";
-    $food_name ="";
-     $food_kind_id = "";
-    $food_price = "";
-   
-    $food_status_id = "";
-
+    
     if (!$postData) {
-    // ส่งจาก RESTlet
-   $food_id = $_POST["food_id"];
-    $food_name =$_POST["food_name"];
-    $food_kind_id = $_POST["food_kind_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    $food_price = $_POST["food_price"];
-    
-    $food_status_id = $_POST["food_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
-
-} else {
-    // ส่งจากหน้าเว็บ AngularJS
-    $food_id = $postData->food_id;
-    $food_name = $postData->food_name;
-     $food_kind_id = $postData->food_kind_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    $food_price = $postData->food_price;
-   
-    $food_status_id = $postData->food_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
-
-
-}
-
-   
-   
-   
-  $query_check_kind = "SELECT * FROM res_kind WHERE kind_id = '".$food_kind_id."'";
-    $result_check_kind = $database->query($query_check_kind);
-    
-    if ($result_check_kind->num_rows < 0) { 
-        $query_delete_kind = "DELETE FROM res_kind WHERE kind_id = '".$kind_id."'";
-      
-        if ($database->query($query)) {
-            $result["status"] = 200;
-            $result["message"] = "Update food success!";
-        }
+        // ส่งจาก RESTlet
+        $food_id = $_POST["food_id"];
     } else {
-        $result["status"] = 404;
-        $result["message"] = "Cannot find this food!";
+        // ส่งจากหน้าเว็บ AngularJS
+        $food_id = $postData->food_id;
     }
-   
-        if ($database->query($query_delete_food)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete food not successful!";
+
+    if ($food_id != "") {
+        /*
+        $query = "SELECT *, COUNT(p.pos_id) AS r_number "
+                . " FROM res_role r "
+                . " LEFT JOIN res_position p ON p.pos_role_id = r.role_id "
+                . " WHERE r.role_id = ".$role_id."";
+
+        $rs = $database->query($query);
+        
+        $data = mysqli_fetch_assoc($rs);
+        */
+
+        if (true) { //$data["f_number"] == 0
+            $query = "DELETE FROM res_food "
+                    . " WHERE food_id = '".$food_id."' ";
+
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        /*
+        else {
+            $query = "UPDATE res_food "
+                    . " SET food_status_id = 2 "
+                    . " WHERE food_id = ".$food_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+        */
+    }
     
 echo json_encode($result);
