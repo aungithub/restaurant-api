@@ -45,7 +45,7 @@ if ($dp_created_by != "" && is_array($drink_po_object)) {
 
         $count = 0;
         foreach ($drink_po_object as $obj) {
-            $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unit_id, vendor_id, dpd_number, dpd_unit_price, dpd_total_price, dpd_status_id) "
+            $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unitdetail_id, vendor_id, dpd_number, dpd_unit_price, dpd_total_price, dpd_status_id) "
                 . "VALUES('".$dp_id."', '".$obj->drink_id."', '".$obj->unit_id."', '".$obj->vendor_id."', '".$obj->number."', '".$obj->unit_price."', '".($obj->number * $obj->unit_price)."', 1)";
         
             $database->query($query);

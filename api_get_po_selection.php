@@ -31,7 +31,13 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
-$query = " SELECT * FROM res_unit WHERE unit_status_id = 1";
+//$query = " SELECT * FROM res_unit WHERE unit_status_id = 1";
+
+$query = "SELECT *, CONCAT(u1.unit_name, ' (', u2.unit_name, ')') AS unitdetail_name "
+        . " FROM res_unitdetail ud "
+        . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
+        . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
+        . " WHERE unitdetail_status_id = 1";
 
 $rs = $database->query($query);
 
@@ -39,8 +45,8 @@ $count = 0;
 $unit = array();
 while ($row = mysqli_fetch_assoc($rs)) {
    
-    $unit[$count]["unit_id"] = $row["unit_id"];
-    $unit[$count]["unit_name"] = $row["unit_name"];
+    $unit[$count]["unitdetail_id"] = $row["unitdetail_id"];
+    $unit[$count]["unitdetail_name"] = $row["unitdetail_name"];
    
     $count++;
 }

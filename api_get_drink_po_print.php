@@ -30,13 +30,23 @@ $vendor_id = $_POST["vendor_id"];
 }
 
 
-$query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id
+/*$query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id
         FROM res_drink_po_detail dpd
         INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id
         INNER JOIN res_drink d ON d.drink_id = dpd.drink_id
         INNER JOIN res_vendor v ON v.vendor_id = dpd.vendor_id
         INNER JOIN res_unit u ON u.unit_id = dpd.unit_id
-        WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id."";
+        WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id."";*/
+
+$query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, CONCAT(u1.unit_name, ' (', u2.unit_name, ')') AS unitdetail_name "
+        . " FROM res_drink_po_detail dpd "
+        . " INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id "
+        . " INNER JOIN res_drink d ON d.drink_id = dpd.drink_id "
+        . " INNER JOIN res_vendor v ON v.vendor_id = dpd.vendor_id "
+        . " INNER JOIN res_unitdetail ud ON ud.unitdetail_id = dpd.unitdetail_id "
+        . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
+        . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
+        . " WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id."";
 
 $rs = $database->query($query);
 
@@ -52,7 +62,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["vendor_tel"] = $row["vendor_tel"];
     $drinkPOs[$count]["drink_name"] = $row["drink_name"];
     $drinkPOs[$count]["dpd_number"] = $row["dpd_number"];
-    $drinkPOs[$count]["unit_name"] = $row["unit_name"];
+    $drinkPOs[$count]["unit_name"] = $row["unitdetail_name"];
     $drinkPOs[$count]["dpd_unit_price"] = $row["dpd_unit_price"];
     
     $count++;
