@@ -33,7 +33,7 @@ $result["message"] = "Error: Bad request!";
 
         if ($database->query($query)) {
             $result["status"] = 200;
-            $result["message"] = "Delete  success!";
+            $result["message"] = "ลบข้อมูลสำเร็จ";
         }
         else {
             $result["status"] = 500;

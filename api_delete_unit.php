@@ -46,7 +46,8 @@ $result["message"] = "Error: Bad request!";
 
             if ($database->query($query)) {
                 $result["status"] = 200;
-                $result["message"] = "Delete  success!";
+                $result["noty_type"] = "success";
+                $result["message"] = "ลบข้อมูลสำเร็จ";
             }
             else {
                 $result["status"] = 500;
@@ -61,7 +62,8 @@ $result["message"] = "Error: Bad request!";
             $database->query($query);
 
             $result["status"] = 200;
-            $result["message"] = "Delete  success!";
+            $result["noty_type"] = "warning";
+            $result["message"] = "ไม่สามารถลบข้อมูลได้ เนื่องจากมีการใช้งานข้อมูลนี้";
         }
     }
     
