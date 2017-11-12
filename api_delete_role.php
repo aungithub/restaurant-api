@@ -15,46 +15,52 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
    
     $role_id = "";
-    $role_name = "";
-    $role_front = "";
-    $role_back = "";
-    //$role_back_pages_string = "";
-    $role_status_id = "";
-
-
-    if(!$postData){
-    $role_id = $_POST["role_id"];
-    $role_name = $_POST["role_name"];
-    $role_front = $_POST["role_front"];
-    $role_back = $_POST["role_back"];
-   // $role_back = $_POST["role_back_pages_string"];
-    $role_status_id = $_POST["role_status_id"];
-
-    }else{
+    
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $role_id = $_POST["role_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
         $role_id = $postData->role_id;
-        $role_name = $postData->role_name;
-         $role_front = $postData->role_front;
-         $role_back = $postData->role_back;
-        //$role_back = $postData->role_back_pages_string;
-         $role_status_id = $postData->role_status_id;
-
     }
 
-   
-    $query_delete_role = "DELETE FROM res_role WHERE role_id = '".$role_id."'";
-   
+    if ($role_id != "") {
+        $query = "SELECT *, COUNT(p.pos_id) AS r_number "
+                . " FROM res_role r "
+                . " LEFT JOIN res_position p ON p.pos_role_id = r.role_id "
+                . " WHERE r.role_id = ".$role_id."";
 
-   
-        if ($database->query($query_delete_role)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete role not successful!";
+        $rs = $database->query($query);
+
+        $data = mysqli_fetch_assoc($rs);
+
+        if ($data["r_number"] == 0) {
+            $query = "DELETE FROM res_role "
+                    . " WHERE role_id = '".$role_id."' ";
+
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        else {
+            $query = "UPDATE res_role "
+                    . " SET role_status_id = 2 "
+                    . " WHERE role_id = ".$role_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+    }
     
 echo json_encode($result);
