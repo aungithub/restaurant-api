@@ -105,7 +105,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
         . " ORDER BY dpd_id DESC, dpd_receipt_remaining_number ASC "
         . " LIMIT 0, ".$rs->num_rows." ";*/
 
-    $query = " SELECT dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, dpd.unitdetail_id, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name, CONCAT(u1.unit_name, ' (', u2.unit_name, ')') AS unitdetail_name "
+    $query = " SELECT dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, dpd.unitdetail_id, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
          . " FROM res_drink_po dp   "
          . " INNER JOIN res_drink_po_detail dpd ON dpd.dp_id = dp.dp_id   "
          . " INNER JOIN res_drink d ON d.drink_id = dpd.drink_id   "
