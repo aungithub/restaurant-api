@@ -15,41 +15,54 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
     $unit_id = "";
-    $unit_name = "";
-    $unit_number = "";
-    $unit_status_id = "";
-
-    if(!$postData){
-
-    $unit_id = $_POST["unit_id"];
-    $unit_name = $_POST["unit_name"];
-    $unit_number = $_POST["unit_number"];
-    $unit_status_id = $_POST["unit_status_id"];
-   
-
-    }else{
+    
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $unit_id = $_POST["unit_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
         $unit_id = $postData->unit_id;
-         $unit_name = $postData->unit_name;
-         $unit_number = $postData->unit_number;
-         $unit_status_id = $postData->unit_status_id;
-       
     }
 
+    if ($unit_id != "") {
+        $query = "SELECT *, COUNT(d.drink_id) AS d_number, COUNT(dpd.dpd_id) AS dpd_number, COUNT(u1.unitdetail_id) AS u1_number, COUNT(u2.unitdetail_id) AS u2_number "
+                . " FROM res_unit u "
+                . " LEFT JOIN res_drink d ON d.drink_unit_id = u.unit_id "
+                . " LEFT JOIN res_drink_po_detail dpd ON dpd.unit_id = u.unit_id "
+                . " LEFT JOIN res_unitdetail u1 ON u1.unitdetail_unit_id = u.unit_id "
+                . " LEFT JOIN res_unitdetail u2 ON u2.unit_unit_id = u.unit_id "
+                . " WHERE u.unit_id = ".$unit_id."";
 
-   
-    $query_delete_unit = "DELETE FROM res_unit WHERE unit_id = '".$unit_id."'";
-   
+        $rs = $database->query($query);
 
-   
-        if ($database->query($query_delete_unit)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete unit not successful!";
+        $data = mysqli_fetch_assoc($rs);
+
+        if ($data["d_number"] == 0 && $data["dpd_number"] == 0 && $data["u1_number"] == 0 && $data["u2_number"] == 0) {
+            $query = "DELETE FROM res_unit "
+                    . " WHERE unit_id = '".$unit_id."' ";
+
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        else {
+            $query = "UPDATE res_unit "
+                    . " SET unit_status_id = 2 "
+                    . " WHERE unit_id = ".$unit_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+    }
     
 echo json_encode($result);
