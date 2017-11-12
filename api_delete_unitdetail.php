@@ -15,46 +15,30 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
+
     $unitdetail_id = "";
-    $primary_unit_id = "";
-    $secondary_unit_id = "";
-    $primary_unit_number = "";
-    $secondary_unit_number = "";
-    $unitdetail_status_id = "";
-   
-
-if(!$postData){
-
-    $unitdetail_id = $_POST["unitdetail_id"];
-    $primary_unit_id = $_POST["primary_unit_id"];
-    $secondary_unit_id = $_POST["secondary_unit_id"];
-    $primary_unit_number = $_POST["primary_unit_number"];
-    $secondary_unit_number = $_POST["secondary_unit_number"];
-    $unitdetail_status_id = $_POST["unitdetail_status_id"];
-   
-
-    }else{
+    
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $unitdetail_id = $_POST["unitdetail_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
         $unitdetail_id = $postData->unitdetail_id;
-        $primary_unit_id = $postData->primary_unit_id;
-        $secondary_unit_id = $postData->secondary_unit_id;
-        $primary_unit_number = $postData->primary_unit_number;
-        $secondary_unit_number = $postData->secondary_unit_number;
-        $unitdetail_status_id = $postData->unitdetail_status_id;
-       
     }
 
-   
-    $query_delete_unitdetail = "DELETE FROM res_unitdetail WHERE unitdetail_id = '".$unitdetail_id."'";
-   
+    if ($unitdetail_id != "") {
+        $query = "DELETE FROM res_unitdetail "
+                    . " WHERE unitdetail_id = '".$unitdetail_id."' ";
 
-   
-        if ($database->query($query_delete_unitdetail)) {
+        if ($database->query($query)) {
             $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete unitdetail not successful!";
+            $result["message"] = "Delete  success!";
         }
+        else {
+            $result["status"] = 500;
+            $result["message"] = "Error: Delete not success";
+        }
+    }
     
 echo json_encode($result);
