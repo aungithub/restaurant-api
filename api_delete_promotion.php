@@ -15,49 +15,30 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
-    $pro_name = "";
-    $pro_discount = "";
-    $pro_start    = "";
-    $pro_end = "";
-    $pro_status_id = "";
-
-
-     if (!$postData) {
-    // ส่งจาก RESTlet
-    $pro_id = $_POST["pro_id"];
-    $pro_name = $_POST["pro_name"];
-    $pro_discount = $_POST["pro_discount"];
-    $pro_start    = $_POST["pro_start"];
-    $pro_end = $_POST["pro_end"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    $pro_status_id = $_POST["pro_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
-
-} else {
-    // ส่งจากหน้าเว็บ AngularJS
+    $pro_id = "";
     
-    $pro_id = $postData->pro_id;
-    $pro_name = $postData->pro_name;
-    $pro_discount = $postData->pro_discount;
-    $pro_start = $postData->pro_start;
-    $pro_end = $postData->pro_end;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    $pro_status_id = $postData->pro_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $pro_id = $_POST["pro_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
+        $pro_id = $postData->pro_id;
+    }
 
-}
+    if ($pro_id != "") {
+        $query = "DELETE FROM res_promotion "
+                . " WHERE pro_id = '".$pro_id."' ";
 
-   
-    $query_delete_promotion = "DELETE FROM res_promotion WHERE pro_id = '".$pro_id."'";
-   
-
-   
-        if ($database->query($query_delete_promotion)) {
+        if ($database->query($query)) {
             $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete promotion not successful!";
+            $result["message"] = "Delete  success!";
         }
+        else {
+            $result["status"] = 500;
+            $result["message"] = "Error: Delete not success";
+        }
+    }
     
 echo json_encode($result);
