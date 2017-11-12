@@ -21,7 +21,7 @@ if ($_GET["food_id"] != null && $_GET["food_id"] != 0) {
 }
 //เช็คเฉพาะอาหารที่ใช้งานอยู่
 if ($conditions == "") {
-    $conditions = " WHERE food_status_id = 1 ";
+    //$conditions = " WHERE food_status_id = 1 ";
 }
 
 $limit = 9999999;

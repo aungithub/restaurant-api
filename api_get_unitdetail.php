@@ -45,7 +45,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
         ud.unitdetail_status_id AS primary_status_id,
         ud.unitdetail_unit_id, ud.unit_unit_id, ud.unitdetail_number
         FROM res_unit u1
-        INNER JOIN res_unitdetail ud ON ud.unit_unit_id = u1.unit_id AND ud.unitdetail_status_id = 1) innertable
+        INNER JOIN res_unitdetail ud ON ud.unit_unit_id = u1.unit_id) innertable
     WHERE innertable.unitdetail_unit_id = u2.unit_id "
         . $conditions;
 

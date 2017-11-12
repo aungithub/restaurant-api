@@ -19,7 +19,7 @@ if ($_GET["unit_id"] != null && $_GET["unit_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE unit_status_id = 1 ";
+    //$conditions = " WHERE unit_status_id = 1 ";
 }
 
 $limit = 9999999;

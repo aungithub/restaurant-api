@@ -21,7 +21,7 @@ if ($_GET["kind_id"] != null && $_GET["kind_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE kind_status_id = 1 ";
+    //$conditions = " WHERE kind_status_id = 1 ";
 }
 
 $limit = 9999999;

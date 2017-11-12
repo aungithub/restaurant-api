@@ -21,7 +21,7 @@ if ($_GET["vendor_id"] != null && $_GET["vendor_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE vendor_status_id = 1 ";
+    //$conditions = " WHERE vendor_status_id = 1 ";
 }
 
 $limit = 9999999;

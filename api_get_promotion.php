@@ -21,7 +21,7 @@ if ($_GET["pro_id"] != null && $_GET["pro_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE pro_status_id = 1 ";
+    //$conditions = " WHERE pro_status_id = 1 ";
 }
 
 $limit = 9999999;

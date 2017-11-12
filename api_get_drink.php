@@ -38,7 +38,7 @@ if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE d.drink_status_id = 1 ";
+    //$conditions = " WHERE d.drink_status_id = 1 ";
 }
 
 $limit = 9999999;

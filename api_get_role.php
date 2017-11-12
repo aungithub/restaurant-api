@@ -21,7 +21,7 @@ if ($_GET["role_id"] != null && $_GET["role_id"] != 0) {
 }
 
 if ($conditions == "") {
-    $conditions = " WHERE role_status_id = 1 ";
+    //$conditions = " WHERE role_status_id = 1 ";
 }
 
 $limit = 9999999;
