@@ -15,42 +15,52 @@ $result["message"] = "Error: Bad request!";
                                 $db["local"]["password"], 
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
-   $database->set_charset('utf8');
+    $database->set_charset('utf8');
     
     $vendor_id = "";
-    $vendor_name = "";
-    $vendor_tel = "";
-    $vendor_address = "";
-    $vendor_status_id = "";
-
-
-    if(!$postData){
-    $vendor_id = $_POST["id"];
-    $vendor_name = $_POST["name"];
-    $vendor_tel = $_POST["tel"];
-    $vendor_address = $_POST["address"];
-    $vendor_status_id = $_POST["status"];
-
-    }else{
-        $vendor_id = $postData->id;
-        $vendor_name = $postData->name;
-        $vendor_tel = $postData->tel;
-        $vendor_address = $postData->address;
-         $vendor_status_id = $postData->status;
-
+    
+    if (!$postData) {
+        // ส่งจาก RESTlet
+        $vendor_id = $_POST["vendor_id"];
+    } else {
+        // ส่งจากหน้าเว็บ AngularJS
+        $vendor_id = $postData->vendor_id;
     }
 
-   
-    $query_delete_vendor = "DELETE FROM res_vendor WHERE vendor_id = '".$vendor_id."'";
-   
+    if ($vendor_id != "") {
+        $query = "SELECT *, COUNT(dpd.dpd_id) AS dpd_number, COUNT(dv.dv_id) AS dv_number "
+                . " FROM res_vendor v "
+                . " LEFT JOIN res_drink_po_detail dpd ON dpd.vendor_id = v.vendor_id "
+                . " LEFT JOIN res_drink_vendor dv ON dv.vendor_id = v.vendor_id "
+                . " WHERE v.vendor_id = ".$vendor_id."";
 
-   
-        if ($database->query($query_delete_vendor)) {
-            $result["status"] = 200;
-            $result["message"] = "Delete successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error: Delete vendor not successful!";
+        $rs = $database->query($query);
+
+        $data = mysqli_fetch_assoc($rs);
+
+        if ($data["dpd_number"] == 0 && $data["dv_number"] == 0) {
+            $query = "DELETE FROM res_vendor "
+                    . " WHERE vendor_id = '".$vendor_id."' ";
+
+            if ($database->query($query)) {
+                $result["status"] = 200;
+                $result["message"] = "Delete  success!";
+            }
+            else {
+                $result["status"] = 500;
+                $result["message"] = "Error: Delete not success";
+            }
         }
+        else {
+            $query = "UPDATE res_vendor "
+                    . " SET vendor_status_id = 2 "
+                    . " WHERE vendor_id = ".$vendor_id." ";
+
+            $database->query($query);
+
+            $result["status"] = 200;
+            $result["message"] = "Delete  success!";
+        }
+    }
     
 echo json_encode($result);
