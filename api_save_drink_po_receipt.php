@@ -67,8 +67,8 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
                     $database->query($query);
                 }*/
                 $remaining_number = abs($obj->number - $obj->old_receipt_number - $obj->receipt_number);
-                $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unit_id, vendor_id, dpd_number, dpd_receipt_number, dpd_receipt_remaining_number, dpd_unit_price, dpd_total_price, dpd_status_id, dpd_receipt_by) "
-                . "VALUES('".$obj->dp_id."', '".$obj->drink_id."', '".$obj->unit_id."', '".$obj->vendor_id."', '".$obj->number."', '".$receipt_number."', '".$remaining_number."', '".$obj->unit_price."', '".($obj->number * $obj->unit_price)."', 1, ".$dpd_receipt_by.")";
+                $query = "INSERT INTO res_drink_po_detail(dp_id, drink_id, unit_id, vendor_id, dpd_number, dpd_receipt_number, dpd_receipt_remaining_number, dpd_unit_price, dpd_total_price, dpd_status_id, dpd_receipt_by, unitdetail_id) "
+                . "VALUES('".$obj->dp_id."', '".$obj->drink_id."', '".$obj->unit_id."', '".$obj->vendor_id."', '".$obj->number."', '".$receipt_number."', '".$remaining_number."', '".$obj->unit_price."', '".($obj->number * $obj->unit_price)."', 1, ".$dpd_receipt_by.", ".$obj->unit_id.")";
 
                 $database->query($query);
             }

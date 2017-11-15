@@ -60,7 +60,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
 
     $query = "SELECT * "
         . " FROM res_drink_po_detail dpd "
-        . " WHERE dpd.dp_id = 14 "
+        . " WHERE dpd.dp_id = ".$row["dp_id"]." "
         . " GROUP BY dpd.dp_id, dpd.drink_id, dpd.vendor_id, dpd.unit_id";
     $rs_sum_number = $database->query($query);
 
@@ -90,10 +90,10 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
 
     $query = "SELECT * "
             . " FROM res_drink_po_detail dpd "
-            . " WHERE dpd.dp_id = ".$dp_id." AND dpd_status_id = 1 "
-            . " GROUP BY drink_id, unit_id, vendor_id";
+            . " WHERE dpd.dp_id = ".$dp_id." AND dpd_status_id = 1  "   
+            . " GROUP BY drink_id, vendor_id, dpd_number";
 
-    $rs = $database->query($query);
+    $rs_row = $database->query($query);
 
     /*$query = " SELECT dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, u.unit_id, u.unit_name, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name "
         . " FROM res_drink_po dp "
@@ -114,7 +114,8 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
          . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
          . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
          . " WHERE dp.dp_id = ".$dp_id." AND dpd_status_id = 1   "
-         . " ORDER BY dpd_id DESC, dpd_receipt_remaining_number ASC ";
+         . " ORDER BY dpd_id DESC, dpd_receipt_remaining_number ASC "
+         . " LIMIT 0, ".$rs_row->num_rows."";
 
     $rs = $database->query($query);
 
