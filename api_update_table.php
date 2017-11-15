@@ -19,7 +19,8 @@ require 'config.php';
 
     $table_id = "";
     $table_number = "";
-    $table_status_id = "";
+    $table_status = "";
+     $table_status_id = "";
    
 
 
@@ -27,31 +28,38 @@ if(!$postData){
 
     $table_id = $_POST["table_id"];
     $table_number = $_POST["table_number"];
-    $table_status_id = $_POST["table_status_id"];
+    $table_status = $_POST["table_status"];
+     $table_status_id = $_POST["table_status_id"];
    
 
     }else{
         $table_id = $postData->table_id;
          $table_number = $postData->table_number;
-         $table_status_id = $postData->table_status_id;
+         $table_status = $postData->table_status;
+           $table_status_id = $postData->table_status_id;
        
     }
 
 
-if ($table_id != "" && $table_status_id != "" ) {
+if ($table_id != "" && $table_status != ""  && $table_status_id != "" ) {
 
      $condition_update = "";
    if ($table_number != "") {
         $condition_update = " table_number = '".$table_number."' ";
     }
     
+    if ($table_status != "") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " table_status = '".$table_status."'";
+    }
     if ($table_status_id != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
         $condition_update .= " table_status_id = '".$table_status_id."'";
     }
-    
     
     
     $query_check_table = "SELECT * FROM res_table WHERE table_id = '".$table_id."'";

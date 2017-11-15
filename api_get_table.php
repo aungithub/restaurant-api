@@ -47,7 +47,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $tables[$count]["table_id"] = $row["table_id"]; 
     $tables[$count]["table_char_id"] = $row["table_char_id"]; 
     $tables[$count]["table_number"] = $row["table_number"];
-    $tables[$count]["table_status_id"] = $row["table_status_id"];
+    $tables[$count]["table_status"] = $row["table_status"];
+     $tables[$count]["table_status_id"] = $row["table_status_id"];
     $count++;
 }
 

@@ -11,7 +11,8 @@ $result["message"] = "Error: Bad request!";
 
     $id = "";
     $number = "";
-    $status = "";
+    $table_status = "";
+     $status = "";
    
 
 
@@ -19,18 +20,20 @@ if(!$postData){
 
     
     $number = $_POST["number"];
-    $status = $_POST["status"];
+    $table_status = $_POST["table_status"];
+      $status = $_POST["status"];
    
 
     }else{
         
          $number = $postData->number;
-         $status = $postData->status;
+         $table_status = $postData->table_status;
+          $status = $postData->status;
        
     }
 
 
-if ( $number != "" && $status != "" ) {
+if ( $number != "" && $table_status != "" && $status != "" ) {
     require 'config.php';
 
     $database = mysqli_connect($db["local"]["host"], 
@@ -50,8 +53,8 @@ if ( $number != "" && $status != "" ) {
         $result["message"] = "Error: Add table not successful! This table is already exist in the system.";
     } else {
     
-        $query_insert_table = "INSERT INTO res_table(table_number,table_status_id) "
-                . "VALUES('".$number."', '".$status."')";
+        $query_insert_table = "INSERT INTO res_table(table_number,table_status,table_status_id) "
+                . "VALUES('".$number."', '".$table_status."' , '".$status."')";
 
         if ($database->query($query_insert_table)) {
             $result["status"] = 200;
