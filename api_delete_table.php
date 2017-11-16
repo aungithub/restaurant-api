@@ -27,6 +27,7 @@ $result["message"] = "Error: Bad request!";
         $table_id = $postData->table_id;
     }
 
+    //cm บังคับให้ระบบทำการลบ table ออกจาก table เพราะยังไม่มีการใช้งาน
     if ($table_id != "") {
         $query = "DELETE FROM res_table "
                 . " WHERE table_id = '".$table_id."' ";

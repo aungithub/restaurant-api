@@ -27,6 +27,7 @@ $result["message"] = "Error: Bad request!";
         $pro_id = $postData->pro_id;
     }
 
+    //cm บังคับให้ระบบทำการลบ promotion ออกจาก table เพราะยังไม่มีการใช้งาน
     if ($pro_id != "") {
         $query = "DELETE FROM res_promotion "
                 . " WHERE pro_id = '".$pro_id."' ";

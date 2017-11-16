@@ -39,6 +39,8 @@ $result["message"] = "Error: Bad request!";
         $data = mysqli_fetch_assoc($rs);
         */
 
+
+        //cm บังคับให้ระบบทำการลบ food ออกจาก table เพราะยังไม่มีการใช้งาน
         if (true) { //$data["f_number"] == 0
             $query = "DELETE FROM res_food "
                     . " WHERE food_id = '".$food_id."' ";

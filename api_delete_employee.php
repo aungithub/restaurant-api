@@ -31,6 +31,7 @@ if (!$postData) {
 
 if ($emp_id != "") {
     
+    //cm เขียน query แล้ว join เพื่อ count แล้วเอาจำนวนที่ count ไปเช็คว่ามีการใช้งานอยู่หรือไม่
     $query = "SELECT *, COUNT(et.tel_emp_id) AS et_number, COUNT(dp.dp_approved_by) AS dp_approved_number, COUNT(dp.dp_rejected_by) AS dp_rejected_number, COUNT(dpd.dpd_receipt_by) AS dpd_number "
             . " FROM res_employee e "
             . " LEFT JOIN emp_tel et ON et.tel_emp_id = e.emp_id "
@@ -42,6 +43,7 @@ if ($emp_id != "") {
 
     $data = mysqli_fetch_assoc($rs);
 
+    //cm ถ้าข้อมูลไม่มีการใช้งานอยู่ จะลบออกจา table
     if ($data["et_number"] == 0 && $data["dp_approved_number"] == 0 && $data["dp_rejected_number"] == 0 && $data["dpd_number"] == 0) {
         $query = "DELETE FROM res_employee "
                 . " WHERE emp_id = '".$emp_id."' ";
@@ -55,7 +57,10 @@ if ($emp_id != "") {
             $result["status"] = 500;
             $result["message"] = "Error: Delete not success";
         }
-    } else if ($rs->num_rows > 0) {
+    } 
+
+    //cm ถ้าข้อมูลมีการใช้งานจะอัพเดทสถานะ
+    else if ($rs->num_rows > 0) {
         $query = "UPDATE res_employee "
                 . " SET emp_status_id = 2 "
                 . " WHERE emp_id = ".$emp_id." ";
