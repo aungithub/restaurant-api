@@ -12,6 +12,8 @@ $result["message"] = "Error: Bad request!";
 
     $drink_po_object = "";
     $dp_created_by = "";
+
+    // function date เพื่อทำการกำหนดวันที่ ของ ณ วันปัจจุบัน
     $dp_date = date("Y-m-d");
 
 
