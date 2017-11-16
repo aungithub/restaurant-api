@@ -32,7 +32,7 @@ if (!$postData) {
     $idc = $_POST["idc"];
     $user = $_POST["username"];
 
-    //cm ทำการเข้ารหัส password โดยใช้ function md5
+    //cm ทำการเข้ารหัส password โดยใช้ function/อัลกอริทึ่ม md5
     $pass = md5($_POST["password"]);
     $position = $_POST["position"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
      $status = $_POST["status"];
