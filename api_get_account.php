@@ -13,10 +13,10 @@ $database = mysqli_connect($db["local"]["host"],
 
 $database->set_charset('utf8');
 
-$conditions = "";
+$condition = "";
 $search = null;
-if ($_GET["search"] != null && $_GET["search"] != 0) {
-    $conditions = " WHERE Account_ID LIKE '%".$_GET["search"]."%' "
+if ($_GET["search"] != null) {
+    $condition = " WHERE Account_ID LIKE '%".$_GET["search"]."%' "
                 . " OR M_NAME LIKE '%".$_GET["search"]."%' "
                 . " OR M_Username LIKE '%".$_GET["search"]."%' ";
 
@@ -24,7 +24,7 @@ if ($_GET["search"] != null && $_GET["search"] != 0) {
 
 $query = " SELECT * "
         . " FROM Account "
-        . $conditions;
+        . $condition;
 
 
 $rs = $database->query($query);
