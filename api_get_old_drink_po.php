@@ -39,6 +39,7 @@ if ($vendor_id != null && $vendor_id != '') {
     $condition = " dpd.vendor_id = ".$vendor_id." ";
 }
 
+//cm เขียน query เพื่อดึงการสั่งซื้อเก่าๆ ของเครื่องดื่มนี้ และ บริษัทคู่ค้านี้ เพื่อจะนำไปกรอกอัตโนมัติในหน้าสั่งซื้อในหน้าเครื่องดื่ม
 $query = " SELECT dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, u.unit_id, u.unit_name, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name "
     . " FROM res_drink_po_detail dpd "
     . " INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id "
@@ -80,7 +81,7 @@ if ($rs->num_rows > 0) {
 
         $count++;
     }
-
+    
     $drinkPODetails[0]["is_remaining"] = $isRemaining;
 
 }

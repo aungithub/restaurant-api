@@ -15,10 +15,15 @@ $database->set_charset('utf8');
 
 $conditions = "";
 $drink_id = null;
+
+//cm เช็คว่าถ้ามี drink_id ส่งมาโดย method GET
 if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
     $drink_id = $_GET["drink_id"];
+
+    //cm เขียน where condition เก็บไว้ในตัวแปร conditions และจะเอาไปใช้ข้างล่าง
     $conditions = " WHERE d.drink_id = '".$drink_id."' ";
 
+    //cm เขียน query เพื่อดึงบริษัทคู่ค้าของเครื่องดื่มนี้
     $query_vendor_drink = "SELECT * FROM res_vendor v "
                     . " LEFT JOIN res_drink_vendor dv ON dv.vendor_id = v.vendor_id "
                     . " WHERE dv.drink_id = '".$drink_id."'";
@@ -28,6 +33,8 @@ if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
     $count = 0;
     $vendor_drink = array();
     while ($row_vendor_drink = mysqli_fetch_assoc($rs_vendor_drink)) {
+
+        //cm เก็บบริษัทคู่ค้าทุกบริษัทของเครื่องดื่มนี้ พร้อมทั้งราคาของแต่ละบริษัทลงในตัวแปร $vendor_drink
         $vendor_drink[$count]["vendor_id"] = $row_vendor_drink["vendor_id"];
         $vendor_drink[$count]["vendor_name"] = $row_vendor_drink["vendor_name"];
         $vendor_drink[$count]["price"] = $row_vendor_drink["price"];
@@ -43,13 +50,16 @@ if ($conditions == "") {
 
 $limit = 9999999;
 $offset = 0;
+
+//cm ถ้ามีการส่ง limit และ offset กลับมาจะทำการแทรก LIMIT limit, offset ลงในตัวแปร $conditions
 if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $limit = $_GET["limit"];
     $offset = $_GET["offset"];
-     $conditions .= " LIMIT ".$offset.", ".$limit." ";
+    $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
- 
+
+//cm เขียน query เพื่อทำการดึง ข้อมูลเครื่องดื่มนี้ พร้อมทั้ง join กับตารางต่างๆที่เกี่ยวข้องกัน 
 $query = " SELECT d.drink_id, 
                         d.drink_name, 
                         d.drink_number, 
@@ -75,6 +85,8 @@ $rs = $database->query($query);
 
 $count = 0;
 $drink = array();
+
+//cm ทำการวนลูปเครื่องดื่มที่ query มาได้ ลงในตัวแปร
 while ($row = mysqli_fetch_assoc($rs)) {
     $drink[$count]["drink_id"] = $row["drink_id"];
     $drink[$count]["drink_char_id"] = $row["drink_char_id"];
@@ -94,6 +106,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
+//cm เขียน query เพื่อดีงหน่วยทั้งหมด
 $query_unit = "SELECT * FROM res_unit";
 
 $rs_unit = $database->query($query_unit);
@@ -107,6 +120,7 @@ while ($row_unit = mysqli_fetch_assoc($rs_unit)) {
     $count_unit++;
 }
 
+//cm เขียน query เพื่อดึงบริษัทคู่ค้าทั้งหมด
 $query_vendor = "SELECT * FROM res_vendor";
 
 $rs_vendor = $database->query($query_vendor);
@@ -120,6 +134,7 @@ while ($row_vendor = mysqli_fetch_assoc($rs_vendor)) {
     $count_vendor++;
 }
 
+//cm เขียน query เพื่อดึงบริษัทคู่ค้าของเครื่องดื่มนี้
 $query_vendor_list = "SELECT dv.vendor_id, v.vendor_name, d.drink_number, dv.price, d.drink_status_id "
                     . " FROM res_drink d "
                     . " INNER JOIN res_drink_vendor dv ON dv.drink_id = d.drink_id "

@@ -22,6 +22,7 @@ if ($_GET["drink_id"] != null && $_GET["drink_id"] != 0) {
 $vendor = array();
 if ($drink_id != "") {
 
+    //cm เขียน query เพื่อดึงบริษัทคู่ค้าด้วย รหัสเครื่องดื่ม
     $query = "SELECT *, dv.price AS vendor_unit_price "
             . " FROM res_drink d "
             . " INNER JOIN res_drink_vendor dv ON dv.drink_id = d.drink_id "

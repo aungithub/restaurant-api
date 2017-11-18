@@ -13,6 +13,7 @@ $database = mysqli_connect($db["local"]["host"],
 
 $database->set_charset('utf8');
 
+//cm เขียน query เพื่อดึง drink po การสั่งซื้อใหม่ๆ เพื่อนำไปแจ้งเตือนที่ฝั่งเว็บ
 $query = " SELECT * "
         . " FROM res_drink_po "
         . " WHERE dp_approved_by IS NULL AND dp_rejected_by IS NULL";

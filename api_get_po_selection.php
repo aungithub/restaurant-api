@@ -33,6 +33,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
 
 //$query = " SELECT * FROM res_unit WHERE unit_status_id = 1";
 
+//cm เขียน query เพื่อดึง การแปลงหน่วย CONCAT เพื่อใช้รวมข้อมูลของจำนวน ชื่อต่างๆ ผลลัพธ์เช่น 1 ลังใหญ่ (12 ขวดเล็ก)
 $query = "SELECT *, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
         . " FROM res_unitdetail ud "
         . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "

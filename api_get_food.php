@@ -32,6 +32,7 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
     $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
+//cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
  $query = " SELECT *, lpad(f.food_id, 4, '0') AS food_char_id "
         . " FROM res_food f "
         . " LEFT JOIN res_kind k ON k.kind_id = f.food_kind_id " 

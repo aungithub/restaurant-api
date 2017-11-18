@@ -27,8 +27,9 @@ if($user != "" && $pass !=""){
                                 $db["local"]["database"])
                                  or die("Error : MySQL cannot connect!");
                         
-    
-   $query = "SELECT e.*, group_concat(r.role_front, ',', r.role_back) AS user_roles "
+    //cm เขียน query เพื่อเช็คว่า username และ password ที่  user กรอกมามีในระบบหรือไม่
+    //cm พร้อมทั้ง Inner join ตำแหน่ง เพื่อดึงสิทธิ์ออกมาด้วย
+    $query = "SELECT e.*, group_concat(r.role_front, ',', r.role_back) AS user_roles "
             ."FROM res_employee e "
             ." INNER JOIN res_position p ON p.pos_id = e.emp_pos_id "
             . " INNER JOIN res_role r ON r.role_id = p.pos_role_id "
@@ -43,7 +44,7 @@ if($user != "" && $pass !=""){
         if ($row['emp_user'] != null) {
             $result["status"] = 200;
             $result["message"] = "Login successfull!";         
-            $result["roles"] = $row['user_roles'];
+            $result["roles"] = $row['user_roles']; //cm เอาสิทธิ์พนักงานกลับไปด้วย เพื่อนำไปตรวจสอบสิทธิ์การเข้าถึงเมนูที่ฝั่งเว็บ
             $result["emp_id"] = $row['emp_id'];
             $result["emp_pos_id"] = $row['emp_pos_id'];
         }

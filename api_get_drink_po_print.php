@@ -38,6 +38,8 @@ $vendor_id = $_POST["vendor_id"];
         INNER JOIN res_unit u ON u.unit_id = dpd.unit_id
         WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id."";*/
 
+
+//cm เขียน query เพื่อดึงรายละเอียดทั้งหมดของการสั่งซื้อ เพื่อนำไปออกใบสั่งซื้อ โดยเงื่อนไข dp_id และ vendor_id
 $query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
         . " FROM res_drink_po_detail dpd "
         . " INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id "

@@ -28,6 +28,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
      $conditions .= " LIMIT ".$offset.", ".$limit." ";
 }
 
+
+//cm เขียน query เพื่อดึงการแปลงหน่วย
     $query = " SELECT innertable.primary_unit_id AS primary_unit_id, 
         lpad(innertable.primary_unit_id, 4, '0') AS primary_unit_char_id,
         innertable.primary_unit_number AS primary_unit_number, 

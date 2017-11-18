@@ -13,6 +13,7 @@ $database = mysqli_connect($db["local"]["host"],
 
 $database->set_charset('utf8');
 
+//cm เขียน query เพื่อดึงการแจ้งเตือนเมื่อการสั่งซื้อถูกอนุมัติ โดยจะแจ้งกลับไปเป็นจำนวนการอนุมัติใหม่ๆ
 $query = " SELECT * "
 		." FROM res_drink_po dp "
 		." INNER JOIN res_drink_po_detail dpd ON dpd.dp_id = dp.dp_id "

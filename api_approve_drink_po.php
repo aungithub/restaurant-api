@@ -45,9 +45,12 @@ if ($dp_id != "" && ($dp_approval_status == true || $dp_approval_status == false
 
         if ($drink_pos != "") {
 
+            //cm ทำการวนลูป $drink_pos และทำการ update ลงฐานข้อมูล
+            //cm $drink_pos จะมาในรูปแบบ array
             $count=0;
             foreach ($drink_pos as $obj) {
 
+                //cm เขียน query เพื่อ approve จำนวนที่ ผู้อนุมัติ อนุมัติมา
                 $query = "UPDATE res_drink_po_detail "
                         . " SET dpd_number = ".$obj->number.", dpd_total_price = ".($obj->number * $obj->unit_price)." "
                         . " WHERE dpd_id = ".$obj->dpd_id."";
@@ -56,7 +59,9 @@ if ($dp_id != "" && ($dp_approval_status == true || $dp_approval_status == false
 
                 $count++;
 
+                //cm ถ้าวนลูปจนครบแล้ว จะไป set สถานะการอนุมัติเป็น 1
                 if ($count == count($drink_pos)) {
+                    //cm เขียน query  เพื่อจะกำหนดสถานะการอนุมัติเป็น 1 และเก็บว่าอนุมัติโดยใคร
                     $query = " UPDATE res_drink_po SET dp_approval_status = 1, dp_approved_by = ".$dp_approval_emp_id.", dp_rejected_by = NULL WHERE dp_id = ".$dp_id."";
 
                     if ($database->query($query)) {
