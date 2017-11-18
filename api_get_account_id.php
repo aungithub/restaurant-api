@@ -22,8 +22,8 @@ $query = " SELECT * "
 $rs = $database->query($query);
 
 if ($rs->num_rows > 0) {
-    $result = mysqli_fetch_assoc($rs);
-    $split = explode('ACC', $result["Account_ID"]);
+    $data = mysqli_fetch_assoc($rs);
+    $split = explode('ACC', $data["Account_ID"]);
     $int = intval($split[1]);
     $int++;
 

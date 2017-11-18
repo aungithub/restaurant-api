@@ -53,6 +53,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
+$result["account"] = $account;
 $result["country"] = $country;
 
 echo json_encode($result);
