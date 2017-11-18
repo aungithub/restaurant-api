@@ -1,0 +1,45 @@
+<?php
+
+error_reporting(0);
+
+header("Content-Type: application/json; charset=UTF-8");
+$result["status"] = 200;
+$result["message"] = "Successful!";
+require 'config.php';
+$database = mysqli_connect($db["local"]["host"], 
+                            $db["local"]["username"], 
+                            $db["local"]["password"], 
+                            $db["local"]["database"]) or die("Error: MySQL cannot connect!");
+
+$database->set_charset('utf8');
+
+$conditions = "";
+$search = null;
+if ($_GET["search"] != null && $_GET["search"] != 0) {
+    $conditions = " WHERE Account_ID LIKE '%".$_GET["search"]."%' "
+                . " OR M_NAME LIKE '%".$_GET["search"]."%' "
+                . " OR M_Username LIKE '%".$_GET["search"]."%' ";
+
+}
+
+$query = " SELECT * "
+        . " FROM Account "
+        . $conditions;
+
+
+$rs = $database->query($query);
+
+$count = 0;
+$account = array();
+while ($row = mysqli_fetch_assoc($rs)) {
+    $account[$count]["Account_ID"] = $row["Account_ID"];
+    $account[$count]["M_NAME"] = $row["M_NAME"];
+    $account[$count]["M_LastName"] = $row["M_LastName"];
+    $account[$count]["M_Username"] = $row["M_Username"];
+
+    $count++;
+}
+
+$result["account"] = $account;
+
+echo json_encode($result);
