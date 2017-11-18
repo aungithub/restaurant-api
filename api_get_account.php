@@ -26,7 +26,6 @@ $query = " SELECT * "
         . " FROM Account "
         . $condition;
 
-
 $rs = $database->query($query);
 
 $count = 0;
@@ -40,6 +39,20 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count++;
 }
 
-$result["account"] = $account;
+$query = " SELECT * "
+        . " FROM Country ";
+
+$rs = $database->query($query);
+
+$count = 0;
+$country = array();
+while ($row = mysqli_fetch_assoc($rs)) {
+    $country[$count]["Country_ID"] = $row["Country_ID"];
+    $country[$count]["Country_Name"] = $row["Country_Name"];
+
+    $count++;
+}
+
+$result["country"] = $country;
 
 echo json_encode($result);
