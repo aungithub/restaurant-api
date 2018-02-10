@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 //cm ซ่อน Error และ Warning 
 error_reporting(0);
