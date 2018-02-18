@@ -42,7 +42,7 @@ if (!$postData) {
      $tel_ext = $_POST["tel_ext"];
 
      //cm กรณีมีหลายเบอร์ แต่ยังไม่ได้ใช้
-     $telephone_numbers = json_decode($tel, true);
+     $telephone_numbers =$_POST["listTelephone"];
      $tel_status = 1; //id from status
 
 } else {
@@ -58,7 +58,7 @@ if (!$postData) {
 
      $tel = $postData->tel;
      $tel_ext = $postData->tel_ext;
-     $telephone_numbers = json_decode($tel, true);
+     $telephone_numbers = $postData->listTelephone;
      $tel_status = 1; //id from status
 }
 
@@ -96,13 +96,19 @@ if ($firstname != "" && $lastname != "" && $idc != "" && $user != ""  && $pass !
 
         //cm ถ้า insert ผ่าน
         if ($database->query($query_insert_employee)) {
+        $emp_id = $database->insert_id;
+            foreach ($telephone_numbers as  $value) {
+               
+                 $query_insert_tel = "INSERT INTO emp_tel( tel_tel, tel_ext ,tel_status, tel_emp_id) "
+                . "VALUES( '".$value."', '0', '".$tel_status."', '".$emp_id."')";
+                 $database->query($query_insert_tel);
 
+            }
             //cm ทำการเขียน query เพื่อเพิ่มเบอร์โทรของพนักงานลงฐานข้อมูล
-             $query_insert_tel = "INSERT INTO emp_tel( tel_tel, tel_ext ,tel_status, tel_emp_id) "
-                . "VALUES( '".$tel."', '0', '".$tel_status."', '".$database->insert_id."')";
+            
 
 
-             $database->query($query_insert_tel);
+            
 
 
             $result["status"] = 200;

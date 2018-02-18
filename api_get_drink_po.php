@@ -127,7 +127,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
          . " INNER JOIN res_unitdetail ud ON ud.unitdetail_id = dpd.unitdetail_id "
          . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
          . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
-         . " WHERE dp.dp_id = ".$dp_id." AND dpd_status_id = 1   "
+         . " WHERE dp.dp_id = ".$dp_id." AND dpd_status_id = 1  AND dpd.dpd_number >0  "
          . " ORDER BY dpd_id DESC, dpd_receipt_remaining_number ASC "
          . " LIMIT 0, ".$rs_row->num_rows."";
 

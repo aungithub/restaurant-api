@@ -48,7 +48,7 @@ $query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, CONCAT(ud.unitdetail_n
         . " INNER JOIN res_unitdetail ud ON ud.unitdetail_id = dpd.unitdetail_id "
         . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
         . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
-        . " WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id."";
+        . " WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id." AND dpd.dpd_number > 0";
 
 $rs = $database->query($query);
 
