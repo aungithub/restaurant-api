@@ -24,6 +24,7 @@ $emp_idcard = "";
 $emp_tel = "";
 $emp_pos_id = "";
 $emp_status_id = "";
+$telephone_numbers = "";
 
 
 if (!$postData) {
@@ -36,6 +37,7 @@ if (!$postData) {
     $emp_tel = $_POST["emp_tel"];
     $emp_pos_id = $_POST["emp_position_id"];
     $emp_status_id = $_POST["emp_status_id"];
+    $telephone_numbers =$_POST["listTelephone"];
 
 } else {
     $emp_id = $postData->emp_id;
@@ -47,6 +49,7 @@ if (!$postData) {
     $emp_tel = $postData->emp_tel;
     $emp_pos_id = $postData->emp_position_id;
     $emp_status_id = $postData->emp_status_id;
+    $telephone_numbers = $postData->listTelephone;
 }
 
 
@@ -104,7 +107,20 @@ if ($emp_id != "" && $emp_status_id != "") {
 
         if ($database->query($query)) {
 
-            if ($emp_tel != "") {
+            $query_update = "DELETE FROM emp_tel WHERE tel_emp_id = ".$emp_id."";
+
+            if ($database->query($query_update)) {
+                foreach ($telephone_numbers as  $value) {
+               
+                    $query_insert_tel = "INSERT INTO emp_tel( tel_tel, tel_ext ,tel_status, tel_emp_id) "
+                    . "VALUES( '".$value."', '0', 1, '".$emp_id."')";
+
+                    $database->query($query_insert_tel);
+
+                }
+            }
+
+            /*if ($emp_tel != "") {
 
                 $query = "SELECT * FROM emp_tel WHERE tel_emp_id = ".$emp_id."";
                 $rs = $database->query($query);
@@ -123,7 +139,7 @@ if ($emp_id != "" && $emp_status_id != "") {
                 }
 
                 
-            }
+            }*/ 
             
             $result["status"] = 200;
             $result["message"] = "Update employee success!";

@@ -57,6 +57,22 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $employees[$count]["emp_pos_id"] = $row["emp_pos_id"];
     $employees[$count]["emp_pos_name"] = $row["pos_name"];
     $employees[$count]["emp_status_id"] = $row["emp_status_id"];
+
+    $query_telephone = "SELECT * FROM emp_tel WHERE tel_emp_id = ".$row["emp_id"]." AND tel_status = 1";
+
+    $rs_telephone = $database->query($query_telephone);
+
+    $count_telephone = 0;//ใช้นับค่าอาร์เรย์
+    $telephone = array();
+    if ($rs_telephone->num_rows > 0) {
+
+        while ($row_telephone = mysqli_fetch_assoc($rs_telephone)) {
+            $telephone[$count_telephone] = $row_telephone["tel_tel"];
+            $count_telephone++;
+        }
+    }
+
+    $employees[$count]["telephone"] = $telephone;
     
     $count++;
 }
