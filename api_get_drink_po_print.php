@@ -40,7 +40,7 @@ $vendor_id = $_POST["vendor_id"];
 
 
 //cm เขียน query เพื่อดึงรายละเอียดทั้งหมดของการสั่งซื้อ เพื่อนำไปออกใบสั่งซื้อ โดยเงื่อนไข dp_id และ vendor_id
-$query = "SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
+$query = "SELECT *, lpad(dpd.dpd_id, 4, '0') AS dpd_char_id, lpad(dp.dp_id, 4, '0') AS dp_char_id, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
         . " FROM res_drink_po_detail dpd "
         . " INNER JOIN res_drink_po dp ON dp.dp_id = dpd.dp_id "
         . " INNER JOIN res_drink d ON d.drink_id = dpd.drink_id "
@@ -57,6 +57,7 @@ $drinkPOs = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["dp_id"] = $row["dp_id"];
     $drinkPOs[$count]["dp_char_id"] = $row["dp_char_id"];
+    $drinkPOs[$count]["dpd_char_id"] = $row["dpd_char_id"];
     $drinkPOs[$count]["dp_date"] = $row["dp_date"];
     $drinkPOs[$count]["dp_status_id"] = $row["dp_status_id"];
     $drinkPOs[$count]["vendor_name"] = $row["vendor_name"];

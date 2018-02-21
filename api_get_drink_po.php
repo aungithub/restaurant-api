@@ -119,7 +119,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
         . " LIMIT 0, ".$rs->num_rows." ";*/
 
     //cm เขียน query เพื่อดึงข้อมูลของการสั่งซื่อทั้งหมด โดยนำไป join กับตารางที่เกี่ยวข้อง และกำหนดว่าต้องดึงรายละเอียดการรับแถวล่าสุดออกมา
-    $query = " SELECT dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, dpd.unitdetail_id, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
+    $query = " SELECT lpad(dpd.dpd_id, 4, '0') AS dpd_char_id, dp.dp_id, dpd.dpd_id, dpd.drink_id, v.vendor_id, v.vendor_name, dpd.dpd_number, dpd.unitdetail_id, dpd.dpd_unit_price, dpd.dpd_receipt_number, dpd.dpd_receipt_remaining_number, dpd.dpd_receipt_by, d.drink_number, d.drink_name, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
          . " FROM res_drink_po dp   "
          . " INNER JOIN res_drink_po_detail dpd ON dpd.dp_id = dp.dp_id   "
          . " INNER JOIN res_drink d ON d.drink_id = dpd.drink_id   "
@@ -143,6 +143,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
             //cm วนลูปเพื่อเอาข้อมูลการสั่งซื้อทั้งหมดใส่ในตัวแปรไว้
             $drinkPODetails[$count]["dp_id"] = $row["dp_id"];
             $drinkPODetails[$count]["dpd_id"] = $row["dpd_id"];
+            $drinkPODetails[$count]["dpd_char_id"] = $row["dpd_char_id"];
             $drinkPODetails[$count]["vendor_id"] = $row["vendor_id"];
             $drinkPODetails[$count]["vendor_name"] = $row["vendor_name"];
             $drinkPODetails[$count]["number"] = $row["dpd_number"];
