@@ -123,4 +123,8 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
         $result["message"] = "Cannot find this vendor!";
     }*/
 }
-echo json_encode($result);้
+
+echo json_encode($result);
+
+
+
