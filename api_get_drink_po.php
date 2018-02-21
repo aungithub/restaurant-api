@@ -29,12 +29,11 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm ดึงรายละเอียดการสั่งซื้อ และ เขียน query เพื่อดึงประวัติการรับทั้งหมดออกมา เพื่อจะนำมาคำนวณว่ารับหมดหรือยัง
-$query = " SELECT *, lpad(dpd.dpd_id, 4, '0') AS dpd_char_id, lpad(dp.dp_id, 4, '0') AS dp_char_id, SUM(dpd.dpd_receipt_number) AS receipted "
+$query = " SELECT *, lpad(dp.dp_id, 4, '0') AS dp_char_id, SUM(dpd.dpd_receipt_number) AS receipted "
         . " FROM res_drink_po dp "
         . " INNER JOIN res_drink_po_detail dpd ON dpd.dp_id = dp.dp_id "
-        . " INNER JOIN res_vendor v ON v.vendor_id = dpd.vendor_id "
         . $conditions
-        . " GROUP BY dp.dp_id, dpd.vendor_id";
+        . " GROUP BY dp.dp_id";
 
 $rs = $database->query($query);
 
@@ -43,12 +42,8 @@ $drinkPOs = array();
 while ($row = mysqli_fetch_assoc($rs)) {
     $drinkPOs[$count]["dp_id"] = $row["dp_id"];
     $drinkPOs[$count]["dp_char_id"] = $row["dp_char_id"];
-    $drinkPOs[$count]["dpd_char_id"] = $row["dpd_char_id"];
     $drinkPOs[$count]["dp_date"] = $row["dp_date"];
     $drinkPOs[$count]["dp_status_id"] = $row["dp_status_id"];
-    $drinkPOs[$count]["dpd_id"] = $row["dpd_id"];
-    $drinkPOs[$count]["vendor_id"] = $row["vendor_id"];
-    $drinkPOs[$count]["vendor_name"] = $row["vendor_name"];
 
     //cm เช็คว่าถ้าสถานะเป็น 1 และ approve_by มีข้อมูลแล้ว จะถือว่าพิจารณาแล้ว
     if ($row["dp_approved_by"] != null && $row["dp_approval_status"] == 1) {
@@ -72,7 +67,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     //cm เขียน query เพื่อดึงจำนวนทั้งหมดที่สั่งซื้อมา
     $query = "SELECT * "
         . " FROM res_drink_po_detail dpd "
-        . " WHERE dpd.dp_id = ".$row["dp_id"]." AND dpd.dpd_id = ".$row["dpd_id"]." AND dpd.vendor_id = ".$row["vendor_id"]." "
+        . " WHERE dpd.dp_id = ".$row["dp_id"]." "
         . " GROUP BY dpd.dp_id, dpd.drink_id, dpd.vendor_id, dpd.unit_id";
     $rs_sum_number = $database->query($query);
 
@@ -103,13 +98,12 @@ while ($row = mysqli_fetch_assoc($rs)) {
 
 if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
     $dp_id = $_GET["dp_id"];
-    $vendor_id = $_GET["vendor_id"];
 
     //cm ดึงจำนวนแถวของรายละเอยีดเครื่องดื่ม เพื่อจะให้รู้ว่า ต้องดึงรายละเอียดจากตาราง res_drink_po_detail กี่แถว
     //cm เพราะหากรับหลายๆรอบ ระบบควรดึงจำนวนแถวล่าสุดออกมาเท่านั้น
     $query = "SELECT * "
             . " FROM res_drink_po_detail dpd "
-            . " WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id." AND dpd_status_id = 1  "   
+            . " WHERE dpd.dp_id = ".$dp_id." AND dpd_status_id = 1  "   
             . " GROUP BY drink_id, vendor_id, dpd_number";
 
     $rs_row = $database->query($query);
@@ -133,7 +127,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
          . " INNER JOIN res_unitdetail ud ON ud.unitdetail_id = dpd.unitdetail_id "
          . " INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
          . " INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id "
-         . " WHERE dp.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id." AND dpd_status_id = 1  AND dpd.dpd_number >0  "
+         . " WHERE dp.dp_id = ".$dp_id." AND dpd_status_id = 1  AND dpd.dpd_number >0  "
          . " ORDER BY dpd_id DESC, dpd_receipt_remaining_number ASC "
          . " LIMIT 0, ".$rs_row->num_rows."";
 
@@ -164,7 +158,7 @@ if ($_GET["dp_id"] != null && $_GET["dp_action"] == 'detail') {
             //cm query เพื่อดึงรายละเอียดการรับ โดยดึง จำนวนที่รับทั้งหมด และจะไปคำนวน จำนวนที่รับคงเหลือ
             $query = "SELECT SUM(dpd.dpd_receipt_number) as sum_receipt_number, dpd.drink_id "
             . " FROM res_drink_po_detail dpd  "
-            . " WHERE dpd.dp_id = ".$dp_id." AND dpd.vendor_id = ".$vendor_id." AND dpd.dpd_status_id = 1 "
+            . " WHERE dpd.dp_id = ".$dp_id." AND dpd.dpd_status_id = 1 "
             . " GROUP BY dpd.drink_id, dpd.unitdetail_id, dpd.vendor_id";
 
             $rs_sum = $database->query($query);
