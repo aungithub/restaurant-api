@@ -74,9 +74,10 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
             }
             
             $query = "SELECT * "
-                        . " FROM res_drink  d " 
-                        . " LEFT JOIN res_unitdetail ut ON ut.unitdetail_id = d.drink_unit_id " 
-                        . " GROUP BY d.drink_id ORDER BY d.drink_id ASC";
+                        ." FROM res_drink  d   "
+                        ." LEFT JOIN res_unitdetail ut ON ut.unitdetail_id = d.unitdetail_id   "
+                        ." WHERE ut.unitdetail_id = 30 AND d.drink_id = 23 "
+                        ." GROUP BY d.drink_id ORDER BY d.drink_id ASC";
                      
             $rs = $database->query($query);
 
@@ -88,8 +89,20 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
                     $old_receipt_number = $obj->old_receipt_number;
                 }
 
+                //$old = ($rs["drink_number"] - ($old_receipt_number * $rs["unit_number"]));
+                $new = $receipt_number * $rs["unit_number"];
+
+                /*if ($old < 0) {
+                    $old = $old * -1;
+                }*/
+                if ($new < 0) {
+                    $new = $new * -1;
+                }
+
+                $total = $rs["drink_number"] + $new;
+
                 $query = "UPDATE res_drink "
-                        ." SET drink_number = ".((($rs["drink_number"] - $old_receipt_number) + $receipt_number)*($rs["unitdetail_number"]))." "
+                        ." SET drink_number = ".$total." "
                         ." WHERE drink_id = ".$obj->drink_id."";
 
                 $database->query($query);
