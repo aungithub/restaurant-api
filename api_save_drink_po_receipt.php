@@ -76,7 +76,7 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
             $query = "SELECT * "
                         ." FROM res_drink  d   "
                         ." LEFT JOIN res_unitdetail ut ON ut.unitdetail_id = d.unitdetail_id   "
-                        ." WHERE ut.unitdetail_id = 30 AND d.drink_id = 23 "
+                        ." WHERE d.drink_id = ".$obj->drink_id." "
                         ." GROUP BY d.drink_id ORDER BY d.drink_id ASC";
                      
             $rs = $database->query($query);
