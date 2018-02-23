@@ -18,6 +18,7 @@ $result["message"] = "Error: Bad request!";
 $drink_name = "";
 $drink_order_point = "";
 $drink_unit_id = "";
+$drink_unitdetail_id = "";
 $drink_unit_price = "";
 $drink_number = "";
 $drink_status_id = "";
@@ -31,6 +32,7 @@ if (!$postData) {
     $drink_name = $_POST["drink_name"];
     $drink_order_point = $_POST["drink_order_point"];
     $drink_unit_id = $_POST["drink_unit_id"];
+    $drink_unitdetail_id = $_POST["drink_unitdetail_id"];
     $drink_unit_price = $_POST["drink_unit_price"];
     $drink_number = $_POST["drink_number"];
     $drink_status_id = $_POST["drink_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
@@ -45,6 +47,7 @@ else {
     $drink_name = $postData->drink_name;
     $drink_order_point = $postData->drink_order_point;
     $drink_unit_id = $postData->drink_unit_id;
+    $drink_unitdetail_id = $postData->drink_unitdetail_id;
     $drink_unit_price = $postData->drink_unit_price;
     $drink_number = $postData->drink_number;
     $drink_status_id = $postData->drink_status_id;
@@ -53,7 +56,7 @@ else {
 }
 
 //cm เช็คว่า แต่ละข้อมูลที่รับมา ได้ครบหรือไม่ ถ้าครบ หรือถูกตามเงื่อนไขจะเข้าไปทำใน if แต่ถ้าไม่ก็จะข้ามไป
-if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != "" && $drink_unit_id != "" && $drink_number != "" && $drink_unit_price != "" && $drink_status_id != "" ) {
+if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != "" && $drink_unit_id != "" && $drink_unitdetail_id != "" && $drink_number != "" && $drink_unit_price != "" && $drink_status_id != "" ) {
     
     //cm ทำการ import ไฟล์ config.php ที่มี configuration เกี่ยวกับ database เข้ามา
     require 'config.php';
@@ -72,8 +75,8 @@ if ( $drink_name != "" && count($add_drink_object) > 0 && $drink_order_point != 
     
     
     //cm เขียนคำสั่ง query สำหรับ insert โดยทำการกำหนดค่าที่ได้จาก หน้าเว็บ ลงไปในคำสั่ง
-    $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_number, drink_order_point, drink_price, drink_unit_id, drink_status_id )"
-                . "VALUES( '".$drink_name."', '".$drink_number."', '".$drink_order_point."', '".$drink_unit_price."', '".$drink_unit_id."', '".$drink_status_id."' )";
+    $query_insert_drink = "INSERT INTO res_drink( drink_name, drink_number, drink_order_point, drink_price, drink_unit_id, drink_status_id, unitdetail_id )"
+                . "VALUES( '".$drink_name."', '".$drink_number."', '".$drink_order_point."', '".$drink_unit_price."', '".$drink_unit_id."', '".$drink_status_id."', ".$drink_unitdetail_id." )";
 
         //cm นำคำสั่ง query ไป query เพื่อทำการ insert ข้อมูลลงฐานข้อมูล โดยใช้คำสั่ง/ฟังก์ชัน  $database->query()
         //cm และตรวจสอบว่าถ้าหาก query ได้ ไม่มีปัญหาอะไร จะ เข้าไปทำใน if 
