@@ -21,7 +21,6 @@ require 'config.php';
     $drink_number = ""; 
     $drink_order_point = "";
     $drink_unit_id = "";
-    $drink_unitdetail_id = "";
     $drink_status_id  = "";
     $drink_unit_price = "";
    
@@ -35,7 +34,6 @@ require 'config.php';
     $drink_number = $_POST["drink_number"]; 
     $drink_order_point = $_POST["drink_order_point"]; 
     $drink_unit_id = $_POST["drink_unit_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-    $drink_unitdetail_id = $_POST["drink_unitdetail_id"];
     $drink_status_id = $_POST["drink_status_id"];
     $drink_unit_price = $_POST["drink_unit_price"];
    
@@ -49,7 +47,6 @@ require 'config.php';
     $drink_number = $postData->drink_number; 
     $drink_order_point = $postData->drink_order_point;
     $drink_unit_id = $postData->drink_unit_id;
-    $drink_unitdetail_id = $postData->drink_unitdetail_id;
     $drink_status_id = $postData->drink_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $drink_unit_price = $postData->drink_unit_price;
 
@@ -86,12 +83,6 @@ if ( $drink_id != "" && $drink_status_id != "") {
             $condition_update .= ",";
         }
         $condition_update .= " drink_unit_id = '".$drink_unit_id."' ";
-    }
-    if ($drink_unitdetail_id != "") {
-        if ($condition_update != "") {
-            $condition_update .= ",";
-        }
-        $condition_update .= " unitdetail_id = '".$drink_unitdetail_id."' ";
     }
     if ($drink_status_id != "") {
         if ($condition_update != "") {

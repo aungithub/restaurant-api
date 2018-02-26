@@ -75,7 +75,6 @@ $query = " SELECT d.drink_id,
                         d.drink_unit_id, 
                         d.drink_price, 
                         d.drink_status_id, 
-                        d.unitdetail_id, 
                         v.vendor_name, 
                         u.unit_name, 
                         lpad(d.drink_id, 4, '0') AS drink_char_id, 
@@ -111,7 +110,6 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $drink[$count]["drink_unit_price"] = $row["drink_price"];
     $drink[$count]["drink_status_id"] = $row["drink_status_id"];
     $drink[$count]["is_less"] = $row["is_less"];
-    $drink[$count]["unitdetail_id"] = $row["unitdetail_id"];
 
     $count++;
 }
@@ -166,27 +164,11 @@ while ($row_vendor_list = mysqli_fetch_assoc($rs_vendor_list)) {
     $count_vendor_list++;
 }
 
-$query_unitdetail = "SELECT *, CONCAT(ud.unitdetail_number, ' ', u1.unit_name, ' (', ud.unit_number, ' ', u2.unit_name, ')') AS unitdetail_name "
-                    ." FROM res_unitdetail ud "
-                    ." INNER JOIN res_unit u1 ON u1.unit_id = ud.unitdetail_unit_id "
-                    ." INNER JOIN res_unit u2 ON u2.unit_id = ud.unit_unit_id";
-$rs_unitdetail_list = $database->query($query_unitdetail);
-
-$count_unitdetail_list = 0;
-$unitdetail_list = array();
-while ($row_unitdetail_list = mysqli_fetch_assoc($rs_unitdetail_list)) {
-    $unitdetail_list[$count_unitdetail_list]["unitdetail_id"] = $row_unitdetail_list["unitdetail_id"];
-    $unitdetail_list[$count_unitdetail_list]["unitdetail_name"] = $row_unitdetail_list["unitdetail_name"];
-
-    $count_unitdetail_list++;
-}
-
 
 $result["drink"] = $drink;
 $result["unit"] = $unit;
 $result["vendor"] = $vendor;
 $result["vendor_drink"] = $vendor_drink;
 $result["vendor_list"] = $vendor_list;
-$result["unitdetail_list"] = $unitdetail_list;
 
 echo json_encode($result);

@@ -27,6 +27,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
    
     $drink[$count]["drink_id"] = $row["drink_id"];
     $drink[$count]["drink_name"] = $row["drink_name"];
+    $drink[$count]["drink_unit_id"] = $row["drink_unit_id"];
    
     $count++;
 }
@@ -46,6 +47,7 @@ $count = 0;
 $unit = array();
 while ($row = mysqli_fetch_assoc($rs)) {
    
+    $unit[$count]["unit_unit_id"] = $row["unit_unit_id"];
     $unit[$count]["unitdetail_id"] = $row["unitdetail_id"];
     $unit[$count]["unitdetail_name"] = $row["unitdetail_name"];
     $unit[$count]["unitdetail_number"] = $row["unitdetail_number"];
