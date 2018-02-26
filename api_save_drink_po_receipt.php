@@ -74,10 +74,11 @@ if ($dpd_receipt_by != "" && is_array($drink_po_receipt)) {
             }
             
             $query = "SELECT * "
-                        ." FROM res_drink  d   "
-                        ." LEFT JOIN res_unitdetail ut ON ut.unitdetail_id = d.unitdetail_id   "
-                        ." WHERE d.drink_id = ".$obj->drink_id." "
-                        ." GROUP BY d.drink_id ORDER BY d.drink_id ASC";
+                        ." FROM res_drink_po_detail dpd "
+                        ." INNER JOIN res_drink d ON d.drink_id = dpd.drink_id "
+                        ." INNER JOIN res_unitdetail ut ON ut.unitdetail_id = dpd.unitdetail_id   " 
+                        ." WHERE d.drink_id = ".$obj->drink_id." AND dpd.dp_id = ".$obj->dp_id." AND dpd.vendor_id = ".$obj->vendor_id." "
+                        ." GROUP BY d.drink_id ORDER BY d.drink_id ASC ";
                      
             $rs = $database->query($query);
 
