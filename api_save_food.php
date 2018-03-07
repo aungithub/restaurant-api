@@ -49,7 +49,7 @@ foreach ($food_list as $obj) {
 
 if ($obj->type == "food") {
 
-     $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", 1, ".$obj->food_id.",'".$obj->comment."');";
+     $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
 
     $database->query($query);
 }
