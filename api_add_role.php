@@ -55,7 +55,7 @@ if ($role_name != "" && $role_back_pages_string != "" && $role_status != "") {
     } else {
     
         $query_insert_role = "INSERT INTO res_role(role_name,role_front,role_back,role_status_id) "
-                . "VALUES('".$role_name."','index,admin_home','".$role_back_pages_string."','".$role_status."')";
+                . "VALUES('".$role_name."','index,admin_home,user_home','".$role_back_pages_string."','".$role_status."')";
 
         if ($database->query($query_insert_role)) {
             $result["status"] = 200;

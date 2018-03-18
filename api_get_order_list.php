@@ -73,6 +73,14 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
+$conditionn = "";
+$search = null;
+if ($_GET["search"] != null) {
+    $conditionn = " WHERE order_id LIKE '%".$_GET["search"]."%' "
+                . " OR food_name LIKE '%".$_GET["search"]."%' ";
+
+}
+
 
 $conditions = "";
 $order_id = null;
@@ -103,24 +111,40 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 $rs = $database->query($query);
 
 $count = 0;
-$orderfood = array();
+$orderlist = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
-    $orderfood[$count]["order_id"] = $row["order_id"];
-     $orderfood[$count]["order_number"] = $row["order_number"];
-    $orderfood[$count]["price"] = $row["price"];
-     $orderfood[$count]["order_datetime"] = $row["order_datetime"];
-      $orderfood[$count]["number"] = $row["number"];
-      $orderfood[$count]["status"] = $row["status"];
-    $orderfood[$count]["food_id"] = $row["food_id"];
-     $orderfood[$count]["food_name"] = $row["food_name"];
-     $orderfood[$count]["comment"] = $row["comment"];
+    $orderlist[$count]["order_id"] = $row["order_id"];
+     $orderlist[$count]["order_number"] = $row["order_number"];
+    $orderlist[$count]["price"] = $row["price"];
+     $orderlist[$count]["order_datetime"] = $row["order_datetime"];
+      $orderlist[$count]["number"] = $row["number"];
+      $orderlist[$count]["status"] = $row["status"];
+    $orderlist[$count]["food_id"] = $row["food_id"];
+     $orderlist[$count]["food_name"] = $row["food_name"];
+     $orderlist[$count]["comment"] = $row["comment"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }
 
+ $query_pro = "SELECT * FROM res_promotion WHERE DATE(pro_start) <= '".date('Y-m-d')."' AND DATE(pro_end) >= '".date('Y-m-d')."' AND pro_status_id = 1";
+  
+  $rs_pro = $database->query($query_pro);
+
+$count_pro = 0;
+$promotionlist = array();
+while ($row_pro = mysqli_fetch_assoc($rs_pro)) {
+    $promotionlist[$count_pro]["pro_id"] = $row_pro["pro_id"];
+    $promotionlist[$count_pro]["pro_name"] = $row_pro["pro_name"];
+    $promotionlist[$count_pro]["pro_discount"] = $row_pro["pro_discount"];
+    $promotionlist[$count_pro]["pro_start"] = $row_pro["pro_start"];
+    $promotionlist[$count_pro]["pro_end"] = $row_pro["pro_end"];
+    $promotionlist[$count_pro]["pro_status_id"] = $row_pro["pro_status_id"];
+    $count_pro++;
+}
 
 
-$result["orderfood"] = $orderfood;
+$result["orderlist"] = $orderlist;
+$result["promotionlist"] = $promotionlist;
 
 echo json_encode($result);

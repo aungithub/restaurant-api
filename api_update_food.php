@@ -23,6 +23,7 @@ $database->set_charset('utf8');
     $food_price = "";
    
     $food_status_id = "";
+    $action = "";
 
     if (!$postData) {
     // ส่งจาก RESTlet
@@ -32,7 +33,7 @@ $database->set_charset('utf8');
     $food_price = $_POST["food_price"];
     
     $food_status_id = $_POST["food_status_id"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+     $action = $_POST["action"];
 
 } else {
     // ส่งจากหน้าเว็บ AngularJS
@@ -42,7 +43,7 @@ $database->set_charset('utf8');
     $food_price = $postData->food_price;
    
     $food_status_id = $postData->food_status_id;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-   
+     $action = $postData->action;
 
 
 }
@@ -78,6 +79,13 @@ $database->set_charset('utf8');
             $condition_update .= ",";
         }
         $condition_update .= " food_status_id = '".$food_status_id."' ";
+    }
+
+    if ($action == "cancel") {
+        if ($condition_update != "") {
+            $condition_update .= ",";
+        }
+        $condition_update .= " cancel_date = '".date('Y-m-d H:i:s')."' ";
     }
     
     

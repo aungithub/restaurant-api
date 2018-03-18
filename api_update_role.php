@@ -56,13 +56,13 @@ if ($role_id != ""  && $role_status_id != "") {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " role_front = 'index,admin_home,".$role_front."' ";
+        $condition_update .= " role_front = 'index,admin_home,user_home,".$role_front."' ";
     }
     else {
         if ($condition_update != "") {
             $condition_update .= ",";
         }
-        $condition_update .= " role_front = 'index,admin_home'";
+        $condition_update .= " role_front = 'index,admin_home,user_home'";
     }
 
     if ($role_back != "") {

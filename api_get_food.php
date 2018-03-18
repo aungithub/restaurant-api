@@ -12,6 +12,13 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
+$conditionn = "";
+$search = null;
+if ($_GET["search"] != null) {
+    $conditionn = " WHERE food_id LIKE '%".$_GET["search"]."%' "
+                . " OR food_name LIKE '%".$_GET["search"]."%' ";
+
+}
 
 $conditions = "";
 $food_id = null;
@@ -52,6 +59,18 @@ while ($row = mysqli_fetch_assoc($rs)) {
       $food[$count]["kind_name"] = $row["kind_name"];
       $food[$count]["food_price"] = $row["food_price"];
     $food[$count]["food_status_id"] = $row["food_status_id"];
+
+    if ($row["cancel_date"] != null) {
+         $cancel_date = explode(' ', $row["cancel_date"]);
+
+        if ($cancel_date[0] != date('Y-m-d')) {
+             $query = "UPDATE res_food SET cancel_date = null,food_status_id = 1 WHERE food_id = ".$row["food_id"]." ";
+             $database->query($query);
+             $food[$count]["food_status_id"] = 1;
+        }
+    }
+   
+
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }

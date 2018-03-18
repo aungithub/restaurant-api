@@ -95,32 +95,32 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
  $query = " SELECT * "
-        . " FROM order_food f "
-        . " inner JOIN res_food k ON k.food_id = f.food_id " 
+        . " FROM order_drink f "
+        . " inner JOIN res_drink k ON k.drink_id = f.drink_id " 
         . $conditions
-        . " ORDER BY f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY f.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
 $count = 0;
-$orderfood = array();
+$orderdrink = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
-    $orderfood[$count]["order_id"] = $row["order_id"];
-     $orderfood[$count]["order_number"] = $row["order_number"];
-    $orderfood[$count]["price"] = $row["price"];
-     $orderfood[$count]["order_datetime"] = $row["order_datetime"];
-      $orderfood[$count]["number"] = $row["number"];
-      $orderfood[$count]["status"] = $row["status"];
-    $orderfood[$count]["food_id"] = $row["food_id"];
-     $orderfood[$count]["food_name"] = $row["food_name"];
-     $orderfood[$count]["comment"] = $row["comment"];
+    $orderdrink[$count]["order_id"] = $row["order_id"];
+     $orderdrink[$count]["order_number"] = $row["order_number"];
+    $orderdrink[$count]["price"] = $row["price"];
+     $orderdrink[$count]["order_datetime"] = $row["order_datetime"];
+      $orderdrink[$count]["number"] = $row["number"];
+      $orderdrink[$count]["status"] = $row["status"];
+    $orderdrink[$count]["drink_id"] = $row["drink_id"];
+     $orderdrink[$count]["drink_name"] = $row["drink_name"];
+     $orderdrink[$count]["comment"] = $row["comment"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }
 
 
 
-$result["orderfood"] = $orderfood;
+$result["orderdrink"] = $orderdrink;
 
 echo json_encode($result);

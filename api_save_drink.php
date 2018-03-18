@@ -9,21 +9,15 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
-$food_list = "";
 $drink_list = "";
-$table_id = "";
 $time = date("Y-m-d H:i:s");
 
 if (!$postData) {
     // ส่งจาก RESTlet
-   $food_list = $_POST["food_list"];
    $drink_list = $_POST["drink_list"];
-    $table_id = $_POST["table_id"];
 } else {
     // ส่งจากหน้าเว็บ AngularJS
-    $food_list = $postData->food_list;
     $drink_list = $postData->drink_list;
-     $table_id = $postData->table_id;
 }
 
     //cm ทำการ import ไฟล์ config.php ที่มี configuration เกี่ยวกับ database เข้ามา
@@ -41,31 +35,30 @@ if (!$postData) {
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
 
-echo $query = "INSERT INTO res_order(order_date, id_service,id_payment) VALUES('".$time."', '1', '1');";
+$query = "INSERT INTO res_order(order_date, id_service,id_payment) VALUES('".$time."', '1', '1');";
 
 $database->query($query);
 
 $order_id = $database->insert_id;
 
-$query = "INSERT INTO res_order_detail(order_id, order_number) VALUES(".$order_id.", 1);";
+ $query = "INSERT INTO res_order_detail(order_id, order_number) VALUES(".$order_id.", 1);";
 
 $database->query($query);
 
-foreach ($food_list as $obj) {
-    if ($obj->type == "food") {
+foreach ($drink_list as $obj) {
 
-         $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
+if ($obj->type == "drink") {
 
-        $database->query($query);
-    }
+     $query = "INSERT INTO order_food(order_id, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.",  ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
+
+    $database->query($query);
 }
 
-foreach ($drink_list as $obj) {
-    if ($obj->type == "drink") {
-        $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
+   else if ($obj->type == "drink") {
 
-        $database->query($query);
+
    }
+
 }
 
 
