@@ -20,12 +20,15 @@ require 'config.php';
 $order_id = "";
 $status = "";
 $drink_id = "";
+$number = "";
 
  if (!$postData) {
 // ส่งจาก RESTlet
     $order_id = $_POST["order_id"];
     $status = $_POST["status"];//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
      $drink_id = $_POST["drink_id"];
+      $number = $_POST["number"];
+   
    
 
 } else {
@@ -33,8 +36,11 @@ $drink_id = "";
     $order_id = $postData->order_id;
     $status = $postData->status;//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
     $drink_id = $postData->drink_id;
+     $number = $postData->number;
 
 }
+
+
 
 $query = " UPDATE order_drink "
     . " SET status = ".$status." "
@@ -42,6 +48,25 @@ $query = " UPDATE order_drink "
    
 
 if ($database->query($query)) {
+
+$query = " SELECT * "
+        . " FROM res_drink d "
+        ." WHERE drink_id =  ".$drink_id." ";
+        
+$rs = $database->query($query);
+
+while ($row = mysqli_fetch_assoc($rs)) {
+   $drink_number =  $row["drink_number"] - $number;
+  
+    $query = " UPDATE res_drink "
+    . " SET drink_number = ".$drink_number." "
+    . " WHERE drink_id = ".$drink_id."  ";
+    $database->query($query);
+}
+
+
+
+
     $result["status"] = 200;
     $result["message"] = "Update order success!";
 }

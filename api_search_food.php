@@ -13,12 +13,12 @@ $database = mysqli_connect($db["local"]["host"],
 
 $database->set_charset('utf8');
 
-
 $conditions = "";
-$food_id = null;
-if ($_GET["food_id"] != null && $_GET["food_id"] != 0) {
-    $food_id = $_GET["food_id"];
-    $conditions = " WHERE food_id = '".$food_id."' ";
+$search = null;
+if ($_GET["search"] != null) {
+    $conditions = " WHERE food_id LIKE '%".$_GET["search"]."%' "
+                . " OR food_name LIKE '%".$_GET["search"]."%' ";
+
 }
 //เช็คเฉพาะอาหารที่ใช้งานอยู่
 if ($conditions == "") {

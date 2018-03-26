@@ -62,8 +62,8 @@ $result["orderfood"] = $orderfood;
 echo json_encode($result);*/
 
 error_reporting(0);
-
 header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 $result["status"] = 200;
 $result["message"] = "Successful!";
 require 'config.php';

@@ -9,35 +9,21 @@ $postData = json_decode(file_get_contents('php://input')); // เพื่อร
 $result["status"] = 400;
 $result["message"] = "Error: Bad request!";
 
-     $order_id = "";
-    $totalprice = "";
-    $promotion = "";
-    $discount = "";
-    $total = "";
-    $price = "";//ตัวแปลfillที่ใช้ใส่ข้อมูลในหน้าadd
-     $changeprice = "";
-
-
+$food_list = "";
+$drink_list = "";
+$order_id = "";
+$time = date("Y-m-d H:i:s");
 
 if (!$postData) {
     // ส่งจาก RESTlet
+   $food_list = $_POST["food_list"];
+   $drink_list = $_POST["drink_list"];
     $order_id = $_POST["order_id"];
-   $totalprice = $_POST["totalprice"];
-   $promotion = $_POST["promotion"];
-   $discount = $_POST["discount"];
-   $total = $_POST["total"];
-   $price = $_POST["price"];
-   $changeprice = $_POST["changeprice"];
-
 } else {
     // ส่งจากหน้าเว็บ AngularJS
-    $order_id = $postData->order_id;
-    $totalprice = $postData->totalprice;
-    $promotion = $postData->promotion;
-    $discount = $postData->discount;
-    $total = $postData->total;
-    $price = $postData->price;
-    $changeprice = $postData->changeprice;
+    $food_list = $postData->food_list;
+    $drink_list = $postData->drink_list;
+     $order_id = $postData->order_id;
 }
 
     //cm ทำการ import ไฟล์ config.php ที่มี configuration เกี่ยวกับ database เข้ามา
@@ -55,14 +41,54 @@ if (!$postData) {
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
 
- $query = "INSERT INTO res_payment(order_id ,totalprice,promotion,total,price,changeprice) VALUES(  '".$order_id."','".$totalprice."', '".$promotion."','".$total."','".$price."' ,'".$changeprice."');";
 
-$database->query($query);
 
-$payment_id = $database->insert_id;
+foreach ($food_list as $obj) {
+    if ($obj->type == "food") {
 
-$query = "UPDATE res_order SET id_payment = '".$payment_id."'  WHERE order_id = '".$order_id."'";
-$database->query($query);
+         $query = "SELECT * FROM order_food WHERE order_id = '".$order_id."' AND food_id = '".$obj->food_id."'";
+
+         $rs =$database->query($query);
+
+         if ($rs->num_rows > 0) {
+             # code...
+         $query = "UPDATE order_food SET number = ".$obj->number." , comment = '".$obj->comment."' WHERE order_id = '".$obj->order_id."' AND food_id = '".$obj->food_id."'";
+
+        $database->query($query);
+         }
+         else {
+
+             $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
+
+        $database->query($query);
+         }
+
+    }
+}
+
+foreach ($drink_list as $obj) {
+    if ($obj->type == "drink") {
+
+          $query = "SELECT * FROM order_drink WHERE order_id = '".$order_id."' AND drink_id = '".$obj->drink_id."'";
+
+         $rs =$database->query($query);
+
+          if ($rs->num_rows > 0) {
+      $query = "UPDATE order_drink SET number = ".$obj->number." , comment = '".$obj->comment."'  WHERE order_id = '".$obj->order_id."' AND drink_id = '".$obj->drink_id."'";
+
+
+        $database->query($query);
+    }
+    else{
+
+         $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
+
+        $database->query($query);
+        
+    }
+   }
+}
+
 
 $result["status"] = 200;
 $result["message"] = "successful!";

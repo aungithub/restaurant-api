@@ -12,14 +12,7 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
-$conditionn = "";
-$search = null;
-if ($_GET["search"] != null) {
-    $conditionn = " WHERE Account_ID LIKE '%".$_GET["search"]."%' "
-                . " OR M_NAME LIKE '%".$_GET["search"]."%' "
-                . " OR M_Username LIKE '%".$_GET["search"]."%' ";
 
-}
 
 $conditions = "";
 $drink_id = null;

@@ -73,13 +73,13 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
-$conditionn = "";
+/*$conditionn = "";
 $search = null;
 if ($_GET["search"] != null) {
     $conditionn = " WHERE order_id LIKE '%".$_GET["search"]."%' "
                 . " OR food_name LIKE '%".$_GET["search"]."%' ";
 
-}
+}*/
 
 
 $conditions = "";
@@ -102,9 +102,12 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
- $query = " SELECT * "
+$query = " SELECT f.*, COUNT(f2.order_id) AS food_not_finish , COUNT(f3.order_id) AS drink_not_finish "
         . " FROM order_food f "
         . " inner JOIN res_food k ON k.food_id = f.food_id " 
+        . "LEFT JOIN order_food f2 ON f2.order_id = f.order_id AND (f2.status != 1 OR f2.status IS NULL)"
+        . " LEFT JOIN order_drink f3 ON f3.order_id = f.order_id AND (f3.status != 1 OR f3.status IS NULL)"
+        . " GROUP BY f.order_id"
         . $conditions
         . " ORDER BY f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
@@ -123,6 +126,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $orderlist[$count]["food_id"] = $row["food_id"];
      $orderlist[$count]["food_name"] = $row["food_name"];
      $orderlist[$count]["comment"] = $row["comment"];
+     $orderlist[$count]["food_not_finish"] = $row["food_not_finish"];
+     $orderlist[$count]["drink_not_finish"] = $row["drink_not_finish"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }

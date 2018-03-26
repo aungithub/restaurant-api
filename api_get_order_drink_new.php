@@ -117,7 +117,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
      $orderdrink[$count]["comment"] = $row["comment"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
 
-       if ( $row["status"] == 1) {
+    /* if ( $row["status"] == 1) {
         $orderdrink[$count]["status"] = "กำลังเตรียมเสิร์ฟ";
     } 
     //cm เช็คว่าถ้าสถานะเป็น 0 และ rejected_by มีข้อมูลแล้ว จะถือว่าไม่พิจารณา 
@@ -128,7 +128,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     else {
         $orderdrink[$count]["status"] = "ยกเลิกรายการ";
     } 
-    
+*/
+
     $count++;
 }
 

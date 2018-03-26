@@ -62,8 +62,8 @@ $result["orderfood"] = $orderfood;
 echo json_encode($result);*/
 
 error_reporting(0);
-
 header("Content-Type: application/json; charset=UTF-8");
+$postData = json_decode(file_get_contents('php://input')); // เพื่อรับข้อมูลจาก web เพราะเว็บส่งเป็น json
 $result["status"] = 200;
 $result["message"] = "Successful!";
 require 'config.php';
@@ -73,6 +73,19 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
+
+
+$table_id = "";
+
+
+if (!$postData) {
+    // ส่งจาก RESTlet
+    $table_id = $_POST["table_id"];
+} else {
+    // ส่งจากหน้าเว็บ AngularJS
+  $table_id = $postData->table_id;
+}
+
 
 $conditions = "";
 $order_id = null;
@@ -94,46 +107,63 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
- $query = " SELECT * "
-        . " FROM order_drink f "
-        . " inner JOIN res_drink k ON k.drink_id = f.drink_id " 
+$query = " SELECT * "
+        . " FROM res_order f "
+        . " INNER JOIN order_food k ON k.order_id = f.order_id " 
+         . "  INNER JOIN res_food r ON r.food_id = k.food_id "
         . $conditions
-        . " ORDER BY f.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " WHERE f.table_id =  '".$table_id."' AND f.id_payment IS NULL";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
 $count = 0;
-$orderdrink = array();
+$orderfood = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
-    $orderdrink[$count]["order_id"] = $row["order_id"];
-     $orderdrink[$count]["order_number"] = $row["order_number"];
-    $orderdrink[$count]["price"] = $row["price"];
-     $orderdrink[$count]["order_datetime"] = $row["order_datetime"];
-      $orderdrink[$count]["number"] = $row["number"];
-      $orderdrink[$count]["status"] = $row["status"];
-    $orderdrink[$count]["drink_id"] = $row["drink_id"];
-     $orderdrink[$count]["drink_name"] = $row["drink_name"];
-     $orderdrink[$count]["comment"] = $row["comment"];
-    //$employees[$count]["emp_name"] = $row["emp_name"];
-
-       if ( $row["status"] == 1) {
-        $orderdrink[$count]["status"] = "กำลังเตรียมเสิร์ฟ";
-    } 
-    //cm เช็คว่าถ้าสถานะเป็น 0 และ rejected_by มีข้อมูลแล้ว จะถือว่าไม่พิจารณา 
-    else if ( $row["status"] == 2) {
-        $orderdrink[$count]["status"] = "กำลังจัดเตรียม";
-    } 
-    //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
-    else {
-        $orderdrink[$count]["status"] = "ยกเลิกรายการ";
-    } 
-    
+    $orderfood[$count]["order_id"] = $row["order_id"];
+     $orderfood[$count]["order_number"] = $row["order_number"];
+    $orderfood[$count]["price"] = $row["price"];
+     $orderfood[$count]["order_datetime"] = $row["order_datetime"];
+      $orderfood[$count]["number"] = $row["number"];
+      $orderfood[$count]["status"] = $row["status"];
+    $orderfood[$count]["food_id"] = $row["food_id"];
+     $orderfood[$count]["food_name"] = $row["food_name"];
+     $orderfood[$count]["comment"] = $row["comment"];
+        $orderfood[$count]["table_id"] = $row["table_id"];
+        $orderfood[$count]["type"] = 'food';
+   
     $count++;
 }
 
+$queryy = " SELECT * "
+        . " FROM res_order f "
+        . "  INNER JOIN order_drink d ON d.order_id = f.order_id " 
+        . "  INNER JOIN res_drink r ON r.drink_id = d.drink_id "
+        . $conditions
+        . " WHERE f.table_id =  '".$table_id."' AND f.id_payment IS NULL";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
+$rs_drink = $database->query($queryy);
 
+$count_drink = 0;
+$orderdrink = array();
+while ($row_drink = mysqli_fetch_assoc($rs_drink)) {
+
+    $orderdrink[$count_drink]["order_id"] = $row_drink["order_id"];
+     
+    $orderdrink[$count_drink]["price"] = $row_drink["price"];
+     $orderdrink[$count_drink]["order_datetime"] = $row_drink["order_datetime"];
+      $orderdrink[$count_drink]["number"] = $row_drink["number"];
+      $orderdrink[$count_drink]["status"] = $row_drink["status"];
+    $orderdrink[$count_drink]["drink_id"] = $row_drink["drink_id"];
+     $orderdrink[$count_drink]["drink_name"] = $row_drink["drink_name"];
+     $orderdrink[$count_drink]["comment"] = $row_drink["comment"];
+        $orderdrink[$count_drink]["table_id"] = $row_drink["table_id"];
+        $orderdrink[$count_drink]["type"] = 'drink';
+   
+    $count_drink++;
+}
+
+$result["orderfood"] = $orderfood;
 $result["orderdrink"] = $orderdrink;
 
 echo json_encode($result);

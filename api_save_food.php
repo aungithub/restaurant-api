@@ -41,7 +41,7 @@ if (!$postData) {
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
 
-echo $query = "INSERT INTO res_order(order_date, id_service,id_payment) VALUES('".$time."', '1', '1');";
+ $query = "INSERT INTO res_order(order_date, id_service,table_id) VALUES('".$time."', '1','".$table_id."');";
 
 $database->query($query);
 
@@ -53,6 +53,8 @@ $database->query($query);
 
 foreach ($food_list as $obj) {
     if ($obj->type == "food") {
+
+        
 
          $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
 
