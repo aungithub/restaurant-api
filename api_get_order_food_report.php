@@ -94,13 +94,12 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
-  $query = " SELECT * "
+ $query = " SELECT * "
         . " FROM order_food f "
-        . " INNER JOIN res_order r ON r.order_id = f.order_id "
-        . " INNER JOIN res_table t ON t.table_id = r.table_id "
-        . " INNER JOIN res_food k ON k.food_id = f.food_id " 
+        . " inner JOIN res_food k ON k.food_id = f.food_id " 
+         . " GROUP BY k.food_id ASC"
         . $conditions
-        . " ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY f.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
@@ -117,15 +116,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $orderfood[$count]["food_id"] = $row["food_id"];
      $orderfood[$count]["food_name"] = $row["food_name"];
      $orderfood[$count]["comment"] = $row["comment"];
-
-     if($row["table_id"] == 10){
-        $orderfood[$count]["table_name"] = "T10";
-     }
-     else {
-      $orderfood[$count]["table_name"] = "T0".$row["table_id"];
-    }
     //$employees[$count]["emp_name"] = $row["emp_name"];
-
+/*
  if ( $row["status"] == 1) {
         $orderfood[$count]["status"] = "กำลังเตรียมเสิร์ฟ";
     } 
@@ -134,13 +126,31 @@ while ($row = mysqli_fetch_assoc($rs)) {
         $orderfood[$count]["status"] = "กำลังจัดเตรียม";
     } 
     //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
-    else {
+    else ( $row["status"] == 0) {
         $orderfood[$count]["status"] = "ยกเลิกรายการ";
-    } 
+    } */
 
     $count++;
 }
 
+$query_pro = "SELECT * FROM res_promotion WHERE DATE(pro_start) <= '".date('Y-m-d')."' AND DATE(pro_end) >= '".date('Y-m-d')."' AND pro_status_id = 1";
+  
+  $rs_pro = $database->query($query_pro);
+
+$count_pro = 0;
+$promotionlist = array();
+while ($row_pro = mysqli_fetch_assoc($rs_pro)) {
+    $promotionlist[$count_pro]["pro_id"] = $row_pro["pro_id"];
+    $promotionlist[$count_pro]["pro_name"] = $row_pro["pro_name"];
+    $promotionlist[$count_pro]["pro_discount"] = $row_pro["pro_discount"];
+    $promotionlist[$count_pro]["pro_start"] = $row_pro["pro_start"];
+    $promotionlist[$count_pro]["pro_end"] = $row_pro["pro_end"];
+    $promotionlist[$count_pro]["pro_status_id"] = $row_pro["pro_status_id"];
+    $count_pro++;
+}
+
+
 $result["orderfood"] = $orderfood;
+$result["promotionlist"] = $promotionlist;
 
 echo json_encode($result);

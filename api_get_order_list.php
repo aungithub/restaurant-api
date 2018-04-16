@@ -102,14 +102,11 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
-$query = " SELECT f.*, COUNT(f2.order_id) AS food_not_finish , COUNT(f3.order_id) AS drink_not_finish "
+ $query = " SELECT * "
         . " FROM order_food f "
         . " inner JOIN res_food k ON k.food_id = f.food_id " 
-        . "LEFT JOIN order_food f2 ON f2.order_id = f.order_id AND (f2.status != 1 OR f2.status IS NULL)"
-        . " LEFT JOIN order_drink f3 ON f3.order_id = f.order_id AND (f3.status != 1 OR f3.status IS NULL)"
-        . " GROUP BY f.order_id"
         . $conditions
-        . " ORDER BY f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
@@ -128,6 +125,18 @@ while ($row = mysqli_fetch_assoc($rs)) {
      $orderlist[$count]["comment"] = $row["comment"];
      $orderlist[$count]["food_not_finish"] = $row["food_not_finish"];
      $orderlist[$count]["drink_not_finish"] = $row["drink_not_finish"];
+
+      if ( $row["status"] == 1) {
+        $orderlist[$count]["status"] = "กำลังเตรียมเสิร์ฟ";
+    } 
+    //cm เช็คว่าถ้าสถานะเป็น 0 และ rejected_by มีข้อมูลแล้ว จะถือว่าไม่พิจารณา 
+    else if ( $row["status"] == 2) {
+        $orderlist[$count]["status"] = "กำลังจัดเตรียม";
+    } 
+    //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
+    else {
+        $orderlist[$count]["status"] = "ยกเลิกรายการ";
+    } 
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }

@@ -73,6 +73,14 @@ $database = mysqli_connect($db["local"]["host"],
                             $db["local"]["database"]) or die("Error: MySQL cannot connect!");
 
 $database->set_charset('utf8');
+/*$conditionn = "";
+$search = null;
+if ($_GET["search"] != null) {
+    $conditionn = " WHERE order_id LIKE '%".$_GET["search"]."%' "
+                . " OR food_name LIKE '%".$_GET["search"]."%' ";
+
+}*/
+
 
 $conditions = "";
 $order_id = null;
@@ -94,44 +102,52 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
- $query = " SELECT * "
+$query =" SELECT * "
         . " FROM order_food f "
         . " inner JOIN res_food k ON k.food_id = f.food_id " 
+        ."GROUP BY f.order_id"
         . $conditions
-        . " ORDER BY f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . " ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
 $count = 0;
-$orderfood = array();
+$orderlist = array();
 while ($row = mysqli_fetch_assoc($rs)) {
 
-    $orderfood[$count]["order_id"] = $row["order_id"];
-     $orderfood[$count]["order_number"] = $row["order_number"];
-    $orderfood[$count]["price"] = $row["price"];
-     $orderfood[$count]["order_datetime"] = $row["order_datetime"];
-      $orderfood[$count]["number"] = $row["number"];
-      $orderfood[$count]["status"] = $row["status"];
-    $orderfood[$count]["food_id"] = $row["food_id"];
-     $orderfood[$count]["food_name"] = $row["food_name"];
-     $orderfood[$count]["comment"] = $row["comment"];
+    $orderlist[$count]["order_id"] = $row["order_id"];
+     $orderlist[$count]["order_number"] = $row["order_number"];
+    $orderlist[$count]["price"] = $row["price"];
+     $orderlist[$count]["order_datetime"] = $row["order_datetime"];
+      $orderlist[$count]["number"] = $row["number"];
+      $orderlist[$count]["status"] = $row["status"];
+    $orderlist[$count]["food_id"] = $row["food_id"];
+     $orderlist[$count]["food_name"] = $row["food_name"];
+     $orderlist[$count]["comment"] = $row["comment"];
+     $orderlist[$count]["food_not_finish"] = $row["food_not_finish"];
+     $orderlist[$count]["drink_not_finish"] = $row["drink_not_finish"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
-
- if ( $row["status"] == 1) {
-        $orderfood[$count]["status"] = "กำลังเตรียมเสิร์ฟ";
-    } 
-    //cm เช็คว่าถ้าสถานะเป็น 0 และ rejected_by มีข้อมูลแล้ว จะถือว่าไม่พิจารณา 
-    else if ( $row["status"] == 2) {
-        $orderfood[$count]["status"] = "กำลังจัดเตรียม";
-    } 
-    //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
-    else ( $row["status"] == 0) {
-        $orderfood[$count]["status"] = "ยกเลิกรายการ";
-    } 
-
     $count++;
 }
 
-$result["orderfood"] = $orderfood;
+ $query_pro = "SELECT * FROM res_promotion WHERE DATE(pro_start) <= '".date('Y-m-d')."' AND DATE(pro_end) >= '".date('Y-m-d')."' AND pro_status_id = 1";
+  
+  $rs_pro = $database->query($query_pro);
+
+$count_pro = 0;
+$promotionlist = array();
+while ($row_pro = mysqli_fetch_assoc($rs_pro)) {
+    $promotionlist[$count_pro]["pro_id"] = $row_pro["pro_id"];
+    $promotionlist[$count_pro]["pro_name"] = $row_pro["pro_name"];
+    $promotionlist[$count_pro]["pro_discount"] = $row_pro["pro_discount"];
+    $promotionlist[$count_pro]["pro_start"] = $row_pro["pro_start"];
+    $promotionlist[$count_pro]["pro_end"] = $row_pro["pro_end"];
+    $promotionlist[$count_pro]["pro_status_id"] = $row_pro["pro_status_id"];
+    $count_pro++;
+}
+
+
+$result["orderlist"] = $orderlist;
+$result["promotionlist"] = $promotionlist;
 
 echo json_encode($result);
