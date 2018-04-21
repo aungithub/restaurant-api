@@ -105,6 +105,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 $query =" SELECT * "
         . " FROM order_food f "
         . " inner JOIN res_food k ON k.food_id = f.food_id " 
+         . " INNER JOIN res_order r ON r.order_id = f.order_id "
+        . " INNER JOIN res_table t ON t.table_id = r.table_id "
         ."GROUP BY f.order_id"
         . $conditions
         . " ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
@@ -126,6 +128,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
      $orderlist[$count]["comment"] = $row["comment"];
      $orderlist[$count]["food_not_finish"] = $row["food_not_finish"];
      $orderlist[$count]["drink_not_finish"] = $row["drink_not_finish"];
+       $orderlist[$count]["table_id"] = $row["table_id"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;
 }

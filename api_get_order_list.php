@@ -135,7 +135,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     } 
     //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
     else {
-        $orderlist[$count]["status"] = "ยกเลิกรายการ";
+        $orderlist[$count]["status"] = "รอดำเนินการ";
     } 
     //$employees[$count]["emp_name"] = $row["emp_name"];
     $count++;

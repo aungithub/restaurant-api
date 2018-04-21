@@ -97,6 +97,8 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
  $query = " SELECT * "
         . " FROM order_drink f "
         . " inner JOIN res_drink k ON k.drink_id = f.drink_id " 
+        . " INNER JOIN res_order r ON r.order_id = f.order_id "
+        . " INNER JOIN res_table t ON t.table_id = r.table_id "
         . $conditions
         . " ORDER BY f.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
@@ -115,6 +117,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $orderdrink[$count]["drink_id"] = $row["drink_id"];
      $orderdrink[$count]["drink_name"] = $row["drink_name"];
      $orderdrink[$count]["comment"] = $row["comment"];
+     $orderdrink[$count]["table_id"] = $row["table_id"];
     //$employees[$count]["emp_name"] = $row["emp_name"];
 
        if ( $row["status"] == 1) {
@@ -126,7 +129,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     } 
     //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
     else {
-        $orderdrink[$count]["status"] = "ยกเลิกรายการ";
+        $orderdrink[$count]["status"] = "รอดำเนินการ";
     } 
     
     $count++;

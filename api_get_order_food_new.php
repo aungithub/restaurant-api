@@ -117,13 +117,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $orderfood[$count]["food_id"] = $row["food_id"];
      $orderfood[$count]["food_name"] = $row["food_name"];
      $orderfood[$count]["comment"] = $row["comment"];
-
-     if($row["table_id"] == 10){
-        $orderfood[$count]["table_name"] = "T10";
-     }
-     else {
-      $orderfood[$count]["table_name"] = "T0".$row["table_id"];
-    }
+       $orderfood[$count]["table_id"] = $row["table_id"];
+    
     //$employees[$count]["emp_name"] = $row["emp_name"];
 
  if ( $row["status"] == 1) {
@@ -135,7 +130,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     } 
     //cm เงื่อนไขอื่นๆจะเป็น อยู่ระหว่างการพิจารณา
     else {
-        $orderfood[$count]["status"] = "ยกเลิกรายการ";
+        $orderfood[$count]["status"] = "รอดำเนินการ";
     } 
 
     $count++;
