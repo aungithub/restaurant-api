@@ -12,6 +12,9 @@ $result["message"] = "Error: Bad request!";
     $table_id = "";
     $table_status_id = "";
      $detail = "";
+     $reserve_date = "";
+     $reserve_time = "";
+     $detail = "";
     $time = date("Y-m-d H:i:s");
 
 
@@ -21,6 +24,8 @@ if(!$postData){
     $table_id = $_POST["table_id"];
     $table_status_id = $_POST["table_status_id"];
     $detail = $_POST["detail"];
+    $reserve_date = $_POST["reserve_date"];
+    $reserve_time = $_POST["reserve_time"];
    
 
     }else{
@@ -28,6 +33,8 @@ if(!$postData){
          $table_id = $postData->table_id;
          $table_status_id = $postData->table_status_id;
         $detail = $postData->detail;
+        $reserve_date = $postData->reserve_date;
+        $reserve_time = $postData->reserve_time;
        
     }
 
@@ -42,8 +49,8 @@ if ( $table_id != "" && $table_status_id != "" ) {
     
     $database->set_charset('utf8');
     
-    $query_insert_table = "INSERT INTO res_reserve(service_id,reserve_name,reserve_datetime) "
-                . "VALUES('".$table_status_id."','".$detail."','".$time."')";
+    $query_insert_table = "INSERT INTO res_reserve(service_id,reserve_name,reserve_datetime,reserve_date,reserve_time) "
+                . "VALUES('".$table_status_id."','".$detail."','".$time."','".$reserve_date."','".$reserve_time."')";
 
        $rss = $database->query($query_insert_table);
 
@@ -63,6 +70,8 @@ while ($row = mysqli_fetch_assoc($rss)) {
     $table[$count]["service_id"] = $row["service_id"];
      $table[$count]["reserve_name"] = $row["reserve_name"];
     $table[$count]["reserve_datetime"] = $row["reserve_datetime"];
+    $table[$count]["reserve_date"] = $row["reserve_date"];
+    $table[$count]["reserve_time"] = $row["reserve_time"];
     // $table[$count]["order_datetime"] = $row["order_datetime"];
       $table[$count]["table_id"] = $row["table_id"];
      // $table[$count]["table_number"] = $row["table_number"];
