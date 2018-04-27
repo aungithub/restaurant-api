@@ -23,6 +23,7 @@ require 'config.php';
      $pos_status_id = "";
     
 
+
      if (!$postData) {
     // ส่งจาก RESTlet
     $pos_id = $_POST["pos_id"];
