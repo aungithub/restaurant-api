@@ -41,11 +41,25 @@ if (!$postData) {
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
 
- $query = "INSERT INTO res_order(order_date, id_service,table_id) VALUES('".$time."', '1','".$table_id."');";
+$query = "SELECT * "
+        ." FROM res_order o "
+        ." WHERE o.order_date LIKE '".date('Y-m-d')."%' AND o.table_id = ".$table_id." AND o.id_payment IS NULL "
+        ." ORDER BY o.order_id DESC";
 
-$database->query($query);
+$rs = $database->query($query);
 
-$order_id = $database->insert_id;
+if ($rs->num_rows > 0) {
+    $data = $rs->fetch_array();
+    $order_id = $data["order_id"];
+}
+else {
+
+     $query = "INSERT INTO res_order(order_date, id_service,table_id) VALUES('".$time."', '1','".$table_id."');";
+
+    $database->query($query);
+
+    $order_id = $database->insert_id;
+}
 
 $query = "INSERT INTO res_order_detail(order_id, order_number) VALUES(".$order_id.", 1);";
 
