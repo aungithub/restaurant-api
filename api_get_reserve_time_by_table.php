@@ -44,6 +44,33 @@ $query = " SELECT * "
 
 $rs = $database->query($query);
 
+
+$have_order_not_payment = false;
+$q = " SELECT *, IF(o.id_payment IS NULL, FALSE, TRUE) AS is_payment , t.table_id AS id_table  " 
+ ." FROM res_reserve r   "
+ ." INNER JOIN res_reserve_table t ON t.reserve_id = r.reserve_id  AND t.table_id = ".$table_id." "
+ ." INNER JOIN res_service s ON s.service_id = r.service_id   "
+ ." INNER JOIN res_order o ON o.table_id = t.table_id  " 
+ ." WHERE r.reserve_date LIKE '".date('Y-m-d')."%' AND order_date LIKE '".date('Y-m-d')."%' "
+ ." GROUP BY r.reserve_id ORDER BY r.reserve_id ASC";
+
+ $r = $database->query($q);
+
+if ($r->num_rows == 0) {
+    $have_order_not_payment = true;
+}
+else {
+    while ($row1 = mysqli_fetch_assoc($r)) {
+        if ($have_order_not_payment == false && ($row1["id_payment"] > 0 || $row1["id_payment"] != null || $row1["is_payment"] == 1)) {
+            $have_order_not_payment = false;
+        }
+        else {
+            $have_order_not_payment = true;
+        }
+    }
+}
+
+
 $count = 0;
 $data = array();
 
@@ -77,11 +104,11 @@ while ($row = mysqli_fetch_assoc($rs)) {
     $count_back_time = 0;
     $count = 0;
     foreach ($data as $value) {
-        if ($row["reserve_time"] == $value["time"]) {
+        if ($have_order_not_payment == true && $row["reserve_time"] == $value["time"]) {
             $data[$count]["is_busy"] = true;
             $count_back_time = $add_hour;
         }
-        if ($count_back_time >= 0) {
+        if ($have_order_not_payment == true && $count_back_time >= 0) {
             $data[$count]["is_busy"] = true;
             $count_back_time--;
         }
