@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set("Asia/Bangkok");
 error_reporting(0);
 
 
@@ -13,17 +13,20 @@ $food_list = "";
 $drink_list = "";
 $table_id = "";
 $time = date("Y-m-d H:i:s");
+$table_reserve_id = "";
 
 if (!$postData) {
     // ส่งจาก RESTlet
    $food_list = $_POST["food_list"];
    $drink_list = $_POST["drink_list"];
     $table_id = $_POST["table_id"];
+    $table_reserve_id = $_POST["table_reserve_id"];
 } else {
     // ส่งจากหน้าเว็บ AngularJS
     $food_list = $postData->food_list;
     $drink_list = $postData->drink_list;
      $table_id = $postData->table_id;
+     $table_reserve_id = $postData->table_reserve_id;
 }
 
     //cm ทำการ import ไฟล์ config.php ที่มี configuration เกี่ยวกับ database เข้ามา
@@ -40,6 +43,31 @@ if (!$postData) {
     
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
+
+if ($table_reserve_id != null || $table_reserve_id != "") {
+    $q = "SELECT * "
+        ." FROM res_reserve r "
+        ." WHERE r.reserve_id = ".$table_reserve_id."";
+    $r = $database->query($q);
+
+    if ($r->num_rows > 0) {
+        $data = $r->fetch_array();
+        $timeNow = intval(date('H'));
+        $timeReserve = intval($data["reserve_time"]);
+
+        if ($timeNow < $timeReserve) {
+            if ($timeNow < 10) {
+                $timeUpdate = "0".$timeNow.":00";
+            }
+            else {
+                $timeUpdate = $timeNow.":00";
+            }
+
+            $q = "UPDATE res_reserve SET reserve_time = '".$timeUpdate."' WHERE reserve_id = ".$table_reserve_id."";
+            $database->query($q);
+        }
+    }
+}
 
 $query = "SELECT * "
         ." FROM res_order o "

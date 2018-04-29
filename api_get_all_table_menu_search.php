@@ -38,11 +38,14 @@ $rs_all = $database->query($query_all);
 
 $table_reserve = array();
 $table_reserve_merge = array();
+$table_reserve_id = array();
 while ($row = mysqli_fetch_assoc($rs_all)) {
     if($row["is_payment"] == false){
 
         $table_reserve[] = $row["id_table"];
         $table_reserve_merge[$row["id_table"]] = false;
+        $table_reserve_id[$row["id_table"]] = $row["reserve_id"];
+
     }
     
     if($row["service_id"] == 3){
@@ -83,6 +86,7 @@ if ($rs_all->num_rows > 0) {
         while ($row_table = mysqli_fetch_assoc($rs_table)) {
 
              if (in_array($row_table["table_id"], $table_reserve)) {
+                $zone[$count]["table"][$count_table]["table_reserve_id"] = $table_reserve_id[$row_table["table_id"]];
                 $zone[$count]["table"][$count_table]["table_reserve"] = true;
                 $zone[$count]["table"][$count_table]["table_reserve_merge"] = $table_reserve_merge[$row_table["table_id"]];
                 $zone[$count]["table"][$count_table]["table_id"] = $row_table["table_id"];
