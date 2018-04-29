@@ -66,7 +66,7 @@ $query = "INSERT INTO res_order_detail(order_id, order_number) VALUES(".$order_i
 $database->query($query);
 
 foreach ($food_list as $obj) {
-    if ($obj->type == "food") {
+    if ($obj->type == "food" && $obj->number > 0) {
 
         
 
@@ -77,7 +77,7 @@ foreach ($food_list as $obj) {
 }
 
 foreach ($drink_list as $obj) {
-    if ($obj->type == "drink") {
+    if ($obj->type == "drink" && $obj->number > 0) {
         $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
 
         $database->query($query);
