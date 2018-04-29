@@ -36,10 +36,16 @@ $food_id = "";
 
 }
 
-$query = " UPDATE order_food "
+if ($status == 1) {
+    $query = " UPDATE order_food "
+    . " SET status = ".$status." "
+    . " WHERE food_id = ".$food_id." AND status = 2 ";
+}
+else {
+    $query = " UPDATE order_food "
     . " SET status = ".$status." "
     . " WHERE order_id = ".$order_id." AND food_id = ".$food_id." ";
-   
+}
 
 if ($database->query($query)) {
     $result["status"] = 200;
