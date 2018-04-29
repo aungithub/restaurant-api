@@ -49,6 +49,8 @@ $query = " UPDATE order_drink "
 
 if ($database->query($query)) {
 
+if ($status == 1) {
+
 $query = " SELECT * "
         . " FROM res_drink d "
         ." WHERE drink_id =  ".$drink_id." ";
@@ -62,6 +64,8 @@ while ($row = mysqli_fetch_assoc($rs)) {
     . " SET drink_number = ".$drink_number." "
     . " WHERE drink_id = ".$drink_id."  ";
     $database->query($query);
+}
+
 }
 
 
