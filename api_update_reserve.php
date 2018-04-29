@@ -16,6 +16,8 @@ $result["message"] = "Error: Bad request!";
     $reserve_name = "";
     $reserve_datetime_edit = date("Y-m-d H:i:s");
     $table_id = "";
+    $date = "";
+    $time = "";
 
 
 if(!$postData){
@@ -24,12 +26,21 @@ if(!$postData){
     $service_id = $_POST["service_id"];
     $reserve_name = $_POST["reserve_name"];
       $table_id = $_POST["table_id"];
+      $date = $_POST["date"];
+      $time = $_POST["time"];
 
     }else{
         $reserve_id = $postData->reserve_id;
         $service_id = $postData->service_id;
         $reserve_name = $postData->reserve_name;
         $table_id = $postData->table_id;
+        $date = $postData->date;
+      $time = $postData->time;
+    }
+
+    $cond = "";
+    if ($service_id == 1) {
+        $cond = ",reserve_date = '".$date."',reserve_time = '".$time."'";
     }
 
     require 'config.php';
@@ -48,7 +59,7 @@ if(!$postData){
     $result_check_reserve = $database->query($query_check_reserve);
     
     if ($result_check_reserve->num_rows > 0) {
-         $query = "UPDATE res_reserve SET service_id = '".$service_id."',reserve_name = '".$reserve_name."',reserve_datetime_edit = '".$reserve_datetime_edit."' WHERE reserve_id = '".$reserve_id."' ";
+         $query = "UPDATE res_reserve SET service_id = '".$service_id."',reserve_name = '".$reserve_name."',reserve_datetime_edit = '".$reserve_datetime_edit."' ".$cond." WHERE reserve_id = '".$reserve_id."' ";
 
     
         if ($database->query($query)) {
