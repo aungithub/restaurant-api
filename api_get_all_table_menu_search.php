@@ -32,7 +32,7 @@ $query_all = " SELECT *, IF(o.id_payment IS NULL, false, true) AS is_payment , t
         ." INNER JOIN res_reserve_table t ON t.reserve_id = r.reserve_id "
         ." INNER JOIN res_service s ON s.service_id = r.service_id "
         ." LEFT JOIN res_order o ON o.table_id = t.table_id AND o.order_date LIKE '".date("Y-m-d")."%'"
-        ." WHERE r.reserve_name LIKE '%".$search."%' OR r.reserve_id = '".$search."'";
+        ." WHERE r.reserve_datetime LIKE '".date("Y-m-d")."%' AND r.reserve_name LIKE '%".$search."%' OR r.reserve_id = '".$search."'";
 
 $rs_all = $database->query($query_all);
 
