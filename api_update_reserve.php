@@ -39,7 +39,7 @@ if(!$postData){
     }
 
     $cond = "";
-    if ($service_id == 1) {
+    if ($service_id == 1 || $service_id == 4) {
         $cond = ",reserve_date = '".$date."',reserve_time = '".$time."'";
     }
 
