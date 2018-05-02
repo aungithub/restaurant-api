@@ -40,7 +40,7 @@ if(!$postData){
 $query = " SELECT * "
         ." FROM res_reserve r "
         ." INNER JOIN res_reserve_table rt ON rt.reserve_id = r.reserve_id "
-        ." WHERE rt.table_id = ".$table_id." AND r.service_id = 1 AND reserve_date = '".$reserve_date."'";
+        ." WHERE rt.table_id = ".$table_id." AND (r.service_id = 1 || r.service_id = 4) AND reserve_date = '".$reserve_date."'";
 
 $rs = $database->query($query);
 
