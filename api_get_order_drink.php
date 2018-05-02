@@ -78,7 +78,7 @@ $conditions = "";
 $order_id = null;
 if ($_GET["order_id"] != null && $_GET["order_id"] != 0) {
     $order_id = $_GET["order_id"];
-    $conditions = " WHERE r.order_id = '".$order_id."' ";
+    $conditions = " WHERE (f.status > 0 OR f.status IS NULL) AND  r.order_id = '".$order_id."' ";
 }
 //เช็คเฉพาะอาหารที่ใช้งานอยู่
 if ($conditions == "") {
