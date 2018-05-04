@@ -102,11 +102,11 @@ foreach ($food_list as $obj) {
         if ($rs->num_rows > 0) {
             $data = $rs->fetch_array();
             $total = intval($data["number"]) + $obj->number;
-            $q = "UPDATE order_food SET number = ".$total." WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id."";
+            $q = "UPDATE order_food SET food_eat_where = ".$obj->food_eat_where.",number = ".$total." WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id."";
             $database->query($q);
         }
         else {
-            $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
+            $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment,food_eat_where) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."',".$obj->food_eat_where.");";
 
             $database->query($query);
         }
@@ -122,11 +122,11 @@ foreach ($drink_list as $obj) {
         if ($rs->num_rows > 0) {
             $data = $rs->fetch_array();
             $total = intval($data["number"]) + $obj->number;
-            $q = "UPDATE order_drink SET number = ".$total." WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id."";
+            $q = "UPDATE order_drink SET drink_eat_where = ".$obj->drink_eat_where.", number = ".$total." WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id."";
             $database->query($q);
         }
         else {
-            $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
+            $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment,drink_eat_where) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."',".$obj->drink_eat_where.");";
 
             $database->query($query);
         }
