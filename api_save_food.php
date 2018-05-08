@@ -104,17 +104,25 @@ $database->query($query);
 foreach ($food_list as $obj) {
     if ($obj->type == "food" && $obj->number > 0) {
 
-        $q = "SELECT * FROM order_food WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id." LIMIT 0, 1";
+        $q = "SELECT * FROM order_food WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id." AND comment = '".$obj->comment."' LIMIT 0, 1";
         $rs = $database->query($q);
 
         if ($rs->num_rows > 0) {
             $data = $rs->fetch_array();
             $total = intval($data["number"]) + $obj->number;
-            $q = "UPDATE order_food SET number = ".$total." WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id."";
+            $q = "UPDATE order_food SET number = ".$total." WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id." AND order_number = ".$data["order_number"]."";
             $database->query($q);
         }
         else {
-            $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", 1, ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
+            $q = "SELECT * FROM order_food WHERE order_id = ".$order_id." AND food_id = ".$obj->food_id." ORDER BY order_number DESC LIMIT 0, 1";
+            $rs = $database->query($q);
+            $order_number = 1;
+            if ($rs->num_rows > 0) {
+                $data = $rs->fetch_array();
+                $order_number = intval($data["order_number"]) + 1;
+            }
+
+            $query = "INSERT INTO order_food(order_id, order_number, price,order_datetime,number,status,food_id,comment) VALUES(".$order_id.", ".$order_number.", ".$obj->food_price.", '".$time."', ".$obj->number.", null, ".$obj->food_id.",'".$obj->comment."');";
 
             $database->query($query);
         }
@@ -124,17 +132,25 @@ foreach ($food_list as $obj) {
 foreach ($drink_list as $obj) {
     if ($obj->type == "drink" && $obj->number > 0) {
 
-        $q = "SELECT * FROM order_drink WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id." LIMIT 0, 1";
+        $q = "SELECT * FROM order_drink WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id." AND comment = '".$obj->comment."' LIMIT 0, 1";
         $rs = $database->query($q);
 
         if ($rs->num_rows > 0) {
             $data = $rs->fetch_array();
             $total = intval($data["number"]) + $obj->number;
-            $q = "UPDATE order_drink SET number = ".$total." WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id."";
+            $q = "UPDATE order_drink SET number = ".$total." WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id." AND order_number = ".$data["order_number"]."";
             $database->query($q);
         }
         else {
-            $query = "INSERT INTO order_drink(order_id, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
+            $q = "SELECT * FROM order_drink WHERE order_id = ".$order_id." AND drink_id = ".$obj->drink_id." ORDER BY order_number DESC LIMIT 0, 1";
+            $rs = $database->query($q);
+            $order_number = 1;
+            if ($rs->num_rows > 0) {
+                $data = $rs->fetch_array();
+                $order_number = intval($data["order_number"]) + 1;
+            }
+
+            $query = "INSERT INTO order_drink(order_id, order_number, price,order_datetime,number,status,drink_id,comment) VALUES(".$order_id.", ".$order_number.", ".$obj->drink_price.", '".$time."', ".$obj->number.", null, ".$obj->drink_id.",'".$obj->comment."');";
 
             $database->query($query);
         }
