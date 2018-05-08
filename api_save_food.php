@@ -14,6 +14,7 @@ $drink_list = "";
 $table_id = "";
 $time = date("Y-m-d H:i:s");
 $table_reserve_id = "";
+$reserveType = "";
 
 if (!$postData) {
     // ส่งจาก RESTlet
@@ -21,12 +22,14 @@ if (!$postData) {
    $drink_list = $_POST["drink_list"];
     $table_id = $_POST["table_id"];
     $table_reserve_id = $_POST["table_reserve_id"];
+    $reserveType = $_POST["reserveType"];
 } else {
     // ส่งจากหน้าเว็บ AngularJS
     $food_list = $postData->food_list;
     $drink_list = $postData->drink_list;
      $table_id = $postData->table_id;
      $table_reserve_id = $postData->table_reserve_id;
+     $reserveType = $postData->reserveType;
 }
 
     //cm ทำการ import ไฟล์ config.php ที่มี configuration เกี่ยวกับ database เข้ามา
@@ -43,6 +46,11 @@ if (!$postData) {
     
     //cm ทำการกำหนด character set เป็น utf8 (support ภาษาไทย)
     $database->set_charset('utf8');
+
+
+if ($reserveType  == 0) {
+    $table_id = 9999;
+}
 
 if ($table_reserve_id != null || $table_reserve_id != "") {
     $q = "SELECT * "
