@@ -48,7 +48,7 @@ if(!$postData){
 
       $report[$count]["food_id"] = $row["food_id"];
       $report[$count]["food_name"] = $row["food_name"];
-      $report[$count]["food_unit"] = "จาน/ชาม";
+      $report[$count]["food_unit"] = "จาน";
 
       $query = "SELECT  "
         ."     SUM(IF(MONTH = 'Jan', total, 0)) AS 'Jan', "
