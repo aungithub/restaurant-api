@@ -33,77 +33,126 @@ if(!$postData){
        
     }
 
+    $query = " SELECT of.food_id, f.food_name "
+             ." FROM order_food of "
+             ." INNER JOIN res_food f ON f.food_id = of.food_id "
+             ." WHERE of.order_datetime LIKE '%".$year."%' "
+             ." GROUP BY of.food_id  ";
 
-//cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
- $query = " SELECT * "
-        . " FROM res_payment p "
-        . " INNER JOIN res_order r ON r.order_id = p.order_id " 
-        . " LEFT JOIN order_food f ON f.order_id = p.order_id " 
-        . " LEFT JOIN res_food f1 ON f1.food_id = f.food_id"
-        ." WHERE r.order_date LIKE '%".$year."%'" 
-        . " GROUP BY f1.food_id "
-        . " ORDER BY p.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+    $rs = $database->query($query);
 
-$rs = $database->query($query);
- 
- $count = 0;
-$order = array();
-while ($row = mysqli_fetch_assoc($rs)) {
+    $count = 0;
+    $report = array();
 
-    $order[$count]["order_id"] = $row["order_id"];
-     $order[$count]["order_number"] = $row["order_number"];
-    $order[$count]["price"] = $row["price"];
-     $order[$count]["order_datetime"] = $row["order_datetime"];
-      $order[$count]["number"] = $row["number"];
-      $order[$count]["status"] = $row["status"];
-    $order[$count]["food_id"] = $row["food_id"];
-     $order[$count]["food_name"] = $row["food_name"];
-     $order[$count]["comment"] = $row["comment"];
-    
-    //$employees[$count]["emp_name"] = $row["emp_name"];
-    $count++;
-}
+    while ($row = mysqli_fetch_assoc($rs)) {
 
- $queryy = " SELECT * "
-        . " FROM res_payment p "
-        . " INNER JOIN res_order r ON r.order_id = p.order_id " 
-        . " LEFT JOIN order_drink f ON f.order_id = p.order_id " 
-        . " LEFT JOIN res_drink f1 ON f1.drink_id = f.drink_id"
-        ." WHERE r.order_date LIKE '%".$year."%'"
-        . " GROUP BY f1.drink_id "
-        . " ORDER BY p.order_id ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+      $report[$count]["food_id"] = $row["food_id"];
+      $report[$count]["food_name"] = $row["food_name"];
+      $report[$count]["food_unit"] = "จาน/ชาม";
 
-$rss = $database->query($queryy);
- 
- $count_drink = 0;
-$order_drink = array();
-while ($row_drink = mysqli_fetch_assoc($rss)) {
+      $query = "SELECT  "
+        ."     SUM(IF(MONTH = 'Jan', total, 0)) AS 'Jan', "
+        ."     SUM(IF(MONTH = 'Feb', total, 0)) AS 'Feb', "
+        ."     SUM(IF(MONTH = 'Mar', total, 0)) AS 'Mar', "
+        ."     SUM(IF(MONTH = 'Apr', total, 0)) AS 'Apr', "
+        ."     SUM(IF(MONTH = 'May', total, 0)) AS 'May', "
+        ."     SUM(IF(MONTH = 'Jun', total, 0)) AS 'Jun', "
+        ."     SUM(IF(MONTH = 'Jul', total, 0)) AS 'Jul', "
+        ."     SUM(IF(MONTH = 'Aug', total, 0)) AS 'Aug', "
+        ."     SUM(IF(MONTH = 'Sep', total, 0)) AS 'Sep', "
+        ."     SUM(IF(MONTH = 'Oct', total, 0)) AS 'Oct', "
+        ."     SUM(IF(MONTH = 'Nov', total, 0)) AS 'Nov', "
+        ."     SUM(IF(MONTH = 'Dec', total, 0)) AS 'Dec', "
+        ."     SUM(total) AS total_yearly "
+        ."     FROM ( "
+        ." SELECT f.*, DATE_FORMAT(of.order_datetime, '%b') AS MONTH, SUM(of.number) AS total "
+        ." FROM order_food of "
+        ." INNER JOIN res_food f ON f.food_id = of.food_id "
+        ." WHERE of.food_id = ".$row["food_id"]." AND of.order_datetime <= NOW() AND of.order_datetime >= Date_add(Now(),INTERVAL - 12 MONTH) "
+        ." GROUP BY of.food_id ,DATE_FORMAT(of.order_datetime, '%m-%Y')) AS sub";
 
-    $order_drink[$count_drink]["order_id"] = $row_drink["order_id"];
-     $order_drink[$count_drink]["order_number"] = $row_drink["order_number"];
-    $order_drink[$count_drink]["price"] = $row_drink["price"];
-     $order_drink[$count_drink]["order_datetime"] = $row_drink["order_datetime"];
-      $order_drink[$count_drink]["number"] = $row_drink["number"];
-      $order_drink[$count_drink]["status"] = $row_drink["status"];
-    $order_drink[$count_drink]["drink_id"] = $row_drink["drink_id"];
-     $order_drink[$count_drink]["drink_name"] = $row_drink["drink_name"];
-     $order_drink[$count_drink]["comment"] = $row_drink["comment"];
-    
-    //$employees[$count]["emp_name"] = $row["emp_name"];
-    $count_drink++;
-}
+      $query_result = $database->query($query);
+
+      $data = $query_result->fetch_array();
+
+      $report[$count]["Jan"] = $data["Jan"];
+      $report[$count]["Feb"] = $data["Feb"];
+      $report[$count]["Mar"] = $data["Mar"];
+      $report[$count]["Apr"] = $data["Apr"];
+      $report[$count]["May"] = $data["May"];
+      $report[$count]["Jun"] = $data["Jun"];
+      $report[$count]["Jul"] = $data["Jul"];
+      $report[$count]["Aug"] = $data["Aug"];
+      $report[$count]["Sep"] = $data["Sep"];
+      $report[$count]["Oct"] = $data["Oct"];
+      $report[$count]["Nov"] = $data["Nov"];
+      $report[$count]["Dec"] = $data["Dec"];
+
+      $count++;
+    }
 
 
-$result["order"] = $order;
-$result["order_drink"] = $order_drink;
+    $query = " SELECT od.drink_id, d.drink_name "
+             ." FROM order_drink od "
+             ." INNER JOIN res_drink d ON d.drink_id = od.drink_id "
+             ." WHERE od.order_datetime LIKE '%".$year."%' "
+             ." GROUP BY od.drink_id  ";
 
-      if ($database->query($query)) {
-            $result["status"] = 200;
-            $result["message"] = "successful!";
-        } else {
-            $result["status"] = 500;
-            $result["message"] = "Error:  not successful!";
-        }
+    $rs = $database->query($query);
 
+    //$count = 0;
+    //$report = array();
+
+    while ($row = mysqli_fetch_assoc($rs)) {
+
+      $report[$count]["food_id"] = $row["drink_id"];
+      $report[$count]["food_name"] = $row["drink_name"];
+      $report[$count]["food_unit"] = "แก้ว";
+
+      $query = "SELECT  "
+        ."     SUM(IF(MONTH = 'Jan', total, 0)) AS 'Jan', "
+        ."     SUM(IF(MONTH = 'Feb', total, 0)) AS 'Feb', "
+        ."     SUM(IF(MONTH = 'Mar', total, 0)) AS 'Mar', "
+        ."     SUM(IF(MONTH = 'Apr', total, 0)) AS 'Apr', "
+        ."     SUM(IF(MONTH = 'May', total, 0)) AS 'May', "
+        ."     SUM(IF(MONTH = 'Jun', total, 0)) AS 'Jun', "
+        ."     SUM(IF(MONTH = 'Jul', total, 0)) AS 'Jul', "
+        ."     SUM(IF(MONTH = 'Aug', total, 0)) AS 'Aug', "
+        ."     SUM(IF(MONTH = 'Sep', total, 0)) AS 'Sep', "
+        ."     SUM(IF(MONTH = 'Oct', total, 0)) AS 'Oct', "
+        ."     SUM(IF(MONTH = 'Nov', total, 0)) AS 'Nov', "
+        ."     SUM(IF(MONTH = 'Dec', total, 0)) AS 'Dec', "
+        ."     SUM(total) AS total_yearly "
+        ."     FROM ( "
+        ." SELECT d.*, DATE_FORMAT(od.order_datetime, '%b') AS MONTH, SUM(od.number) AS total "
+        ." FROM order_drink od "
+        ." INNER JOIN res_drink d ON d.drink_id = od.drink_id "
+        ." WHERE od.drink_id = ".$row["drink_id"]." AND od.order_datetime <= NOW() AND od.order_datetime >= Date_add(Now(),INTERVAL - 12 MONTH) "
+        ." GROUP BY od.drink_id ,DATE_FORMAT(od.order_datetime, '%m-%Y')) AS sub";
+
+      $query_result = $database->query($query);
+
+      $data = $query_result->fetch_array();
+
+      $report[$count]["Jan"] = $data["Jan"];
+      $report[$count]["Feb"] = $data["Feb"];
+      $report[$count]["Mar"] = $data["Mar"];
+      $report[$count]["Apr"] = $data["Apr"];
+      $report[$count]["May"] = $data["May"];
+      $report[$count]["Jun"] = $data["Jun"];
+      $report[$count]["Jul"] = $data["Jul"];
+      $report[$count]["Aug"] = $data["Aug"];
+      $report[$count]["Sep"] = $data["Sep"];
+      $report[$count]["Oct"] = $data["Oct"];
+      $report[$count]["Nov"] = $data["Nov"];
+      $report[$count]["Dec"] = $data["Dec"];
+
+      $count++;
+    }
+
+
+$result["status"] = 200;
+$result["message"] = "successful!";
+$result["report"] = $report;
 
 echo json_encode($result);
