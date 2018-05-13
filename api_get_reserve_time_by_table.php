@@ -40,7 +40,7 @@ if(!$postData){
 $query = " SELECT * "
         ." FROM res_reserve r "
         ." INNER JOIN res_reserve_table rt ON rt.reserve_id = r.reserve_id "
-        ." WHERE rt.table_id = ".$table_id." AND (r.service_id = 1 || r.service_id = 4) AND reserve_date = '".$reserve_date."'";
+        ." WHERE rt.table_id = ".$table_id." AND (r.service_id = 1 || r.service_id = 3 || r.service_id = 4) AND reserve_date = '".$reserve_date."'";
 
 $rs = $database->query($query);
 
@@ -100,8 +100,7 @@ $data[11]["time"] = "21:00";
 $data[11]["is_busy"] = false;
 
 while ($row = mysqli_fetch_assoc($rs)) {
-    
-    $count_back_time = 0;
+    $count_back_time = -1;
     $count = 0;
     foreach ($data as $value) {
         if ($have_order_not_payment == true && $row["reserve_time"] == $value["time"]) {
