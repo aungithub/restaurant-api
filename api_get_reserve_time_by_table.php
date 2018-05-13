@@ -98,7 +98,7 @@ $data[10]["time"] = "20:00";
 $data[10]["is_busy"] = false;
 $data[11]["time"] = "21:00";
 $data[11]["is_busy"] = false;
-
+  
 while ($row = mysqli_fetch_assoc($rs)) {
     $count_back_time = -1;
     $count = 0;
