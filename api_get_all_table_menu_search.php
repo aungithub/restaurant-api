@@ -27,7 +27,7 @@ if (!$postData) {
    
 }
 
-$query_all = " SELECT *, IF(o.id_payment IS NULL, false, true) AS is_payment , t.table_id AS id_table "
+$query_all = " SELECT *, IF(o.id_payment IS NULL, false, true) AS is_payment , t.table_id AS id_table, r.reserve_id as this_reserve_id "
         ." FROM res_reserve r "
         ." INNER JOIN res_reserve_table t ON t.reserve_id = r.reserve_id "
         ." INNER JOIN res_service s ON s.service_id = r.service_id "
@@ -44,7 +44,7 @@ while ($row = mysqli_fetch_assoc($rs_all)) {
 
         $table_reserve[] = $row["id_table"];
         $table_reserve_merge[$row["id_table"]] = false;
-        $table_reserve_id[$row["id_table"]] = $row["reserve_id"];
+        $table_reserve_id[$row["id_table"]] = $row["this_reserve_id"];
 
     }
     
@@ -54,7 +54,7 @@ while ($row = mysqli_fetch_assoc($rs_all)) {
                 ." INNER JOIN res_reserve_table t ON t.reserve_id = r.reserve_id  "
                 ." INNER JOIN res_service s ON s.service_id = r.service_id  "
                 ." LEFT JOIN res_order o ON o.table_id = t.table_id "
-                ." WHERE r.reserve_id = ".$row["reserve_id"]."";
+                ." WHERE r.reserve_id = ".$row["this_reserve_id"]."";
         $r = $database->query($q);
 
         while ($row1 = mysqli_fetch_assoc($r)) {

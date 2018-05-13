@@ -68,7 +68,14 @@ if(!$postData){
        $rss = $database->query($query_insert_table);
 
 
+       $count=0;
        foreach ($table_id as $value) {
+
+            if ($count == 0) {
+                $q = "UPDATE res_order SET table_id = ".$value." WHERE reserve_id = ".$reserve_id." ";
+                $database->query($q);
+            }
+
            $query_insert = "INSERT INTO res_reserve_table(reserve_id,table_id) "
                 . "VALUES('".$reserve_id."','".$value."')";
 
