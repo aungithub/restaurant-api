@@ -77,6 +77,40 @@ if ($table_reserve_id != null || $table_reserve_id != "") {
     }
 }
 
+    $q = "SELECT * "
+        ." FROM res_order "
+        ." WHERE order_key IS NOT NULL "
+        ." ORDER BY order_key DESC "
+        ." LIMIT 0, 1;";
+    $r = $database->query($q);
+
+    $year = intval(date('Y') + 543);
+    $year = substr($year, -2);
+    $order_key = "";
+    if ($r->num_rows == 0) {
+        $order_key = "ORD".$year."0001";
+    }
+    else {
+        $data = $r->fetch_array();
+        $latest_key = $data["order_key"];
+        $latest_id = substr($latest_key, -4);
+        $latest_id = intval($latest_id) + 1;
+        switch ($latest_id) {
+            case count($latest_id) == 1:
+                $order_key = "ORD".$year."000".$latest_id;
+                break;
+            case count($latest_id) == 2:
+                $order_key = "ORD".$year."00".$latest_id;
+                break;
+            case count($latest_id) == 3:
+                $order_key = "ORD".$year."0".$latest_id;
+                break;
+            case count($latest_id) == 4:
+                $order_key = "ORD".$year.$latest_id;
+                break;
+        }
+    }
+
 $query = "SELECT * "
         ." FROM res_order o "
         ." WHERE o.order_date LIKE '".date('Y-m-d')."%' AND o.table_id = ".$table_id." AND o.id_payment IS NULL "
@@ -90,7 +124,7 @@ if ($rs->num_rows > 0) {
 }
 else {
 
-     $query = "INSERT INTO res_order(order_date, id_service,table_id) VALUES('".$time."', '1','".$table_id."');";
+     $query = "INSERT INTO res_order(order_date, id_service,table_id, order_key) VALUES('".$time."', '1','".$table_id."', '".$order_key."');";
 
     $database->query($query);
 

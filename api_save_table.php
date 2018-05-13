@@ -48,9 +48,41 @@ if ( $table_id != "" && $table_status_id != "" ) {
                                 $db["local"]["database"]) or die("Error: MySQL cannot connect!");
     
     $database->set_charset('utf8');
+
+    $q = "SELECT * "
+        ." FROM res_reserve "
+        ." WHERE reserve_key IS NOT NULL "
+        ." ORDER BY reserve_key DESC "
+        ." LIMIT 0, 1;";
+    $r = $database->query($q);
+
+    $reserve_key = "";
+    if ($r->num_rows == 0) {
+        $reserve_key = "R0001";
+    }
+    else {
+        $data = $r->fetch_array();
+        $latest_key = $data["reserve_key"];
+        $latest_id = substr($latest_key, -4);
+        $latest_id = intval($latest_id) + 1;
+        switch ($latest_id) {
+            case count($latest_id) == 1:
+                $reserve_key = "R000".$latest_id;
+                break;
+            case count($latest_id) == 2:
+                $reserve_key = "R00".$latest_id;
+                break;
+            case count($latest_id) == 3:
+                $reserve_key = "R0".$latest_id;
+                break;
+            case count($latest_id) == 4:
+                $reserve_key = "R".$latest_id;
+                break;
+        }
+    }
     
-    $query_insert_table = "INSERT INTO res_reserve(service_id,reserve_name,reserve_datetime,reserve_date,reserve_time) "
-                . "VALUES('".$table_status_id."','".$detail."','".$time."','".$reserve_date."','".$reserve_time."')";
+    $query_insert_table = "INSERT INTO res_reserve(service_id,reserve_name,reserve_datetime,reserve_date,reserve_time,reserve_key) "
+                . "VALUES('".$table_status_id."','".$detail."','".$time."','".$reserve_date."','".$reserve_time."', '".$reserve_key."')";
 
        $rss = $database->query($query_insert_table);
 
