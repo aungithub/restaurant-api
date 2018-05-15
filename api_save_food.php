@@ -124,7 +124,14 @@ if ($rs->num_rows > 0) {
 }
 else {
 
-     $query = "INSERT INTO res_order(order_date, id_service,table_id, order_key, reserve_id) VALUES('".$time."', '1','".$table_id."', '".$order_key."', '".$table_reserve_id."');";
+    $attr = "";
+    $attrData = "";
+    if ($table_reserve_id > 0) {
+        $attr = ", reserve_id";
+        $attrData = ", ".$table_reserve_id."";
+    }
+
+     $query = "INSERT INTO res_order(order_date, id_service,table_id, order_key ".$attr.") VALUES('".$time."', '1','".$table_id."', '".$order_key."' ".$attrData.");";
 
     $database->query($query);
 
