@@ -52,6 +52,7 @@ while ($row_reserve = mysqli_fetch_assoc($rs_reserve)) {
      $reserve[$count_reserve]["reserve_datetime_edit"] = $row_reserve["reserve_datetime_edit"];
       $reserve[$count_reserve]["table_id"] = $row_reserve["table_id"];
       $reserve[$count_reserve]["r_table"] = $row_reserve["r_table"];
+       $reserve[$count_reserve]["reserve_key"] = $row_reserve["reserve_key"];
      $count_reserve++;
  }
 

@@ -102,11 +102,11 @@ if ($_GET["limit"] != null && $_GET["offset"] != null) {
 }
 
 //cm เขียน query เพื่อดึง food => lpad(f.food_id, 4, '0') คือแทรกเลข 0 เข้าไปข้างหน้า id โดยจำนวนรวมกับ id คือ 4 ตำแหน่ง
- $query = " SELECT * "
+ $query = " SELECT *,  SUM(f.number) AS f_order_number "
         . " FROM order_food f "
         . " inner JOIN res_food k ON k.food_id = f.food_id " 
         . $conditions
-        . " ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
+        . "  GROUP BY k.food_name ORDER BY  k.food_name ASC,f.order_datetime ASC";//เก็บโค๊ด select ไว้ในตัวแปล $query เลือกจากตารางข้อมูล
 
 $rs = $database->query($query);
 
@@ -118,7 +118,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
      $orderlist[$count]["order_number"] = $row["order_number"];
     $orderlist[$count]["price"] = $row["price"];
      $orderlist[$count]["order_datetime"] = $row["order_datetime"];
-      $orderlist[$count]["number"] = $row["number"];
+      $orderlist[$count]["number"] = $row["f_order_number"];
       $orderlist[$count]["status"] = $row["status"];
     $orderlist[$count]["food_id"] = $row["food_id"];
      $orderlist[$count]["food_name"] = $row["food_name"];

@@ -87,6 +87,7 @@ if (!$postData) {
     }
 
 $result["status"] = 200;
+$result["slip_key"] = $slip_key;
 $result["message"] = "successful!";
 
 echo json_encode($result);
